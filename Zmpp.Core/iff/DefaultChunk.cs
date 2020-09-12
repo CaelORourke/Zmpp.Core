@@ -69,8 +69,8 @@ namespace Zmpp.Core.Iff
             this.memory = memory;
             this.address = address;
             id = new byte[CHUNK_ID_LENGTH];
-            memory.copyBytesToArray(id, 0, 0, CHUNK_ID_LENGTH);
-            chunkSize = (int)readUnsigned32(memory, CHUNK_ID_LENGTH);
+            memory.CopyBytesToArray(id, 0, 0, CHUNK_ID_LENGTH);
+            chunkSize = (int)ReadUnsigned32(memory, CHUNK_ID_LENGTH);
         }
 
         /// <summary>
@@ -87,10 +87,10 @@ namespace Zmpp.Core.Iff
             this.chunkSize = chunkdata.Length;
             byte[] chunkDataWithHeader =
               new byte[chunkSize + CHUNK_HEADER_LENGTH];
-            this.memory = new DefaultMemory(chunkDataWithHeader);
-            memory.copyBytesFromArray(id, 0, 0, id.Length);
-            writeUnsigned32(memory, id.Length, chunkSize);
-            memory.copyBytesFromArray(chunkdata, 0, id.Length + 4, chunkdata.Length);
+            this.memory = new Memory(chunkDataWithHeader);
+            memory.CopyBytesFromArray(id, 0, 0, id.Length);
+            WriteUnsigned32(memory, id.Length, chunkSize);
+            memory.CopyBytesFromArray(chunkdata, 0, id.Length + 4, chunkdata.Length);
         }
 
         public virtual bool isValid() { return true; }

@@ -143,7 +143,7 @@ namespace Zmpp.Core.Vm
             if (outputStream[OUTPUTSTREAM_TRANSCRIPT - 1] != null)
             {
                 outputStream[OUTPUTSTREAM_TRANSCRIPT - 1].select(
-                    machine.getFileHeader().isEnabled(StoryFileHeaderAttribute.TRANSCRIPTING));
+                    machine.getFileHeader().IsEnabled(StoryFileHeaderAttribute.Transcripting));
             }
         }
 
@@ -154,7 +154,7 @@ namespace Zmpp.Core.Vm
             // Sets the tranxdQscript flag if the transcipt is specified
             if (streamnumber == OUTPUTSTREAM_TRANSCRIPT)
             {
-                machine.getFileHeader().setEnabled(StoryFileHeaderAttribute.TRANSCRIPTING, flag);
+                machine.getFileHeader().SetEnabled(StoryFileHeaderAttribute.Transcripting, flag);
             }
             else if (streamnumber == OUTPUTSTREAM_MEMORY && flag)
             {

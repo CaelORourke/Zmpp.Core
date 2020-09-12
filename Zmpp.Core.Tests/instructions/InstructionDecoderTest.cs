@@ -227,12 +227,12 @@ namespace Zmpp.Core.Instructions.Tests
             // arrange
 
             // Setup for machine 4
-            IMemory call_vs2Mem = new DefaultMemory(call_vs2);
+            IMemory call_vs2Mem = new Memory(call_vs2);
             var machine4 = new Mock<IMachine>();
             machine4.Setup(m => m.getVersion()).Returns(4);
-            machine4.Setup(m => m.readUnsigned8(It.IsInRange(0, 2, Moq.Range.Inclusive))).Returns<int>(address => call_vs2Mem.readUnsigned8(address));
-            machine4.Setup(m => m.readUnsigned16(3)).Returns(call_vs2Mem.readUnsigned16(3));
-            machine4.Setup(m => m.readUnsigned8(It.IsInRange(5, 9, Moq.Range.Inclusive))).Returns<int>(address => call_vs2Mem.readUnsigned8(address));
+            machine4.Setup(m => m.ReadUnsigned8(It.IsInRange(0, 2, Moq.Range.Inclusive))).Returns<int>(address => call_vs2Mem.ReadUnsigned8(address));
+            machine4.Setup(m => m.ReadUnsigned16(3)).Returns(call_vs2Mem.ReadUnsigned16(3));
+            machine4.Setup(m => m.ReadUnsigned8(It.IsInRange(5, 9, Moq.Range.Inclusive))).Returns<int>(address => call_vs2Mem.ReadUnsigned8(address));
             machine4.Setup(m => m.getVariable((char)160)).Returns((char)0x4711);
             machine4.Setup(m => m.getVariable((char)1)).Returns((char)0x4712);
             InstructionDecoder decoder4 = new InstructionDecoder();
@@ -245,9 +245,9 @@ namespace Zmpp.Core.Instructions.Tests
 
             // assert
             machine4.Verify(m => m.getVersion(), Times.AtLeastOnce());
-            machine4.Verify(m => m.readUnsigned8(It.IsInRange(0, 2, Moq.Range.Inclusive)), Times.AtLeastOnce());
-            machine4.Verify(m => m.readUnsigned16(3), Times.AtLeastOnce());
-            machine4.Verify(m => m.readUnsigned8(It.IsInRange(5, 9, Moq.Range.Inclusive)), Times.AtLeastOnce());
+            machine4.Verify(m => m.ReadUnsigned8(It.IsInRange(0, 2, Moq.Range.Inclusive)), Times.AtLeastOnce());
+            machine4.Verify(m => m.ReadUnsigned16(3), Times.AtLeastOnce());
+            machine4.Verify(m => m.ReadUnsigned8(It.IsInRange(5, 9, Moq.Range.Inclusive)), Times.AtLeastOnce());
             machine4.Verify(m => m.getVariable((char)160), Times.Once());
             machine4.Verify(m => m.getVariable((char)1), Times.Once());
 
@@ -262,10 +262,10 @@ namespace Zmpp.Core.Instructions.Tests
             // arrange
 
             // Setup for machine 5
-            IMemory save_undoMem = new DefaultMemory(save_undo);
+            IMemory save_undoMem = new Memory(save_undo);
             var machine5 = new Mock<IMachine>();
             machine5.Setup(m => m.getVersion()).Returns(5);
-            machine5.Setup(m => m.readUnsigned8(It.IsInRange(0, 3, Moq.Range.Inclusive))).Returns<int>(address => save_undoMem.readUnsigned8(address));
+            machine5.Setup(m => m.ReadUnsigned8(It.IsInRange(0, 3, Moq.Range.Inclusive))).Returns<int>(address => save_undoMem.ReadUnsigned8(address));
             InstructionDecoder decoder5 = new InstructionDecoder();
             decoder5.initialize(machine5.Object);
 
@@ -276,7 +276,7 @@ namespace Zmpp.Core.Instructions.Tests
 
             // assert
             machine5.Verify(m => m.getVersion(), Times.AtLeastOnce());
-            machine5.Verify(m => m.readUnsigned8(It.IsInRange(0, 3, Moq.Range.Inclusive)), Times.AtLeastOnce());
+            machine5.Verify(m => m.ReadUnsigned8(It.IsInRange(0, 3, Moq.Range.Inclusive)), Times.AtLeastOnce());
 
             // Expected:
             Assert.AreEqual("SAVE_UNDO  -> (SP)", result);

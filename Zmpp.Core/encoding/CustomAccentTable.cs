@@ -63,7 +63,7 @@ namespace Zmpp.Core.Encoding
             int result = 0;
             if (tableAddress > 0)
             {
-                result = memory.readUnsigned8(tableAddress);
+                result = memory.ReadUnsigned8(tableAddress);
             }
             return result;
         }
@@ -73,7 +73,7 @@ namespace Zmpp.Core.Encoding
             char result = '?';
             if (tableAddress > 0)
             {
-                result = memory.readUnsigned16(tableAddress + (index * 2) + 1);
+                result = memory.ReadUnsigned16(tableAddress + (index * 2) + 1);
             }
             return result;
         }

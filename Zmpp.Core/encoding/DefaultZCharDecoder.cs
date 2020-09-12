@@ -266,7 +266,7 @@ namespace Zmpp.Core.Encoding
 
             do
             {
-                zword = memory.readUnsigned16(currentAddr);
+                zword = memory.ReadUnsigned16(currentAddr);
                 byteList.Add(extractZEncodedBytes(zword));
                 currentAddr += 2; // increment pointer
 
@@ -296,7 +296,7 @@ namespace Zmpp.Core.Encoding
             int currentAddress = address;
             do
             {
-                zword = memory.readUnsigned16(currentAddress);
+                zword = memory.ReadUnsigned16(currentAddress);
                 currentAddress += 2;
             } while (!isEndWord(zword));
             return currentAddress - address;

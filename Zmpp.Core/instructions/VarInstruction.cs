@@ -179,7 +179,7 @@ namespace Zmpp.Core.Instructions
             int wordIndex = getSignedValue(1);
             int memAddress = (array + 2 * wordIndex) & 0xffff;
             char value = getUnsignedValue(2);
-            getMachine().writeUnsigned16(memAddress, value);
+            getMachine().WriteUnsigned16(memAddress, value);
             nextInstruction();
         }
 
@@ -192,7 +192,7 @@ namespace Zmpp.Core.Instructions
             int byteIndex = getSignedValue(1);
             int memAddress = (array + byteIndex) & 0xffff;
             int value = getUnsignedValue(2);
-            getMachine().writeUnsigned8(memAddress, (char)(value & 0xff));
+            getMachine().WriteUnsigned8(memAddress, (char)(value & 0xff));
             nextInstruction();
         }
 
@@ -401,7 +401,7 @@ namespace Zmpp.Core.Instructions
         private int getNumLeftOverChars(char textbuffer)
         {
             return getStoryVersion() >= 5 ?
-              getMachine().readUnsigned8(textbuffer + 1) : 0;
+              getMachine().ReadUnsigned8(textbuffer + 1) : 0;
         }
 
         /// <summary>
@@ -605,8 +605,8 @@ namespace Zmpp.Core.Instructions
             {
                 ITextCursor cursor = screenModel.getTextCursor();
                 int arrayAddr = getUnsignedValue(0);
-                getMachine().writeUnsigned16(arrayAddr, (char)cursor.getLine());
-                getMachine().writeUnsigned16(arrayAddr + 2, (char)cursor.getColumn());
+                getMachine().WriteUnsigned16(arrayAddr, (char)cursor.getLine());
+                getMachine().WriteUnsigned16(arrayAddr + 2, (char)cursor.getColumn());
             }
             nextInstruction();
         }
@@ -634,12 +634,12 @@ namespace Zmpp.Core.Instructions
                 int current;
                 if (isWordTable)
                 {
-                    current = getMachine().readUnsigned16(pointer);
+                    current = getMachine().ReadUnsigned16(pointer);
                     x &= 0xffff;
                 }
                 else
                 {
-                    current = getMachine().readUnsigned8(pointer);
+                    current = getMachine().ReadUnsigned8(pointer);
                     x &= 0xff;
                 }
                 if (current == x)
@@ -766,12 +766,12 @@ namespace Zmpp.Core.Instructions
                 // Clear size bytes of first
                 for (int i = 0; i < size; i++)
                 {
-                    getMachine().writeUnsigned8(first + i, (char)0);
+                    getMachine().WriteUnsigned8(first + i, (char)0);
                 }
             }
             else
             {
-                getMachine().copyArea(first, second, size);
+                getMachine().CopyArea(first, second, size);
             }
             nextInstruction();
         }
@@ -809,7 +809,7 @@ namespace Zmpp.Core.Instructions
                 for (int j = 0; j < width; j++)
                 {
                     int offset = (width * i) + j;
-                    zchar = (char)getMachine().readUnsigned8(zsciiText + offset);
+                    zchar = (char)getMachine().ReadUnsigned8(zsciiText + offset);
                     getMachine().printZsciiChar(zchar);
                 }
                 row += skip + 1;

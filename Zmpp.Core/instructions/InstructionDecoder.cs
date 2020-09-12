@@ -79,7 +79,7 @@ namespace Zmpp.Core.Instructions
         public IInstruction decodeInstruction(int instructionAddress)
         {
             IInstruction instr = null;
-            char byte1 = machine.readUnsigned8(instructionAddress);
+            char byte1 = machine.ReadUnsigned8(instructionAddress);
             InstructionForm form = getForm(byte1);
             switch (form)
             {
@@ -164,8 +164,8 @@ namespace Zmpp.Core.Instructions
               Operand.TYPENUM_SMALL_CONSTANT;
             int operandType2 = (byte1 & BIT_5) != 0 ? Operand.TYPENUM_VARIABLE :
               Operand.TYPENUM_SMALL_CONSTANT;
-            char operand1 = machine.readUnsigned8(instrAddress + 1);
-            char operand2 = machine.readUnsigned8(instrAddress + 2);
+            char operand1 = machine.ReadUnsigned8(instrAddress + 1);
+            char operand2 = machine.ReadUnsigned8(instrAddress + 2);
             int numOperandBytes = LEN_LONG_OPERANDS;
             int currentAddr = instrAddress + LEN_OPCODE + LEN_LONG_OPERANDS;
             //System.out.printf("LONG 2OP, opnum: %d, byte1: %d, addr: $%04x\n",
@@ -192,14 +192,14 @@ namespace Zmpp.Core.Instructions
             if (isVx2(opCount, opcodeNum))
             {
                 operandTypes = joinArrays(
-                    extractOperandTypes(machine.readUnsigned8(instrAddress + 1)),
-                    extractOperandTypes(machine.readUnsigned8(instrAddress + 2)));
+                    extractOperandTypes(machine.ReadUnsigned8(instrAddress + 1)),
+                    extractOperandTypes(machine.ReadUnsigned8(instrAddress + 2)));
                 opTypesOffset = 3;
             }
             else
             {
                 operandTypes =
-                    extractOperandTypes(machine.readUnsigned8(instrAddress + 1));
+                    extractOperandTypes(machine.ReadUnsigned8(instrAddress + 1));
                 opTypesOffset = 2;
             }
             return decodeVarInstruction(instrAddress, opCount, opcodeNum, operandTypes,
@@ -242,8 +242,8 @@ namespace Zmpp.Core.Instructions
         private IInstruction decodeExtended(int instrAddress)
         {
             return decodeVarInstruction(instrAddress, OperandCount.EXT,
-                machine.readUnsigned8(instrAddress + 1),
-                extractOperandTypes(machine.readUnsigned8(instrAddress + 2)), 1, 3, true);
+                machine.ReadUnsigned8(instrAddress + 1),
+                extractOperandTypes(machine.ReadUnsigned8(instrAddress + 2)), 1, 3, true);
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace Zmpp.Core.Instructions
             }
             if (info.isStore())
             {
-                storeVar = machine.readUnsigned8(currentAddr);
+                storeVar = machine.ReadUnsigned8(currentAddr);
                 currentAddr++;
                 storeVarLen = LEN_STORE_VARIABLE;
             }
@@ -412,12 +412,12 @@ namespace Zmpp.Core.Instructions
             {
                 if (operandTypes[i] == Operand.TYPENUM_LARGE_CONSTANT)
                 {
-                    result[i] = machine.readUnsigned16(currentAddr);
+                    result[i] = machine.ReadUnsigned16(currentAddr);
                     currentAddr += 2;
                 }
                 else
                 {
-                    result[i] = machine.readUnsigned8(currentAddr);
+                    result[i] = machine.ReadUnsigned8(currentAddr);
                     currentAddr++;
                 }
             }
@@ -457,7 +457,7 @@ namespace Zmpp.Core.Instructions
         /// <returns>the BranchInfo object</returns>
         private BranchInfo getBranchInfo(int branchInfoAddr)
         {
-            char branchByte1 = machine.readUnsigned8(branchInfoAddr);
+            char branchByte1 = machine.ReadUnsigned8(branchInfoAddr);
             bool branchOnTrue = (branchByte1 & BIT_7) != 0;
             int numOffsetBytes, branchOffset;
             if (isSimpleOffset(branchByte1))
@@ -468,7 +468,7 @@ namespace Zmpp.Core.Instructions
             else
             {
                 numOffsetBytes = 2;
-                char branchByte2 = machine.readUnsigned8(branchInfoAddr + 1);
+                char branchByte2 = machine.ReadUnsigned8(branchInfoAddr + 1);
                 //Console.Out.WriteLine("14 Bit offset, bracnh byte1: %02x byte2: %02x\n",
                 //                  (int) branchByte1, (int) branchByte2);
                 branchOffset =
@@ -512,8 +512,8 @@ namespace Zmpp.Core.Instructions
         private char getOperandAt(int operandAddress, int operandType)
         {
             return operandType == Operand.TYPENUM_LARGE_CONSTANT ?
-              machine.readUnsigned16(operandAddress) :
-              machine.readUnsigned8(operandAddress);
+              machine.ReadUnsigned16(operandAddress) :
+              machine.ReadUnsigned8(operandAddress);
         }
 
         /// <summary>

@@ -30,14 +30,14 @@
 namespace Zmpp.Core
 {
     /// <summary>
-    /// Attributes for the file header flags.
+    /// Specifies attributes for the story file header.
     /// </summary>
     public enum StoryFileHeaderAttribute
     {
-        DEFAULT_FONT_IS_VARIABLE,
-        SCORE_GAME, SUPPORTS_STATUSLINE, SUPPORTS_SCREEN_SPLITTING, // V3 only
-        TRANSCRIPTING, FORCE_FIXED_FONT, SUPPORTS_TIMED_INPUT,
-        SUPPORTS_FIXED_FONT, SUPPORTS_ITALIC, SUPPORTS_BOLD,
-        SUPPORTS_COLOURS, USE_MOUSE
+        DefaultFontIsVariable,
+        ScoreGame, SupportsStatusLine, SupportsScreenSplitting, // V3 only
+        Transcripting, ForceFixedFont, SupportsTimedInput,
+        SupportsFixedFont, SupportsItalic, SupportsBold,
+        SupportsColours, UseMouse
     };
 }

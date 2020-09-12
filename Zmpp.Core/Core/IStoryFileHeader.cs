@@ -32,77 +32,71 @@ namespace Zmpp.Core
     using System;
 
     /// <summary>
-    /// This interface defines the structure of a story file header in the Z-machine.
-    /// It is designed as a read only view to the byte array containing the
-    /// story file data.
-    /// By this means, changes in the memory map will be implicitly change
-    /// the header structure.
+    /// Manages read and write access to the story file header.
     /// </summary>
     public interface IStoryFileHeader
     {
         /// <summary>
-        /// Returns the story file version.
+        /// Gets the story file version.
         /// </summary>
-        /// <returns>the story file version</returns>
-        int getVersion();
+        int Version { get; }
 
         /// <summary>
-        /// Returns this game's serial number.
+        /// Gets the story file serial number.
         /// </summary>
-        /// <returns>the serial number</returns>
-        String getSerialNumber();
+        String SerialNumber { get; }
 
         /// <summary>
-        /// Returns this story file's length.
+        /// Gets the story file length.
         /// </summary>
-        /// <returns>the file length</returns>
-        int getFileLength();
+        int FileLength { get; }
+
+        /// <summary>
+        /// Gets the address of the custom Unicode translation table.
+        /// </summary>
+        char CustomAccentTableAddress { get; }
 
         /// <summary>
         /// Sets the interpreter version.
         /// </summary>
-        /// <param name="version">the version</param>
-        void setInterpreterVersion(int version);
+        /// <param name="version">The version.</param>
+        void SetInterpreterVersion(int version);
 
         /// <summary>
-        /// Sets the font width in width of a '0'.
+        /// Sets the font width.
         /// </summary>
-        /// <param name="units">the number of units in widths of a '0'</param>
-        void setFontWidth(int units);
+        /// <param name="units">The number of units in width of a '0'.</param>
+        void SetFontWidth(int units);
 
         /// <summary>
-        /// Sets the font height in width of a '0'.
+        /// Sets the font height.
         /// </summary>
-        /// <param name="units">the number of units in heights of a '0'</param>
-        void setFontHeight(int units);
+        /// <param name="units">The number of units in height of a '0'.</param>
+        void SetFontHeight(int units);
 
         /// <summary>
         /// Sets the mouse coordinates.
         /// </summary>
-        /// <param name="x">the x coordinate</param>
-        /// <param name="y">the y coordinate</param>
-        void setMouseCoordinates(int x, int y);
-
-        /// <summary>
-        /// Returns the address of the cutom unicode translation table.
-        /// </summary>
-        /// <returns>the address of the custom unicode translation table</returns>
-        char getCustomAccentTable();
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        void SetMouseCoordinates(int x, int y);
 
         #region Attributes
-        /// <summary>
-        /// Enables the specified attribute.
-        /// </summary>
-        /// <param name="attribute">the attribute to set</param>
-        /// <param name="flag">the value</param>
-        void setEnabled(StoryFileHeaderAttribute attribute, bool flag);
 
         /// <summary>
-        /// Checks the enabled status of the specified attribute
+        /// Sets the enabled status of the specified attribute.
         /// </summary>
-        /// <param name="attribute">the attribute name</param>
-        /// <returns>true if enabled, false otherwise</returns>
-        bool isEnabled(StoryFileHeaderAttribute attribute);
+        /// <param name="attribute">The story file header attribute.</param>
+        /// <param name="flag">The enabled status.</param>
+        void SetEnabled(StoryFileHeaderAttribute attribute, bool flag);
+
+        /// <summary>
+        /// Gets the enabled status of the specified attribute.
+        /// </summary>
+        /// <param name="attribute">The story file header attribute.</param>
+        /// <returns>true if the attribute is enabled; otherwise, false.</returns>
+        bool IsEnabled(StoryFileHeaderAttribute attribute);
+
         #endregion
     }
 }

@@ -440,7 +440,7 @@ namespace Zmpp.Core.Instructions
             int arrayAddress = getUnsignedValue(0);
             int index = getUnsignedValue(1);
             int memAddress = (arrayAddress + index) & 0xffff;
-            storeUnsignedResult((char)getMachine().readUnsigned8(memAddress));
+            storeUnsignedResult((char)getMachine().ReadUnsigned8(memAddress));
             nextInstruction();
         }
 
@@ -452,7 +452,7 @@ namespace Zmpp.Core.Instructions
             int arrayAddress = getUnsignedValue(0);
             int index = getUnsignedValue(1);
             int memAddress = (arrayAddress + 2 * index) & 0xffff;
-            storeUnsignedResult(getMachine().readUnsigned16(memAddress));
+            storeUnsignedResult(getMachine().ReadUnsigned16(memAddress));
             nextInstruction();
         }
 

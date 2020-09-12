@@ -33,7 +33,7 @@ namespace Zmpp.Core.Iff
     using System.Collections.Generic;
     using System.Text;
     using static Zmpp.Core.MemoryUtil;
-    using DefaultMemory = Zmpp.Core.DefaultMemory;
+    using Memory = Zmpp.Core.Memory;
     using IMemory = Zmpp.Core.IMemory;
 
     /// <summary>
@@ -109,7 +109,7 @@ namespace Zmpp.Core.Iff
 
         public bool isValid() { return true; }
 
-        public IMemory getMemory() { return new DefaultMemory(getBytes()); }
+        public IMemory getMemory() { return new Memory(getBytes()); }
 
         /// <summary>
         /// Returns the data of this chunk.
@@ -119,17 +119,17 @@ namespace Zmpp.Core.Iff
         {
             int datasize = CHUNK_HEADER_LENGTH + getSize();
             byte[] data = new byte[datasize];
-            IMemory memory = new DefaultMemory(data);
-            memory.writeUnsigned8(0, 'F');
-            memory.writeUnsigned8(1, 'O');
-            memory.writeUnsigned8(2, 'R');
-            memory.writeUnsigned8(3, 'M');
-            writeUnsigned32(memory, 4, getSize());
+            IMemory memory = new Memory(data);
+            memory.WriteUnsigned8(0, 'F');
+            memory.WriteUnsigned8(1, 'O');
+            memory.WriteUnsigned8(2, 'R');
+            memory.WriteUnsigned8(3, 'M');
+            WriteUnsigned32(memory, 4, getSize());
 
             int offset = CHUNK_HEADER_LENGTH;
 
             // Write sub id
-            memory.copyBytesFromArray(subId, 0, offset, subId.Length);
+            memory.CopyBytesFromArray(subId, 0, offset, subId.Length);
             offset += subId.Length;
 
             // Write sub chunk data
@@ -142,21 +142,21 @@ namespace Zmpp.Core.Iff
                 int chunkSize = chunk.getSize();
 
                 // Write id
-                memory.copyBytesFromArray(chunkId, 0, offset, chunkId.Length);
+                memory.CopyBytesFromArray(chunkId, 0, offset, chunkId.Length);
                 offset += chunkId.Length;
 
                 // Write chunk size
-                writeUnsigned32(memory, offset, chunkSize);
+                WriteUnsigned32(memory, offset, chunkSize);
                 offset += 4; // add the size word length
 
                 // Write chunk data
                 IMemory chunkMem = chunk.getMemory();
-                memory.copyBytesFromMemory(chunkMem, CHUNK_HEADER_LENGTH, offset, chunkSize);
+                memory.CopyBytesFromMemory(chunkMem, CHUNK_HEADER_LENGTH, offset, chunkSize);
                 offset += chunkSize;
                 // Pad if necessary
                 if ((chunkSize % 2) != 0)
                 {
-                    memory.writeUnsigned8(offset++, (char)0);
+                    memory.WriteUnsigned8(offset++, (char)0);
                 }
             }
             return data;

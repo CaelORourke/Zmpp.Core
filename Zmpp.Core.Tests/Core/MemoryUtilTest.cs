@@ -38,48 +38,44 @@ namespace Zmpp.Core.Tests
     [TestClass]
     public class MemoryUtilTest
     {
-        public MemoryUtilTest()
-        {
-        }
-
         [TestMethod]
-        public void testToUnsigned16()
+        public void ToUnsigned16()
         {
             // arrange
 
             // act
-            var result = MemoryUtil.toUnsigned16(1234);
+            var result = MemoryUtil.ToUnsigned16(1234);
 
             // assert
             Assert.AreEqual((char)1234, result);
         }
 
         [TestMethod]
-        public void testReadUnsigned32()
+        public void ReadUnsigned32()
         {
             // arrange
             byte[] data32 = { (byte)0xd7, (byte)0x4b, (byte)0xd7, (byte)0x53 };
-            IMemory memory = new DefaultMemory(data32);
+            IMemory memory = new Memory(data32);
 
             // act
-            var result = MemoryUtil.readUnsigned32(memory, 0x00);
+            var result = MemoryUtil.ReadUnsigned32(memory, 0x00);
 
             // assert
             Assert.AreEqual(0xd74bd753L, result);
         }
 
         [TestMethod]
-        public void testWriteUnsigned32()
+        public void WriteUnsigned32()
         {
             // arrange
             byte[] data32 = { (byte)0xd7, (byte)0x4b, (byte)0xd7, (byte)0x53 };
-            IMemory memory = new DefaultMemory(data32);
+            IMemory memory = new Memory(data32);
 
             // act
-            MemoryUtil.writeUnsigned32(memory, 0x00, 0xffffffffL);
-            var result = MemoryUtil.readUnsigned32(memory, 0x00);
-            MemoryUtil.writeUnsigned32(memory, 0x00, 0xf0f00f0fL);
-            var result2 = MemoryUtil.readUnsigned32(memory, 0x00);
+            MemoryUtil.WriteUnsigned32(memory, 0x00, 0xffffffffL);
+            var result = MemoryUtil.ReadUnsigned32(memory, 0x00);
+            MemoryUtil.WriteUnsigned32(memory, 0x00, 0xf0f00f0fL);
+            var result2 = MemoryUtil.ReadUnsigned32(memory, 0x00);
 
             // assert
             Assert.AreEqual(0x00000000ffffffffL, result);
@@ -87,16 +83,16 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testSignedToUnsigned16()
+        public void SignedToUnsigned16()
         {
             // arrange
 
             // act
-            var result = MemoryUtil.signedToUnsigned16((short)0);
-            var result2 = MemoryUtil.signedToUnsigned16((short)-1);
-            var result3 = MemoryUtil.signedToUnsigned16((short)-2);
-            var result4 = MemoryUtil.signedToUnsigned16((short)32767);
-            var result5 = MemoryUtil.signedToUnsigned16((short)-32768);
+            var result = MemoryUtil.SignedToUnsigned16((short)0);
+            var result2 = MemoryUtil.SignedToUnsigned16((short)-1);
+            var result3 = MemoryUtil.SignedToUnsigned16((short)-2);
+            var result4 = MemoryUtil.SignedToUnsigned16((short)32767);
+            var result5 = MemoryUtil.SignedToUnsigned16((short)-32768);
 
             // assert
             Assert.AreEqual(0, result);
@@ -107,16 +103,16 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testUnsignedToSigned16()
+        public void UnsignedToSigned16()
         {
             // arrange
 
             // act
-            var result = MemoryUtil.unsignedToSigned16((char)0);
-            var result2 = MemoryUtil.unsignedToSigned16((char)1);
-            var result3 = MemoryUtil.unsignedToSigned16((char)32768);
-            var result4 = MemoryUtil.unsignedToSigned16((char)32767);
-            var result5 = MemoryUtil.unsignedToSigned16((char)65535);
+            var result = MemoryUtil.UnsignedToSigned16((char)0);
+            var result2 = MemoryUtil.UnsignedToSigned16((char)1);
+            var result3 = MemoryUtil.UnsignedToSigned16((char)32768);
+            var result4 = MemoryUtil.UnsignedToSigned16((char)32767);
+            var result5 = MemoryUtil.UnsignedToSigned16((char)65535);
 
             // assert
             Assert.AreEqual(0, result);
@@ -127,17 +123,17 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testUnsignedToSigned8()
+        public void UnsignedToSigned8()
         {
             // arrange
 
             // act
-            var result = MemoryUtil.unsignedToSigned8((char)0);
-            var result2 = MemoryUtil.unsignedToSigned8((char)1);
-            var result3 = MemoryUtil.unsignedToSigned8((char)128);
-            var result4 = MemoryUtil.unsignedToSigned8((char)127);
-            var result5 = MemoryUtil.unsignedToSigned8((char)0xff);
-            var result6 = MemoryUtil.unsignedToSigned8((char)0x10ff);
+            var result = MemoryUtil.UnsignedToSigned8((char)0);
+            var result2 = MemoryUtil.UnsignedToSigned8((char)1);
+            var result3 = MemoryUtil.UnsignedToSigned8((char)128);
+            var result4 = MemoryUtil.UnsignedToSigned8((char)127);
+            var result5 = MemoryUtil.UnsignedToSigned8((char)0xff);
+            var result6 = MemoryUtil.UnsignedToSigned8((char)0x10ff);
 
             // assert
             Assert.AreEqual(0, result);

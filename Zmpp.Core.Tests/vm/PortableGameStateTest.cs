@@ -65,7 +65,7 @@ namespace Zmpp.Core.Vm.Tests
             fileheader = new Mock<IStoryFileHeader>();
 
             savedata = File.ReadAllBytes("testfiles/leathersave.ifzs");
-            IMemory memaccess = new DefaultMemory(savedata);
+            IMemory memaccess = new Memory(savedata);
             formChunk = new DefaultFormChunk(memaccess);
             gameState = new PortableGameState();
         }
@@ -119,10 +119,10 @@ namespace Zmpp.Core.Vm.Tests
             machine.Setup(m => m.getSP()).Returns((char)4);
             machine.Setup(m => m.getStackElement(It.IsAny<int>())).Returns((char)42);
             machine.Setup(m => m.getRelease()).Returns(42);
-            machine.Setup(m => m.readUnsigned16(StoryFileHeaderBase.CHECKSUM)).Returns((char)4712);
-            machine.Setup(m => m.readUnsigned16(StoryFileHeaderBase.STATIC_MEM)).Returns((char)12345);
-            fileheader.Setup(fh => fh.getSerialNumber()).Returns("850101");
-            machine.Setup(m => m.readUnsigned8(It.IsAny<int>())).Returns((char)(short)0);
+            machine.Setup(m => m.ReadUnsigned16(StoryFileHeaderAddress.Checksum)).Returns((char)4712);
+            machine.Setup(m => m.ReadUnsigned16(StoryFileHeaderAddress.StaticMem)).Returns((char)12345);
+            fileheader.Setup(fh => fh.SerialNumber).Returns("850101");
+            machine.Setup(m => m.ReadUnsigned8(It.IsAny<int>())).Returns((char)(short)0);
 
             // act
             gameState.captureMachineState(machine.Object, (char)4711);
@@ -141,10 +141,10 @@ namespace Zmpp.Core.Vm.Tests
             machine.Verify(m => m.getSP(), Times.Once());
             //machine.Verify(m => m.getStackElement(It.IsAny<int>()));//allowing
             machine.Verify(m => m.getRelease(), Times.Once());
-            machine.Verify(m => m.readUnsigned16(StoryFileHeaderBase.CHECKSUM), Times.Once());
-            machine.Verify(m => m.readUnsigned16(StoryFileHeaderBase.STATIC_MEM), Times.Once());
+            machine.Verify(m => m.ReadUnsigned16(StoryFileHeaderAddress.Checksum), Times.Once());
+            machine.Verify(m => m.ReadUnsigned16(StoryFileHeaderAddress.StaticMem), Times.Once());
             //fileheader.Verify(fh => fh.getSerialNumber(), Times.Once());
-            fileheader.Verify(fh => fh.getSerialNumber(), Times.AtLeastOnce());// HACK: The original test seemed wrong!
+            fileheader.Verify(fh => fh.SerialNumber, Times.AtLeastOnce());// HACK: The original test seemed wrong!
             //machine.Verify(m => m.copyBytesToArray(It.IsAny<byte[]>(), 0, 0, 12345));//allowing
             //machine.Verify(m => m.readUnsigned8(It.IsAny<int>()));//allowing
             Assert.AreEqual(4711, result);

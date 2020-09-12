@@ -68,13 +68,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18a5, result); // 'a' + 2 pad
@@ -100,13 +100,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e5, result); // 'ab' + pad
@@ -134,13 +134,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e8, result); // 'abc'
@@ -166,13 +166,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x10c5, result); // Shift-4 + 'a' + Pad
@@ -199,13 +199,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e4, result); // 'ab' + Shift 4
@@ -230,13 +230,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e5, result); // 'ab' + Shift 5
@@ -267,13 +267,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -302,13 +302,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -335,13 +335,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -383,13 +383,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -423,13 +423,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode(realmem, sourceAddress, length, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e8, result); // 'abc'
@@ -450,15 +450,15 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
 
             // we expect to have an end word, padded out with shift 5's
             encoderV4.encode("a", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18a5, result); // 'a' + 2 pad
@@ -479,13 +479,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("ab", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e5, result); // 'ab' + pad
@@ -506,13 +506,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("abcd", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e8, result); // 'abc'
@@ -534,13 +534,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("a", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18a5, result); // 'a' + Pad
@@ -561,13 +561,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("abc", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e8, result); // 'abc'
@@ -586,13 +586,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("ab3", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e5, result); // 'ab' + Shift 5
@@ -616,13 +616,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("@", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -647,13 +647,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("~", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -675,13 +675,13 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
             encoderV4.encode("a~", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -710,7 +710,7 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
 
@@ -718,9 +718,9 @@ namespace Zmpp.Core.Encoding.Tests
             // to ensure that the dictionary is cropped and the characters
             // that exceed the buffer are ommitted
             encoderV4.encode("@abcdef", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
 
@@ -741,7 +741,7 @@ namespace Zmpp.Core.Encoding.Tests
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
-            IMemory realmem = new DefaultMemory(data);
+            IMemory realmem = new Memory(data);
 
             // act
 
@@ -749,9 +749,9 @@ namespace Zmpp.Core.Encoding.Tests
             // so we need to ommit that escape sequence completely, padding
             // out the rest of the string
             encoderV4.encode("abcdef@", realmem, targetAddress);
-            var result = realmem.readUnsigned16(targetAddress);
-            var result2 = realmem.readUnsigned16(targetAddress + 2);
-            var result3 = realmem.readUnsigned16(targetAddress + 4);
+            var result = realmem.ReadUnsigned16(targetAddress);
+            var result2 = realmem.ReadUnsigned16(targetAddress + 2);
+            var result3 = realmem.ReadUnsigned16(targetAddress + 4);
 
             // assert
             Assert.AreEqual(0x18e8, result); // 'abc'

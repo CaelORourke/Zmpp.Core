@@ -72,7 +72,7 @@ namespace Zmpp.Core.Iff
 
             // Determine the sub id
             subId = new byte[CHUNK_ID_LENGTH];
-            memory.copyBytesToArray(subId, 0, CHUNK_HEADER_LENGTH, CHUNK_ID_LENGTH);
+            memory.CopyBytesToArray(subId, 0, CHUNK_HEADER_LENGTH, CHUNK_ID_LENGTH);
         }
 
         /// <summary>

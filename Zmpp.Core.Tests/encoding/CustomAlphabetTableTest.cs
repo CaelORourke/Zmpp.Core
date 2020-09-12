@@ -49,8 +49,8 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(1000)).Returns((char)3);
-            memory.Setup(m => m.readUnsigned8(1006)).Returns((char)2);
+            memory.Setup(m => m.ReadUnsigned8(1000)).Returns((char)3);
+            memory.Setup(m => m.ReadUnsigned8(1006)).Returns((char)2);
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
@@ -59,8 +59,8 @@ namespace Zmpp.Core.Encoding.Tests
             var result3 = alphabetTable.getA0Char((byte)0);
 
             // assert
-            memory.Verify(m => m.readUnsigned8(1000), Times.Once());
-            memory.Verify(m => m.readUnsigned8(1006), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(1000), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(1006), Times.Once());
             Assert.AreEqual(3, result);
             Assert.AreEqual(2, result2);
             Assert.AreEqual(' ', result3);
@@ -71,8 +71,8 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(1026)).Returns((char)3);
-            memory.Setup(m => m.readUnsigned8(1032)).Returns((char)2);
+            memory.Setup(m => m.ReadUnsigned8(1026)).Returns((char)3);
+            memory.Setup(m => m.ReadUnsigned8(1032)).Returns((char)2);
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
@@ -81,8 +81,8 @@ namespace Zmpp.Core.Encoding.Tests
             var result3 = alphabetTable.getA1Char((byte)0);
 
             // assert
-            memory.Verify(m => m.readUnsigned8(1026), Times.Once());
-            memory.Verify(m => m.readUnsigned8(1032), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(1026), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(1032), Times.Once());
             Assert.AreEqual(3, result);
             Assert.AreEqual(2, result2);
             Assert.AreEqual(' ', result3);
@@ -93,8 +93,8 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(1052)).Returns((char)3);
-            memory.Setup(m => m.readUnsigned8(1058)).Returns((char)2);
+            memory.Setup(m => m.ReadUnsigned8(1052)).Returns((char)3);
+            memory.Setup(m => m.ReadUnsigned8(1058)).Returns((char)2);
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
@@ -104,8 +104,8 @@ namespace Zmpp.Core.Encoding.Tests
             var result4 = alphabetTable.getA2Char((byte)7);
 
             // assert
-            memory.Verify(m => m.readUnsigned8(1052), Times.Once());
-            memory.Verify(m => m.readUnsigned8(1058), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(1052), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(1058), Times.Once());
             Assert.AreEqual(3, result);
             Assert.AreEqual(2, result2);
             Assert.AreEqual(' ', result3);
@@ -117,14 +117,14 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(It.IsInRange<int>(1000, 1026, Range.Inclusive))).Returns('a');
+            memory.Setup(m => m.ReadUnsigned8(It.IsInRange<int>(1000, 1026, Range.Inclusive))).Returns('a');
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
             var result = alphabetTable.getA0CharCode('@');
 
             // assert
-            memory.Verify(m => m.readUnsigned8(It.IsInRange<int>(1000, 1026, Range.Inclusive)), Times.AtLeastOnce());
+            memory.Verify(m => m.ReadUnsigned8(It.IsInRange<int>(1000, 1026, Range.Inclusive)), Times.AtLeastOnce());
             Assert.AreEqual(-1, result);
         }
 
@@ -133,14 +133,14 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(It.IsInRange<int>(1026, 1052, Range.Inclusive))).Returns('a');
+            memory.Setup(m => m.ReadUnsigned8(It.IsInRange<int>(1026, 1052, Range.Inclusive))).Returns('a');
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
             var result = alphabetTable.getA1CharCode('@');
 
             // assert
-            memory.Verify(m => m.readUnsigned8(It.IsInRange<int>(1026, 1052, Range.Inclusive)), Times.AtLeastOnce());
+            memory.Verify(m => m.ReadUnsigned8(It.IsInRange<int>(1026, 1052, Range.Inclusive)), Times.AtLeastOnce());
             Assert.AreEqual(-1, result);
         }
 
@@ -149,14 +149,14 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(It.Is<int>(i => i >= 1052 && i <= 1078 && i % 2 == 0))).Returns('a');
+            memory.Setup(m => m.ReadUnsigned8(It.Is<int>(i => i >= 1052 && i <= 1078 && i % 2 == 0))).Returns('a');
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
             var result = alphabetTable.getA2CharCode('@');
 
             // assert
-            memory.Verify(m => m.readUnsigned8(It.Is<int>(i => i >= 1052 && i <= 1078 && i % 2 == 0)), Times.AtLeastOnce());
+            memory.Verify(m => m.ReadUnsigned8(It.Is<int>(i => i >= 1052 && i <= 1078 && i % 2 == 0)), Times.AtLeastOnce());
             Assert.AreEqual(-1, result);
         }
     }

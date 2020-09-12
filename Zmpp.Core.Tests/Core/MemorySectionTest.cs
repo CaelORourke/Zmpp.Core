@@ -42,26 +42,22 @@ namespace Zmpp.Core.Tests
         private const int OFFSET = 36;
         private const int LENGTH = 6;
 
-        public MemorySectionTest()
-        {
-        }
-
         [TestMethod]
-        public void testGetLength()
+        public void Length()
         {
             // arrange
             var memory = new Mock<IMemory>();
             MemorySection section = new MemorySection(memory.Object, OFFSET, LENGTH);
 
             // act
-            var result = section.getLength();
+            var result = section.Length;
 
             // assert
             Assert.AreEqual(LENGTH, result);
         }
 
         [TestMethod]
-        public void testWriteUnsignedShort()
+        public void WriteUnsignedShort()
         {
             // arrange
             int address = 12;
@@ -69,14 +65,14 @@ namespace Zmpp.Core.Tests
             MemorySection section = new MemorySection(memory.Object, OFFSET, LENGTH);
 
             // act
-            section.writeUnsigned16(address, (char)512);
+            section.WriteUnsigned16(address, (char)512);
 
             // assert
-            memory.Verify(m => m.writeUnsigned16(address + OFFSET, (char)512), Times.Once());
+            memory.Verify(m => m.WriteUnsigned16(address + OFFSET, (char)512), Times.Once());
         }
 
         [TestMethod]
-        public void testWriteUnsignedByte()
+        public void WriteUnsignedByte()
         {
             // arrange
             int address = 12;
@@ -84,14 +80,14 @@ namespace Zmpp.Core.Tests
             MemorySection section = new MemorySection(memory.Object, OFFSET, LENGTH);
 
             // act
-            section.writeUnsigned8(address, (char)120);
+            section.WriteUnsigned8(address, (char)120);
 
             // assert
-            memory.Verify(m => m.writeUnsigned8(address + OFFSET, (char)120), Times.Once());
+            memory.Verify(m => m.WriteUnsigned8(address + OFFSET, (char)120), Times.Once());
         }
 
         [TestMethod]
-        public void testCopyBytesToArray()
+        public void CopyBytesToArray()
         {
             // arrange
             byte[] dstData = new byte[5];
@@ -102,14 +98,14 @@ namespace Zmpp.Core.Tests
             MemorySection section = new MemorySection(memory.Object, OFFSET, LENGTH);
 
             // act
-            section.copyBytesToArray(dstData, dstOffset, srcOffset, numBytes);
+            section.CopyBytesToArray(dstData, dstOffset, srcOffset, numBytes);
 
             // assert
-            memory.Verify(m => m.copyBytesToArray(dstData, dstOffset, OFFSET + srcOffset, numBytes), Times.Once());
+            memory.Verify(m => m.CopyBytesToArray(dstData, dstOffset, OFFSET + srcOffset, numBytes), Times.Once());
         }
 
         [TestMethod]
-        public void testCopyBytesFromArray()
+        public void CopyBytesFromArray()
         {
             // arrange
             byte[] srcData = new byte[5];
@@ -120,14 +116,14 @@ namespace Zmpp.Core.Tests
             MemorySection section = new MemorySection(memory.Object, OFFSET, LENGTH);
 
             // act
-            section.copyBytesFromArray(srcData, srcOffset, dstOffset, numBytes);
+            section.CopyBytesFromArray(srcData, srcOffset, dstOffset, numBytes);
 
             // assert
-            memory.Verify(m => m.copyBytesFromArray(srcData, srcOffset, OFFSET + dstOffset, numBytes), Times.Once());
+            memory.Verify(m => m.CopyBytesFromArray(srcData, srcOffset, OFFSET + dstOffset, numBytes), Times.Once());
         }
 
         [TestMethod]
-        public void testCopyBytesFromMemory()
+        public void CopyBytesFromMemory()
         {
             // arrange
             int srcOffset = 2;
@@ -137,14 +133,14 @@ namespace Zmpp.Core.Tests
             MemorySection section = new MemorySection(memory.Object, OFFSET, LENGTH);
 
             // act
-            section.copyBytesFromMemory(memory.Object, srcOffset, dstOffset, numBytes);
+            section.CopyBytesFromMemory(memory.Object, srcOffset, dstOffset, numBytes);
 
             // assert
-            memory.Verify(m => m.copyBytesFromMemory(memory.Object, srcOffset, OFFSET + dstOffset, numBytes), Times.Once());
+            memory.Verify(m => m.CopyBytesFromMemory(memory.Object, srcOffset, OFFSET + dstOffset, numBytes), Times.Once());
         }
 
         [TestMethod]
-        public void testCopyArea()
+        public void CopyArea()
         {
             // arrange
             int src = 1;
@@ -154,10 +150,10 @@ namespace Zmpp.Core.Tests
             MemorySection section = new MemorySection(memory.Object, OFFSET, LENGTH);
 
             // act
-            section.copyArea(src, dst, numBytes);
+            section.CopyArea(src, dst, numBytes);
 
             // assert
-            memory.Verify(m => m.copyArea(OFFSET + src, OFFSET + dst, numBytes), Times.Once());
+            memory.Verify(m => m.CopyArea(OFFSET + src, OFFSET + dst, numBytes), Times.Once());
         }
     }
 }

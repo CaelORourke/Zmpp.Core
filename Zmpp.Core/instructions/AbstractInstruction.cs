@@ -156,7 +156,7 @@ namespace Zmpp.Core.Instructions
             if (operands[operandNum].getType() == OperandType.SMALL_CONSTANT) {
               return MemoryUtil.unsignedToSigned8(getUnsignedValue(operandNum));
             }*/
-            return MemoryUtil.unsignedToSigned16(getUnsignedValue(operandNum));
+            return MemoryUtil.UnsignedToSigned16(getUnsignedValue(operandNum));
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Zmpp.Core.Instructions
         /// <returns>the signed value</returns>
         protected short getSignedVarValue(char varnum)
         {
-            return MemoryUtil.unsignedToSigned16(getMachine().getVariable(varnum));
+            return MemoryUtil.UnsignedToSigned16(getMachine().getVariable(varnum));
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Zmpp.Core.Instructions
         /// <param name="value">the signed value</param>
         protected void setSignedVarValue(char varnum, short value)
         {
-            getMachine().setVariable(varnum, MemoryUtil.signedToUnsigned16(value));
+            getMachine().setVariable(varnum, MemoryUtil.SignedToUnsigned16(value));
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Zmpp.Core.Instructions
         /// <param name="value">the value to store</param>
         protected void storeSignedResult(short value)
         {
-            storeUnsignedResult(MemoryUtil.signedToUnsigned16(value));
+            storeUnsignedResult(MemoryUtil.SignedToUnsigned16(value));
         }
 
         #endregion

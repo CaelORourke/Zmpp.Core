@@ -55,7 +55,7 @@ namespace Zmpp.Core.Iff.Tests
             };
             try
             {
-                new DefaultFormChunk(new DefaultMemory(illegalData));
+                new DefaultFormChunk(new Memory(illegalData));
                 Assert.Fail("IOException should be thrown on an illegal IFF file");
             }
             catch (IOException expected)
@@ -69,7 +69,7 @@ namespace Zmpp.Core.Iff.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
             IFormChunk formChunk = new DefaultFormChunk(mem);
 
             // act
@@ -86,7 +86,7 @@ namespace Zmpp.Core.Iff.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
             IFormChunk formChunk = new DefaultFormChunk(mem);
 
             // act
@@ -119,7 +119,7 @@ namespace Zmpp.Core.Iff.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
             IFormChunk formChunk = new DefaultFormChunk(mem);
 
             // act
@@ -136,7 +136,7 @@ namespace Zmpp.Core.Iff.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
             IFormChunk formChunk = new DefaultFormChunk(mem);
 
             // act

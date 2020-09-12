@@ -74,24 +74,24 @@ namespace Zmpp.Core.Vm
 
         public int getNumberOfSeparators()
         {
-            return memory.readUnsigned8(address);
+            return memory.ReadUnsigned8(address);
         }
 
         public byte getSeparator(int i)
         {
-            return (byte)memory.readUnsigned8(address + i + 1);
+            return (byte)memory.ReadUnsigned8(address + i + 1);
         }
 
         public int getEntryLength()
         {
-            return memory.readUnsigned8(address + getNumberOfSeparators() + 1);
+            return memory.ReadUnsigned8(address + getNumberOfSeparators() + 1);
         }
 
         public short getNumberOfEntries()
         {
             // The number of entries is a signed value so that we can recognize
             // a negative number
-            return unsignedToSigned16(memory.readUnsigned16(address + getNumberOfSeparators() + 2));
+            return UnsignedToSigned16(memory.ReadUnsigned16(address + getNumberOfSeparators() + 2));
         }
 
         public int getEntryAddress(int entryNum)
@@ -141,7 +141,7 @@ namespace Zmpp.Core.Vm
         protected byte[] truncateTokenToBytes(String token)
         {
             byte[] result = new byte[sizes.getNumEntryBytes()];
-            IMemory buffer = new DefaultMemory(result);
+            IMemory buffer = new Memory(result);
             encoder.encode(token, buffer, 0);
             return result;
         }
@@ -158,7 +158,7 @@ namespace Zmpp.Core.Vm
             for (int i = 0; i < tokenBytes.Length; i++)
             {
                 int tokenByte = tokenBytes[i] & 0xff;
-                int c = (getMemory().readUnsigned8(entryAddress + i) & 0xff);
+                int c = (getMemory().ReadUnsigned8(entryAddress + i) & 0xff);
                 if (tokenByte != c)
                 {
                     return tokenByte - c;

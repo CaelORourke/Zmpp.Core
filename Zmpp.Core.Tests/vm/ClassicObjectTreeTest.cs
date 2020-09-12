@@ -49,8 +49,8 @@ namespace Zmpp.Core.Vm.Tests
 		{
 			// arrange
 			byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-			IMemory minizorkmap = new DefaultMemory(data);
-			IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+			IMemory minizorkmap = new Memory(data);
+			IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
 			// act
 			objectTree.setParent(OBJECT1, 38);
@@ -71,8 +71,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.isAttributeSet(OBJECT1, 5);
@@ -102,8 +102,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.isAttributeSet(OBJECT1, 5);
@@ -120,8 +120,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
 
@@ -153,10 +153,10 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
-            Abbreviations abbreviations = new Abbreviations(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.ABBREVIATIONS));
+            Abbreviations abbreviations = new Abbreviations(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.Abbreviations));
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
             IAlphabetTable alphabetTable = new DefaultAlphabetTable();
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
@@ -175,8 +175,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.getPropertyAddress(OBJECT1, 18);
@@ -194,8 +194,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.getProperty(OBJECT2, 22);
@@ -213,8 +213,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             objectTree.setProperty(OBJECT2, 22, (char)0xc5);
@@ -232,8 +232,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.getNextProperty(OBJECT1, 0);
@@ -251,8 +251,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.getParent(1);
@@ -270,8 +270,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
 
@@ -308,8 +308,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
 
@@ -352,8 +352,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
 
@@ -394,8 +394,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             int lantern = 62;
@@ -412,8 +412,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
 
@@ -447,8 +447,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
 
@@ -483,8 +483,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.getPropertyLength(0x1889);
@@ -498,8 +498,8 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
             var result = objectTree.getPropertyLength(0);

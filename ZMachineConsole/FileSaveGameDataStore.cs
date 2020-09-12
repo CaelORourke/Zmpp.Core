@@ -17,7 +17,7 @@
         public IFormChunk retrieveFormChunk()
         {
             byte[] data = File.ReadAllBytes(fileName);
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
             return new DefaultFormChunk(memory);
         }
 

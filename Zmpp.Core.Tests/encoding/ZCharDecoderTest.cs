@@ -69,8 +69,8 @@ namespace Zmpp.Core.Encoding.Tests
             // arrange
             byte[] hello = { 0x35, 0x51, (byte)0xc6, (byte)0x85 };
             byte[] Hello = { 0x11, (byte)0xaa, (byte)0xc6, (byte)0x34 };
-            IMemory memory1 = new DefaultMemory(hello);
-            IMemory memory2 = new DefaultMemory(Hello);
+            IMemory memory1 = new Memory(hello);
+            IMemory memory2 = new Memory(Hello);
 
             var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
@@ -94,9 +94,9 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             byte[] zork1data = System.IO.File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory mem = new DefaultMemory(zork1data);
+            IMemory mem = new Memory(zork1data);
 
-            IZCharDecoder.AbbreviationsTable abbr = new Abbreviations(mem, mem.readUnsigned16(StoryFileHeaderBase.ABBREVIATIONS));
+            IZCharDecoder.AbbreviationsTable abbr = new Abbreviations(mem, mem.ReadUnsigned16(StoryFileHeaderAddress.Abbreviations));
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
             DefaultAlphabetTable alphabetTable = new DefaultAlphabetTable();
             IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
@@ -159,7 +159,7 @@ namespace Zmpp.Core.Encoding.Tests
                 (byte) 0x28, (byte) 0xd8, (byte) 0xa8, (byte) 0x05,
             };
 
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
 
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
             AlphabetTableV1 alphabetTable = new AlphabetTableV1();
@@ -186,7 +186,7 @@ namespace Zmpp.Core.Encoding.Tests
                 0x35, 0x51, (byte) 0xc6, (byte) 0x85, // hello
                 0x11, (byte) 0xaa, (byte) 0xc6, (byte) 0x34 // Hello
             };
-            IMemory mem = new DefaultMemory(helloAbbrev);
+            IMemory mem = new Memory(helloAbbrev);
 
             var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
             abbrev.Setup(a => a.getWordAddress(2)).Returns(10);
@@ -224,7 +224,7 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned16(0)).Returns((char)0x9865);
+            memory.Setup(m => m.ReadUnsigned16(0)).Returns((char)0x9865);
             char[] data = DefaultZCharDecoder.extractZbytes(memory.Object, 0, 0);
 
             // act
@@ -234,7 +234,7 @@ namespace Zmpp.Core.Encoding.Tests
             var result4 = data[2];
 
             // assert
-            memory.Verify(m => m.readUnsigned16(0), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(0), Times.Once());
             Assert.AreEqual(3, result);
             Assert.AreEqual(6, result2);
             Assert.AreEqual(3, result3);
@@ -246,18 +246,18 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned16(0)).Returns((char)0x5432);
-            memory.Setup(m => m.readUnsigned16(2)).Returns((char)0x1234);
-            memory.Setup(m => m.readUnsigned16(4)).Returns((char)0x9865);
+            memory.Setup(m => m.ReadUnsigned16(0)).Returns((char)0x5432);
+            memory.Setup(m => m.ReadUnsigned16(2)).Returns((char)0x1234);
+            memory.Setup(m => m.ReadUnsigned16(4)).Returns((char)0x9865);
             char[] data = DefaultZCharDecoder.extractZbytes(memory.Object, 0, 0);
 
             // act
             var result = data.Length;
 
             // assert
-            memory.Verify(m => m.readUnsigned16(0), Times.Once());
-            memory.Verify(m => m.readUnsigned16(2), Times.Once());
-            memory.Verify(m => m.readUnsigned16(4), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(0), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(2), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(4), Times.Once());
             Assert.AreEqual(9, result);
         }
 
@@ -280,7 +280,7 @@ namespace Zmpp.Core.Encoding.Tests
             int length = 4;
 
             byte[] data = { (byte)0x35, (byte)0x51, (byte)0x46, (byte)0x86, (byte)0xc6, (byte)0x85 };
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
 
             var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
@@ -304,7 +304,7 @@ namespace Zmpp.Core.Encoding.Tests
             int length = 4;
 
             byte[] data = { (byte)0x34, (byte)0x8a, (byte)0x45, (byte)0xc4 };
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
 
             var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
@@ -329,7 +329,7 @@ namespace Zmpp.Core.Encoding.Tests
             int length = 4;
 
             byte[] data = { (byte)0x34, (byte)0xd1, (byte)0x14, (byte)0xc1, (byte)0x80, (byte)0xa5 };
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
 
             var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
@@ -354,7 +354,7 @@ namespace Zmpp.Core.Encoding.Tests
             int length = 4;
 
             byte[] data = { (byte)0x34, (byte)0xd1, (byte)0x44, (byte)0xa6, (byte)0x84, (byte)0x05 };
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
 
             var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
             ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());

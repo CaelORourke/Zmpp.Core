@@ -53,20 +53,20 @@ namespace Zmpp.Core.Iff.Tests
 
             // act
             IMemory mem = chunk.getMemory();
-            var result = MemoryUtil.readUnsigned32(mem, 4);
+            var result = MemoryUtil.ReadUnsigned32(mem, 4);
 
             // assert
             Assert.AreEqual(3, chunk.getSize());
             Assert.AreEqual("FORM", chunk.getId());
             Assert.AreEqual(0, chunk.getAddress());
-            Assert.AreEqual('F', mem.readUnsigned8(0));
-            Assert.AreEqual('O', mem.readUnsigned8(1));
-            Assert.AreEqual('R', mem.readUnsigned8(2));
-            Assert.AreEqual('M', mem.readUnsigned8(3));
+            Assert.AreEqual('F', mem.ReadUnsigned8(0));
+            Assert.AreEqual('O', mem.ReadUnsigned8(1));
+            Assert.AreEqual('R', mem.ReadUnsigned8(2));
+            Assert.AreEqual('M', mem.ReadUnsigned8(3));
             Assert.AreEqual(3, result);
-            Assert.AreEqual(0x01, mem.readUnsigned8(8));
-            Assert.AreEqual(0x02, mem.readUnsigned8(9));
-            Assert.AreEqual(0x03, mem.readUnsigned8(10));
+            Assert.AreEqual(0x01, mem.ReadUnsigned8(8));
+            Assert.AreEqual(0x02, mem.ReadUnsigned8(9));
+            Assert.AreEqual(0x03, mem.ReadUnsigned8(10));
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace Zmpp.Core.Iff.Tests
                 (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03,
                 (byte) 0x01, (byte) 0x02, (byte) 0x03
             };
-            IMemory mem = new DefaultMemory(data);
+            IMemory mem = new Memory(data);
             IChunk chunk = new DefaultChunk(mem, 1234);
 
             // act

@@ -33,52 +33,48 @@ namespace Zmpp.Core.Tests
     using Zmpp.Core;
 
     /// <summary>
-    /// Tests for the DefaultMemory class.
+    /// Tests for the Memory class.
     /// </summary>
     [TestClass]
-    public class DefaultMemoryTest
+    public class MemoryTest
     {
-        public DefaultMemoryTest()
-        {
-        }
-
         [TestMethod]
-        public void testReadUnsignedByte()
+        public void ReadUnsignedByte()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            var result = memory.readUnsigned8(0x00);
+            var result = memory.ReadUnsigned8(0x00);
 
             // assert
             Assert.AreEqual(3, result);
         }
 
         [TestMethod]
-        public void testReadUnsignedWord()
+        public void ReadUnsignedWord()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            var result = memory.readUnsigned16(0x02);
+            var result = memory.ReadUnsigned16(0x02);
 
             // assert
             Assert.AreEqual(0x3709, result);
         }
 
         [TestMethod]
-        public void testReadUnsignedShort()
+        public void ReadUnsignedShort()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            var result = memory.readUnsigned16(0x04);
+            var result = memory.ReadUnsigned16(0x04);
 
             // assert
             Assert.AreEqual(0xffff, result);
@@ -86,17 +82,17 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testWriteUnsignedByte()
+        public void WriteUnsignedByte()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            memory.writeUnsigned8(0x02, (char)0xff);
-            memory.writeUnsigned8(0x03, (char)0x32);
-            var result = memory.readUnsigned8(0x02);
-            var result2 = memory.readUnsigned8(0x03);
+            memory.WriteUnsigned8(0x02, (char)0xff);
+            memory.WriteUnsigned8(0x03, (char)0x32);
+            var result = memory.ReadUnsigned8(0x02);
+            var result2 = memory.ReadUnsigned8(0x03);
 
             // assert
             Assert.AreEqual(0xff, result);
@@ -104,17 +100,17 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testWriteUnsignedShort()
+        public void WriteUnsignedShort()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            memory.writeUnsigned16(0x02, (char)0xffff);
-            memory.writeUnsigned16(0x04, (char)0x00ff);
-            var result = memory.readUnsigned16(0x02);
-            var result2 = memory.readUnsigned16(0x04);
+            memory.WriteUnsigned16(0x02, (char)0xffff);
+            memory.WriteUnsigned16(0x04, (char)0x00ff);
+            var result = memory.ReadUnsigned16(0x02);
+            var result2 = memory.ReadUnsigned16(0x04);
 
             // assert
             Assert.AreEqual(0xffff, result);
@@ -122,7 +118,7 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testCopyBytesToArray()
+        public void CopyBytesToArray()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
@@ -130,10 +126,10 @@ namespace Zmpp.Core.Tests
             int dstOffset = 1;
             int srcOffset = 2;
             int numBytes = 3;
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            memory.copyBytesToArray(dstData, dstOffset, srcOffset, numBytes);
+            memory.CopyBytesToArray(dstData, dstOffset, srcOffset, numBytes);
 
             // assert
             Assert.AreEqual(0x37, dstData[1]);
@@ -142,7 +138,7 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testCopyBytesFromArray()
+        public void CopyBytesFromArray()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
@@ -150,13 +146,13 @@ namespace Zmpp.Core.Tests
             int srcOffset = 1;
             int dstOffset = 0;
             int numBytes = 3;
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            memory.copyBytesFromArray(srcData, srcOffset, dstOffset, numBytes);
-            var result = memory.readUnsigned8(0);
-            var result2 = memory.readUnsigned8(1);
-            var result3 = memory.readUnsigned8(2);
+            memory.CopyBytesFromArray(srcData, srcOffset, dstOffset, numBytes);
+            var result = memory.ReadUnsigned8(0);
+            var result2 = memory.ReadUnsigned8(1);
+            var result3 = memory.ReadUnsigned8(2);
 
             // assert
             Assert.AreEqual(0xef, result);
@@ -165,22 +161,22 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testCopyBytesFromMemory()
+        public void CopyBytesFromMemory()
         {
             // arrange
             byte[] srcData = { (byte)0x00, (byte)0xef, (byte)0x10, (byte)0xfe };
             byte[] dstData = { (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 };
-            IMemory srcMem = new DefaultMemory(srcData);
-            IMemory dstMem = new DefaultMemory(dstData);
+            IMemory srcMem = new Memory(srcData);
+            IMemory dstMem = new Memory(dstData);
             int srcOffset = 1;
             int dstOffset = 0;
             int numBytes = 3;
 
             // act
-            dstMem.copyBytesFromMemory(srcMem, srcOffset, dstOffset, numBytes);
-            var result = dstMem.readUnsigned8(0);
-            var result2 = dstMem.readUnsigned8(1);
-            var result3 = dstMem.readUnsigned8(2);
+            dstMem.CopyBytesFromMemory(srcMem, srcOffset, dstOffset, numBytes);
+            var result = dstMem.ReadUnsigned8(0);
+            var result2 = dstMem.ReadUnsigned8(1);
+            var result3 = dstMem.ReadUnsigned8(2);
 
             // assert
             Assert.AreEqual(0xef, result);
@@ -189,19 +185,19 @@ namespace Zmpp.Core.Tests
         }
 
         [TestMethod]
-        public void testCopyArea()
+        public void CopyArea()
         {
             // arrange
             byte[] data = { 0x03, 0x00, 0x37, 0x09, (byte)0xff, (byte)0xff };
-            IMemory memory = new DefaultMemory(data);
+            IMemory memory = new Memory(data);
 
             // act
-            memory.copyArea(0, 2, 3);
-            var result = memory.readUnsigned8(0);
-            var result2 = memory.readUnsigned8(1);
-            var result3 = memory.readUnsigned8(2);
-            var result4 = memory.readUnsigned8(3);
-            var result5 = memory.readUnsigned8(4);
+            memory.CopyArea(0, 2, 3);
+            var result = memory.ReadUnsigned8(0);
+            var result2 = memory.ReadUnsigned8(1);
+            var result3 = memory.ReadUnsigned8(2);
+            var result4 = memory.ReadUnsigned8(3);
+            var result5 = memory.ReadUnsigned8(4);
 
             // assert
             Assert.AreEqual(0x03, result);

@@ -302,21 +302,21 @@ namespace Zmpp.Core.Vm
             int offset = ChunkBase.CHUNK_HEADER_LENGTH;
 
             // read release number
-            release = chunkMem.readUnsigned16(offset);
+            release = chunkMem.ReadUnsigned16(offset);
             offset += 2;
 
             // read serial number
-            chunkMem.copyBytesToArray(serialBytes, 0, offset, 6);
+            chunkMem.CopyBytesToArray(serialBytes, 0, offset, 6);
             offset += 6;
 
             // read check sum
-            checksum = chunkMem.readUnsigned16(offset);
+            checksum = chunkMem.ReadUnsigned16(offset);
             offset += 2;
 
             // read pc
-            pc = decodePcBytes(chunkMem.readUnsigned8(offset),
-                                chunkMem.readUnsigned8(offset + 1),
-                                chunkMem.readUnsigned8(offset + 2));
+            pc = decodePcBytes(chunkMem.ReadUnsigned8(offset),
+                                chunkMem.ReadUnsigned8(offset + 1),
+                                chunkMem.ReadUnsigned8(offset + 2));
         }
 
         /// <summary>
@@ -349,37 +349,37 @@ namespace Zmpp.Core.Vm
         public int readStackFrame(StackFrame stackFrame, IMemory chunkMem, int offset)
         {
             int tmpoff = offset;
-            stackFrame.pc = decodePcBytes(chunkMem.readUnsigned8(tmpoff),
-                                            chunkMem.readUnsigned8(tmpoff + 1),
-                                            chunkMem.readUnsigned8(tmpoff + 2));
+            stackFrame.pc = decodePcBytes(chunkMem.ReadUnsigned8(tmpoff),
+                                            chunkMem.ReadUnsigned8(tmpoff + 1),
+                                            chunkMem.ReadUnsigned8(tmpoff + 2));
             tmpoff += 3;
 
-            byte pvFlags = (byte)(chunkMem.readUnsigned8(tmpoff++) & 0xff);
+            byte pvFlags = (byte)(chunkMem.ReadUnsigned8(tmpoff++) & 0xff);
             int numLocals = pvFlags & 0x0f;
             bool discardResult = (pvFlags & 0x10) > 0;
             stackFrame.locals = new char[numLocals];
 
             // Read the return variable, ignore the result if DISCARD_RESULT
-            char returnVar = chunkMem.readUnsigned8(tmpoff++);
+            char returnVar = chunkMem.ReadUnsigned8(tmpoff++);
             stackFrame.returnVariable = discardResult ? DISCARD_RESULT :
                                                         returnVar;
-            byte argSpec = (byte)(chunkMem.readUnsigned8(tmpoff++) & 0xff);
+            byte argSpec = (byte)(chunkMem.ReadUnsigned8(tmpoff++) & 0xff);
             stackFrame.args = getArgs(argSpec);
-            int evalStackSize = chunkMem.readUnsigned16(tmpoff);
+            int evalStackSize = chunkMem.ReadUnsigned16(tmpoff);
             stackFrame.evalStack = new char[evalStackSize];
             tmpoff += 2;
 
             // Read local variables
             for (int i = 0; i < numLocals; i++)
             {
-                stackFrame.locals[i] = chunkMem.readUnsigned16(tmpoff);
+                stackFrame.locals[i] = chunkMem.ReadUnsigned16(tmpoff);
                 tmpoff += 2;
             }
 
             // Read evaluation stack values
             for (int i = 0; i < evalStackSize; i++)
             {
-                stackFrame.evalStack[i] = chunkMem.readUnsigned16(tmpoff);
+                stackFrame.evalStack[i] = chunkMem.ReadUnsigned16(tmpoff);
                 tmpoff += 2;
             }
             return tmpoff;
@@ -411,10 +411,10 @@ namespace Zmpp.Core.Vm
 
             while (offset < chunksize)
             {
-                b = chunkMem.readUnsigned8(offset++);
+                b = chunkMem.ReadUnsigned8(offset++);
                 if (b == 0)
                 {
-                    char runlength = chunkMem.readUnsigned8(offset++);
+                    char runlength = chunkMem.ReadUnsigned8(offset++);
                     for (int r = 0; r <= runlength; r++)
                     { // (runlength + 1) iterations
                         byteBuffer.Add((byte)0);
@@ -443,7 +443,7 @@ namespace Zmpp.Core.Vm
             IMemory chunkMem = umemChunk.getMemory();
             int datasize = umemChunk.getSize();
             dynamicMem = new byte[datasize];
-            chunkMem.copyBytesToArray(dynamicMem, 0, ChunkBase.CHUNK_HEADER_LENGTH, datasize);
+            chunkMem.CopyBytesToArray(dynamicMem, 0, ChunkBase.CHUNK_HEADER_LENGTH, datasize);
         }
 
         #endregion
@@ -460,19 +460,19 @@ namespace Zmpp.Core.Vm
         {
             IStoryFileHeader fileheader = machine.getFileHeader();
             release = machine.getRelease();
-            checksum = machine.readUnsigned16(StoryFileHeaderBase.CHECKSUM);
+            checksum = machine.ReadUnsigned16(StoryFileHeaderAddress.Checksum);
             //serialBytes = fileheader.getSerialNumber().getBytes();
-            serialBytes = new byte[Encoding.UTF8.GetByteCount(fileheader.getSerialNumber())];
-            Encoding.UTF8.GetBytes(fileheader.getSerialNumber(), 0, fileheader.getSerialNumber().Length, (byte[])(object)serialBytes, 0);
+            serialBytes = new byte[Encoding.UTF8.GetByteCount(fileheader.SerialNumber)];
+            Encoding.UTF8.GetBytes(fileheader.SerialNumber, 0, fileheader.SerialNumber.Length, (byte[])(object)serialBytes, 0);
             pc = savePc;
 
             // capture dynamic memory which ends at address(staticsMem) - 1
             // uncompressed
             int staticMemStart =
-                machine.readUnsigned16(StoryFileHeaderBase.STATIC_MEM);
+                machine.ReadUnsigned16(StoryFileHeaderAddress.StaticMem);
             dynamicMem = new byte[staticMemStart];
             // Save the state of dynamic memory
-            machine.copyBytesToArray(dynamicMem, 0, 0, staticMemStart);
+            machine.CopyBytesToArray(dynamicMem, 0, 0, staticMemStart);
             captureStackFrames(machine);
         }
 
@@ -594,14 +594,14 @@ namespace Zmpp.Core.Vm
             IMemory chunkmem = chunk.getMemory();
 
             // Write release number
-            chunkmem.writeUnsigned16(8, toUnsigned16(release));
+            chunkmem.WriteUnsigned16(8, ToUnsigned16(release));
 
             // Copy serial bytes
-            chunkmem.copyBytesFromArray(serialBytes, 0, 10, serialBytes.Length);
-            chunkmem.writeUnsigned16(16, toUnsigned16(checksum));
-            chunkmem.writeUnsigned8(18, (char)(((int)((uint)pc >> 16)) & 0xff));
-            chunkmem.writeUnsigned8(19, (char)(((int)((uint)pc >> 8)) & 0xff));
-            chunkmem.writeUnsigned8(20, (char)(pc & 0xff));
+            chunkmem.CopyBytesFromArray(serialBytes, 0, 10, serialBytes.Length);
+            chunkmem.WriteUnsigned16(16, ToUnsigned16(checksum));
+            chunkmem.WriteUnsigned8(18, (char)(((int)((uint)pc >> 16)) & 0xff));
+            chunkmem.WriteUnsigned8(19, (char)(((int)((uint)pc >> 8)) & 0xff));
+            chunkmem.WriteUnsigned8(20, (char)(pc & 0xff));
 
             return chunk;
         }
@@ -718,7 +718,7 @@ namespace Zmpp.Core.Vm
         public void transferStateToMachine(IMachine machine)
         {
             // Copy dynamic memory
-            machine.copyBytesFromArray(dynamicMem, 0, 0, dynamicMem.Length);
+            machine.CopyBytesFromArray(dynamicMem, 0, 0, dynamicMem.Length);
 
             // Stack frames
             List<RoutineContext> contexts = new List<RoutineContext>();
@@ -787,7 +787,7 @@ namespace Zmpp.Core.Vm
         public char getStoreVariable(IMachine machine)
         {
             int storeVarAddress = getProgramCounter();
-            return machine.readUnsigned8(storeVarAddress);
+            return machine.ReadUnsigned8(storeVarAddress);
         }
 
         /// <summary>
@@ -798,7 +798,7 @@ namespace Zmpp.Core.Vm
         /// <returns>1 or 2, depending on the value of the branch offset</returns>
         private static int getBranchOffsetLength(IMemory memory, int offsetAddress)
         {
-            char offsetByte1 = memory.readUnsigned8(offsetAddress);
+            char offsetByte1 = memory.ReadUnsigned8(offsetAddress);
 
             // Bit 6 set -> only one byte needs to be read
             return ((offsetByte1 & 0x40) > 0) ? 1 : 2;

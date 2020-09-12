@@ -29,81 +29,82 @@
 namespace Zmpp.Core
 {
     /// <summary>
-    /// This interface manages read and write access to the byte array which contains
-    /// the story file data. It is the only means to read and manipulate the
-    /// memory map.
+    /// Provides read and write access to the memory map.
     /// </summary>
     public interface IMemory
     {
         #region Read access
+
         /// <summary>
         /// Reads the unsigned 16 bit word at the specified address.
         /// </summary>
-        /// <param name="address">the address</param>
-        /// <returns>the 16 bit unsigned value as int</returns>
-        char readUnsigned16(int address);
+        /// <param name="address">The address.</param>
+        /// <returns>The unsigned 16 bit value.</returns>
+        char ReadUnsigned16(int address);
 
         /// <summary>
         /// Reads the unsigned 8 bit value at the specified address.
         /// </summary>
-        /// <param name="address">the address</param>
-        /// <returns>the 8 bit unsigned value</returns>
-        char readUnsigned8(int address);
+        /// <param name="address">The address.</param>
+        /// <returns>The unsigned 8 bit value.</returns>
+        char ReadUnsigned8(int address);
+
         #endregion
 
         #region Write access
+
         /// <summary>
         /// Writes an unsigned 16 bit value to the specified address.
         /// </summary>
-        /// <param name="address">the address to write to</param>
-        /// <param name="value">the value to write</param>
-        void writeUnsigned16(int address, char value);
+        /// <param name="address">The address.</param>
+        /// <param name="value">The value to write.</param>
+        void WriteUnsigned16(int address, char value);
 
         /// <summary>
         /// Writes an unsigned byte value to the specified address.
         /// </summary>
-        /// <param name="address">the address to write to</param>
-        /// <param name="value">the value to write</param>
-        void writeUnsigned8(int address, char value);
+        /// <param name="address">The address.</param>
+        /// <param name="value">The value to write.</param>
+        void WriteUnsigned8(int address, char value);
+
         #endregion
 
         /// <summary>
-        /// A rather common operation: copy the specified number of bytes from
-        /// the offset to a target array.
+        /// Copies the specified number of bytes from
+        /// the offset to a destination array.
         /// </summary>
-        /// <param name="dstData">the destination array</param>
-        /// <param name="dstOffset">the offset in the destination array</param>
-        /// <param name="srcOffset">the offset in the source</param>
-        /// <param name="numBytes">the number of bytes to copy</param>
-        void copyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes);
+        /// <param name="dstData">The destination array.</param>
+        /// <param name="dstOffset">The offset in the destination array.</param>
+        /// <param name="srcOffset">The offset in the source.</param>
+        /// <param name="numBytes">The number of bytes to copy.</param>
+        void CopyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes);
 
         /// <summary>
-        /// Copy the specified number of bytes from the source array to this
-        /// Memory object.
+        /// Copies the specified number of bytes from the source
+        /// array to this <see cref="Zmpp.Core.IMemory"/> object.
         /// </summary>
-        /// <param name="srcData">the source array</param>
-        /// <param name="srcOffset">the source offset</param>
-        /// <param name="dstOffset">the destination offset</param>
-        /// <param name="numBytes">the number of bytes to copy</param>
-        void copyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes);
+        /// <param name="srcData">The source array.</param>
+        /// <param name="srcOffset">The source offset.</param>
+        /// <param name="dstOffset">The destination offset.</param>
+        /// <param name="numBytes">The number of bytes to copy.</param>
+        void CopyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes);
 
         /// <summary>
-        /// Copy the specified number of bytes from the specified source Memory object.
+        /// Copies the specified number of bytes from the specified
+        /// source <see cref="Zmpp.Core.IMemory"/> object.
         /// </summary>
-        /// <param name="srcMem">the source Memory object</param>
-        /// <param name="srcOffset">the source offset</param>
-        /// <param name="dstOffset">the destination offset</param>
-        /// <param name="numBytes">the number of bytes to copy</param>
-        void copyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes);
+        /// <param name="srcMem">The source Memory object.</param>
+        /// <param name="srcOffset">The source offset.</param>
+        /// <param name="dstOffset">The destination offset.</param>
+        /// <param name="numBytes">The number of bytes to copy.</param>
+        void CopyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes);
 
         /// <summary>
-        /// Copy an area of bytes efficiently. Since the System.arraycopy() is used,
-        /// we do not have to worry about overlapping areas and can take advantage
-        /// of the performance gain.
+        /// Copies an area of bytes.
         /// </summary>
-        /// <param name="src">the source address</param>
-        /// <param name="dst">the destination address</param>
-        /// <param name="numBytes">the number of bytes</param>
-        void copyArea(int src, int dst, int numBytes);
+        /// <param name="src">The source address.</param>
+        /// <param name="dst">The destination address.</param>
+        /// <param name="numBytes">The number of bytes.</param>
+        void CopyArea(int src, int dst, int numBytes);
     }
 }

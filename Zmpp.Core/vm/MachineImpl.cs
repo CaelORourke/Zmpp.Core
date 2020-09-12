@@ -130,31 +130,31 @@ namespace Zmpp.Core.Vm
             byte[] data = new byte[storyfileData.Length];
             Array.Copy(storyfileData, 0, data, 0, storyfileData.Length);
 
-            memory = new DefaultMemory(data);
-            fileheader = new DefaultStoryFileHeader(memory);
+            memory = new Memory(data);
+            fileheader = new StoryFileHeader(memory);
             checksum = calculateChecksum();
 
-            IDictionarySizes dictionarySizes = (fileheader.getVersion() <= 3) ?
+            IDictionarySizes dictionarySizes = (fileheader.Version <= 3) ?
                 (IDictionarySizes)new DictionarySizesV1ToV3() : (IDictionarySizes)new DictionarySizesV4ToV8();
             // Install the whole character code system here
             initEncodingSystem(dictionarySizes);
 
             // The object tree and dictionaries depend on the code system
-            if (fileheader.getVersion() <= 3)
+            if (fileheader.Version <= 3)
             {
                 objectTree = new ClassicObjectTree(memory,
-                    memory.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+                    memory.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
             }
             else
             {
                 objectTree = new ModernObjectTree(memory,
-                    memory.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+                    memory.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
             }
             // CAUTION: the current implementation of DefaultDictionary reads in all
             // entries into a hash table, so it will break when moving this statement
             // to a different position
             dictionary = (IDictionary)new DefaultDictionary(memory,
-                memory.readUnsigned16(StoryFileHeaderBase.DICTIONARY), decoder, encoder,
+                memory.ReadUnsigned16(StoryFileHeaderAddress.Dictionary), decoder, encoder,
                                       dictionarySizes);
         }
 
@@ -164,21 +164,21 @@ namespace Zmpp.Core.Vm
         /// <param name="dictionarySizes">the DictionarySizes</param>
         private void initEncodingSystem(IDictionarySizes dictionarySizes)
         {
-            IAccentTable accentTable = (fileheader.getCustomAccentTable() == 0) ?
+            IAccentTable accentTable = (fileheader.CustomAccentTableAddress == 0) ?
                 (IAccentTable)new DefaultAccentTable() :
-                (IAccentTable)new CustomAccentTable(memory, fileheader.getCustomAccentTable());
+                (IAccentTable)new CustomAccentTable(memory, fileheader.CustomAccentTableAddress);
             encoding = new ZsciiEncoding(accentTable);
 
             // Configure the alphabet table
             char customAlphabetTable =
-                memory.readUnsigned16(StoryFileHeaderBase.CUSTOM_ALPHABET);
+                memory.ReadUnsigned16(StoryFileHeaderAddress.CustomAlphabet);
             if (customAlphabetTable == 0)
             {
-                if (fileheader.getVersion() == 1)
+                if (fileheader.Version == 1)
                 {
                     alphabetTable = new AlphabetTableV1();
                 }
-                else if (fileheader.getVersion() == 2)
+                else if (fileheader.Version == 2)
                 {
                     alphabetTable = new AlphabetTableV2();
                 }
@@ -196,7 +196,7 @@ namespace Zmpp.Core.Vm
               new DefaultZCharTranslator(alphabetTable);
 
             Abbreviations abbreviations = new Abbreviations(memory,
-                memory.readUnsigned16(StoryFileHeaderBase.ABBREVIATIONS));
+                memory.ReadUnsigned16(StoryFileHeaderAddress.Abbreviations));
             decoder = new DefaultZCharDecoder(encoding, translator, abbreviations);
             encoder = new ZCharEncoder(translator, dictionarySizes);
         }
@@ -207,23 +207,23 @@ namespace Zmpp.Core.Vm
         /// <returns>the check sum</returns>
         private int calculateChecksum()
         {
-            int filelen = fileheader.getFileLength();
+            int filelen = fileheader.FileLength;
             int sum = 0;
             for (int i = 0x40; i < filelen; i++)
             {
-                sum += getMemory().readUnsigned8(i);
+                sum += getMemory().ReadUnsigned8(i);
             }
             return (sum & 0xffff);
         }
 
         public int getVersion()
         {
-            return getFileHeader().getVersion();
+            return getFileHeader().Version;
         }
 
         public int getRelease()
         {
-            return getMemory().readUnsigned16(StoryFileHeaderBase.RELEASE);
+            return getMemory().ReadUnsigned16(StoryFileHeaderAddress.Release);
         }
 
         public bool hasValidChecksum()
@@ -245,44 +245,44 @@ namespace Zmpp.Core.Vm
         /// <returns>memory object</returns>
         private IMemory getMemory() { return memory; }
 
-        public char readUnsigned16(int address)
+        public char ReadUnsigned16(int address)
         {
-            return getMemory().readUnsigned16(address);
+            return getMemory().ReadUnsigned16(address);
         }
 
-        public char readUnsigned8(int address)
+        public char ReadUnsigned8(int address)
         {
-            return getMemory().readUnsigned8(address);
+            return getMemory().ReadUnsigned8(address);
         }
 
-        public void writeUnsigned16(int address, char value)
+        public void WriteUnsigned16(int address, char value)
         {
-            getMemory().writeUnsigned16(address, value);
+            getMemory().WriteUnsigned16(address, value);
         }
 
-        public void writeUnsigned8(int address, char value)
+        public void WriteUnsigned8(int address, char value)
         {
-            getMemory().writeUnsigned8(address, value);
+            getMemory().WriteUnsigned8(address, value);
         }
 
-        public void copyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes)
+        public void CopyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes)
         {
-            getMemory().copyBytesToArray(dstData, dstOffset, srcOffset, numBytes);
+            getMemory().CopyBytesToArray(dstData, dstOffset, srcOffset, numBytes);
         }
 
-        public void copyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes)
+        public void CopyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes)
         {
-            getMemory().copyBytesFromArray(srcData, srcOffset, dstOffset, numBytes);
+            getMemory().CopyBytesFromArray(srcData, srcOffset, dstOffset, numBytes);
         }
 
-        public void copyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes)
+        public void CopyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes)
         {
-            getMemory().copyBytesFromMemory(srcMem, srcOffset, dstOffset, numBytes);
+            getMemory().CopyBytesFromMemory(srcMem, srcOffset, dstOffset, numBytes);
         }
 
-        public void copyArea(int src, int dst, int numBytes)
+        public void CopyArea(int src, int dst, int numBytes)
         {
-            getMemory().copyArea(src, dst, numBytes);
+            getMemory().CopyArea(src, dst, numBytes);
         }
 
         #endregion
@@ -613,14 +613,14 @@ namespace Zmpp.Core.Vm
 
         public void updateStatusLine()
         {
-            if (getFileHeader().getVersion() <= 3 && statusLine != null)
+            if (getFileHeader().Version <= 3 && statusLine != null)
             {
                 int objNum = cpu.getVariable((char)0x10);
                 String objectName = getZCharDecoder().decode2Zscii(getMemory(),
                   getObjectTree().getPropertiesDescriptionAddress(objNum), 0);
                 int global2 = cpu.getVariable((char)0x11);
                 int global3 = cpu.getVariable((char)0x12);
-                if (getFileHeader().isEnabled(StoryFileHeaderAttribute.SCORE_GAME))
+                if (getFileHeader().IsEnabled(StoryFileHeaderAttribute.ScoreGame))
                 {
                     statusLine.updateStatusScore(objectName, global2, global3);
                 }
@@ -721,7 +721,7 @@ namespace Zmpp.Core.Vm
             }
             return gamestate.getRelease() == getRelease()
               && gamestate.getChecksum() == checksum
-              && gamestate.getSerialNumber().Equals(getFileHeader().getSerialNumber());
+              && gamestate.getSerialNumber().Equals(getFileHeader().SerialNumber);
         }
 
         /**
@@ -730,7 +730,7 @@ namespace Zmpp.Core.Vm
          */
         private int getChecksum()
         {
-            return memory.readUnsigned16(StoryFileHeaderBase.CHECKSUM);
+            return memory.ReadUnsigned16(StoryFileHeaderAddress.Checksum);
         }
 
         /**
@@ -752,12 +752,12 @@ namespace Zmpp.Core.Vm
             //soundSystem.reset(); // TODO: Implement sound system!
             cpu.reset();
             setStandardRevision(1, 0);
-            if (getFileHeader().getVersion() >= 4)
+            if (getFileHeader().Version >= 4)
             {
-                getFileHeader().setEnabled(StoryFileHeaderAttribute.SUPPORTS_TIMED_INPUT, true);
+                getFileHeader().SetEnabled(StoryFileHeaderAttribute.SupportsTimedInput, true);
                 // IBM PC
-                getMemory().writeUnsigned8(StoryFileHeaderBase.INTERPRETER_NUMBER, (char)6);
-                getFileHeader().setInterpreterVersion(1);
+                getMemory().WriteUnsigned8(StoryFileHeaderAddress.InterpreterNumber, (char)6);
+                getFileHeader().SetInterpreterVersion(1);
             }
         }
 
@@ -768,8 +768,8 @@ namespace Zmpp.Core.Vm
          */
         private void setStandardRevision(int major, int minor)
         {
-            memory.writeUnsigned8(StoryFileHeaderBase.STD_REVISION_MAJOR, (char)major);
-            memory.writeUnsigned8(StoryFileHeaderBase.STD_REVISION_MINOR, (char)minor);
+            memory.WriteUnsigned8(StoryFileHeaderAddress.StdRevisionMajor, (char)major);
+            memory.WriteUnsigned8(StoryFileHeaderAddress.StdRevisionMinor, (char)minor);
         }
 
         /**
@@ -781,8 +781,8 @@ namespace Zmpp.Core.Vm
             // Transcripting and fixed font bits survive the restart
             IStoryFileHeader fileHeader = getFileHeader();
             bool fixedFontForced =
-              fileHeader.isEnabled(StoryFileHeaderAttribute.FORCE_FIXED_FONT);
-            bool transcripting = fileHeader.isEnabled(StoryFileHeaderAttribute.TRANSCRIPTING);
+              fileHeader.IsEnabled(StoryFileHeaderAttribute.ForceFixedFont);
+            bool transcripting = fileHeader.IsEnabled(StoryFileHeaderAttribute.Transcripting);
 
             resetState();
 
@@ -790,8 +790,8 @@ namespace Zmpp.Core.Vm
             {
                 screenModel.reset();
             }
-            fileHeader.setEnabled(StoryFileHeaderAttribute.TRANSCRIPTING, transcripting);
-            fileHeader.setEnabled(StoryFileHeaderAttribute.FORCE_FIXED_FONT, fixedFontForced);
+            fileHeader.SetEnabled(StoryFileHeaderAttribute.Transcripting, transcripting);
+            fileHeader.SetEnabled(StoryFileHeaderAttribute.ForceFixedFont, fixedFontForced);
         }
 
         #endregion

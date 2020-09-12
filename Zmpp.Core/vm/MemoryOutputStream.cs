@@ -84,7 +84,7 @@ namespace Zmpp.Core.Vm
         {
             TablePosition tablePos = tableStack[tableStack.Count - 1];
             int position = tablePos.tableAddress + 2 + tablePos.bytesWritten;
-            machine.writeUnsigned8(position, zsciiChar);
+            machine.WriteUnsigned8(position, zsciiChar);
             tablePos.bytesWritten++;
         }
 
@@ -106,8 +106,8 @@ namespace Zmpp.Core.Vm
                 // of the table
                 TablePosition tablePos = tableStack[tableStack.Count - 1];
                 tableStack.RemoveAt(tableStack.Count - 1);
-                machine.writeUnsigned16(tablePos.tableAddress,
-                                        toUnsigned16(tablePos.bytesWritten));
+                machine.WriteUnsigned16(tablePos.tableAddress,
+                                        ToUnsigned16(tablePos.bytesWritten));
 
                 if (machine.getVersion() == 6)
                 {
@@ -127,7 +127,7 @@ namespace Zmpp.Core.Vm
 
             for (int i = 0; i < numwords; i++)
             {
-                data[i] = (char)machine.readUnsigned8(tablepos.tableAddress + i + 2);
+                data[i] = (char)machine.ReadUnsigned8(tablepos.tableAddress + i + 2);
             }
             machine.getScreen6().setTextWidthInUnits(data);
         }

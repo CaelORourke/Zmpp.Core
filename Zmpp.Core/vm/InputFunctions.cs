@@ -93,7 +93,7 @@ namespace Zmpp.Core.Vm
                     (char)0 : (char)(textpointer - 2);
 
                 // Write the number of characters typed in byte 1
-                machine.writeUnsigned8(textbuffer + 1, numCharsTyped);
+                machine.WriteUnsigned8(textbuffer + 1, numCharsTyped);
             }
             else
             {
@@ -104,7 +104,7 @@ namespace Zmpp.Core.Vm
                 {
                     terminatepos = 0;
                 }
-                machine.writeUnsigned8(textbuffer + terminatepos, (char)0);
+                machine.WriteUnsigned8(textbuffer + terminatepos, (char)0);
             }
         }
 
@@ -118,7 +118,7 @@ namespace Zmpp.Core.Vm
             int storeOffset = machine.getVersion() <= 4 ? 1 : 2;
             for (int i = 0; i < inputString.Length; i++)
             {
-                machine.writeUnsigned8(textbuffer + i + storeOffset,
+                machine.WriteUnsigned8(textbuffer + i + storeOffset,
                         (char)(inputString[i] & 0xff));
             }
             char terminateChar = inputString[inputString.Length - 1];
@@ -191,20 +191,20 @@ namespace Zmpp.Core.Vm
         public void tokenize(int textbuffer, int parsebuffer, int dictionaryAddress, bool flag)
         {
             int version = machine.getVersion();
-            int bufferlen = machine.readUnsigned8(textbuffer);
+            int bufferlen = machine.ReadUnsigned8(textbuffer);
             int textbufferstart = determineTextBufferStart(version);
             int charsTyped =
-              version >= 5 ? machine.readUnsigned8(textbuffer + 1) : 0;
+              version >= 5 ? machine.ReadUnsigned8(textbuffer + 1) : 0;
 
             // from version 5, text starts at position 2
             String input = bufferToZscii(textbuffer + textbufferstart, bufferlen, charsTyped);
             List<String> tokens = tokenize(input);
             Dictionary<String, int> parsedTokens = new Dictionary<String, int>();
-            int maxTokens = machine.readUnsigned8(parsebuffer);
+            int maxTokens = machine.ReadUnsigned8(parsebuffer);
             int numTokens = Math.Min(maxTokens, tokens.Count);
 
             // Write the number of parsed tokens into byte 1 of the parse buffer
-            machine.writeUnsigned8(parsebuffer + 1, (char)numTokens);
+            machine.WriteUnsigned8(parsebuffer + 1, (char)numTokens);
 
             int parseaddr = parsebuffer + 2;
 
@@ -242,9 +242,9 @@ namespace Zmpp.Core.Vm
                 if (!flag || flag && entryAddress > 0)
                 {
                     // This is one slot
-                    machine.writeUnsigned16(parseaddr, toUnsigned16(entryAddress));
-                    machine.writeUnsigned8(parseaddr + 2, (char)token.Length);
-                    machine.writeUnsigned8(parseaddr + 3, (char)tokenIndex);
+                    machine.WriteUnsigned16(parseaddr, ToUnsigned16(entryAddress));
+                    machine.WriteUnsigned8(parseaddr + 2, (char)token.Length);
+                    machine.WriteUnsigned8(parseaddr + 3, (char)tokenIndex);
                 }
                 parseaddr += 4;
             }
@@ -268,7 +268,7 @@ namespace Zmpp.Core.Vm
             StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < numChars; i++)
             {
-                char charByte = (char)machine.readUnsigned8(address + i);
+                char charByte = (char)machine.ReadUnsigned8(address + i);
                 if (charByte == 0)
                 {
                     break;

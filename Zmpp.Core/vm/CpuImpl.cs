@@ -89,7 +89,7 @@ namespace Zmpp.Core.Vm
         {
             stack = new FastShortStack(STACKSIZE);
             routineContextStack = new List<RoutineContext>();
-            globalsAddress = machine.readUnsigned16(StoryFileHeaderBase.GLOBALS);
+            globalsAddress = machine.ReadUnsigned16(StoryFileHeaderAddress.Globals);
 
             if (machine.getVersion() == 6)
             {
@@ -109,7 +109,7 @@ namespace Zmpp.Core.Vm
         /// <returns>the start address</returns>
         private char getProgramStart()
         {
-            return machine.readUnsigned16(StoryFileHeaderBase.PROGRAM_START);
+            return machine.ReadUnsigned16(StoryFileHeaderAddress.ProgramStart);
         }
 
         public int getPC() { return programCounter; }
@@ -149,7 +149,7 @@ namespace Zmpp.Core.Vm
         /// <returns>the routine offset</returns>
         private char getRoutineOffset()
         {
-            return machine.readUnsigned16(StoryFileHeaderBase.ROUTINE_OFFSET);
+            return machine.ReadUnsigned16(StoryFileHeaderAddress.RoutineOffset);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Zmpp.Core.Vm
         /// <returns>the static string offset</returns>
         private char getStaticStringOffset()
         {
-            return machine.readUnsigned16(StoryFileHeaderBase.STATIC_STRING_OFFSET);
+            return machine.ReadUnsigned16(StoryFileHeaderAddress.StaticStringOffset);
         }
 
         /// <summary>
@@ -253,10 +253,10 @@ namespace Zmpp.Core.Vm
         /// <returns>popped value</returns>
         private char popUserStack(char userstackAddress)
         {
-            int numFreeSlots = machine.readUnsigned16(userstackAddress);
+            int numFreeSlots = machine.ReadUnsigned16(userstackAddress);
             numFreeSlots++;
-            machine.writeUnsigned16(userstackAddress, toUnsigned16(numFreeSlots));
-            return machine.readUnsigned16(userstackAddress + (numFreeSlots * 2));
+            machine.WriteUnsigned16(userstackAddress, ToUnsigned16(numFreeSlots));
+            return machine.ReadUnsigned16(userstackAddress + (numFreeSlots * 2));
         }
 
         public bool pushStack(char userstackAddress, char value)
@@ -280,11 +280,11 @@ namespace Zmpp.Core.Vm
         /// <returns>true if successful, false on overflow</returns>
         private bool pushUserStack(char userstackAddress, char value)
         {
-            int numFreeSlots = machine.readUnsigned16(userstackAddress);
+            int numFreeSlots = machine.ReadUnsigned16(userstackAddress);
             if (numFreeSlots > 0)
             {
-                machine.writeUnsigned16(userstackAddress + (numFreeSlots * 2), value);
-                machine.writeUnsigned16(userstackAddress, toUnsigned16(numFreeSlots - 1));
+                machine.WriteUnsigned16(userstackAddress + (numFreeSlots * 2), value);
+                machine.WriteUnsigned16(userstackAddress, ToUnsigned16(numFreeSlots - 1));
                 return true;
             }
             return false;
@@ -314,7 +314,7 @@ namespace Zmpp.Core.Vm
             }
             else
             { // GLOBAL
-                return machine.readUnsigned16(globalsAddress +
+                return machine.ReadUnsigned16(globalsAddress +
                     (getGlobalVariableNumber(variableNumber) * 2));
             }
         }
@@ -344,7 +344,7 @@ namespace Zmpp.Core.Vm
             }
             else
             {
-                machine.writeUnsigned16(globalsAddress +
+                machine.WriteUnsigned16(globalsAddress +
                     (getGlobalVariableNumber(variableNumber) * 2), value);
             }
         }
@@ -487,7 +487,7 @@ namespace Zmpp.Core.Vm
         /// <returns>a RoutineContext object</returns>
         private RoutineContext decodeRoutine(int routineAddress)
         {
-            int numLocals = machine.readUnsigned8(routineAddress);
+            int numLocals = machine.ReadUnsigned8(routineAddress);
             char[] locals = new char[numLocals];
 
             if (machine.getVersion() <= 4)
@@ -496,7 +496,7 @@ namespace Zmpp.Core.Vm
                 // after V5 they are assumed as being 0 (standard document 1.0, S.5.2.1)
                 for (int i = 0; i < numLocals; i++)
                 {
-                    locals[i] = machine.readUnsigned16(routineAddress + 1 + 2 * i);
+                    locals[i] = machine.ReadUnsigned16(routineAddress + 1 + 2 * i);
                 }
             }
             RoutineContext info = new RoutineContext(numLocals);

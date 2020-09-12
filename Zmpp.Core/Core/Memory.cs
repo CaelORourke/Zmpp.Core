@@ -30,71 +30,69 @@
 namespace Zmpp.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     /// <summary>
-    /// This class is the default implementation for MemoryAccess.
+    /// Provides read and write access to the memory map.
     /// </summary>
-    public class DefaultMemory : IMemory
+    public class Memory : IMemory
     {
         /// <summary>
-        /// The data array containing the story file.
+        /// The story file data.
         /// </summary>
-        private byte[] data;
+        private readonly byte[] data;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Memory"/>
+        /// class for the specified story file data.
         /// </summary>
-        /// <param name="data">the story file data</param>
-        public DefaultMemory(byte[] data)
+        /// <param name="data">The story file data.</param>
+        public Memory(byte[] data)
         {
             this.data = data;
         }
 
-        public char readUnsigned16(int address)
+        public char ReadUnsigned16(int address)
         {
-            return (char)
-              (((data[address] & 0xff) << 8 | (data[address + 1] & 0xff)) & 0xffff);
+            return (char)(((data[address] & 0xff) << 8 | (data[address + 1] & 0xff)) & 0xffff);
         }
 
-        public char readUnsigned8(int address)
+        public char ReadUnsigned8(int address)
         {
             return (char)(data[address] & 0xff);
         }
 
-        public void writeUnsigned16(int address, char value)
+        public void WriteUnsigned16(int address, char value)
         {
             data[address] = (byte)((value & 0xff00) >> 8);
             data[address + 1] = (byte)(value & 0xff);
         }
 
-        public void writeUnsigned8(int address, char value)
+        public void WriteUnsigned8(int address, char value)
         {
             data[address] = (byte)(value & 0xff);
         }
 
-        public void copyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes)
+        public void CopyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes)
         {
             Array.Copy(data, srcOffset, dstData, dstOffset, numBytes);
         }
 
-        public void copyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes)
+        public void CopyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes)
         {
             Array.Copy(srcData, srcOffset, data, dstOffset, numBytes);
         }
 
-        public void copyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes)
+        public void CopyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes)
         {
             // This copy method might not be as efficient, because the source
             // memory object could be based on something else than a byte array
             for (int i = 0; i < numBytes; i++)
             {
-                data[dstOffset + i] = (byte)(srcMem.readUnsigned8(srcOffset + i) & 0xff);
+                data[dstOffset + i] = (byte)(srcMem.ReadUnsigned8(srcOffset + i) & 0xff);
             }
         }
 
-        public void copyArea(int src, int dst, int numBytes)
+        public void CopyArea(int src, int dst, int numBytes)
         {
             Array.Copy(data, src, data, dst, numBytes);
         }

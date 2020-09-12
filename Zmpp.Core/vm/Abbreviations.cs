@@ -71,7 +71,7 @@ namespace Zmpp.Core.Vm
         /// <returns>the word address</returns>
         public int getWordAddress(int entryNum)
         {
-            return memory.readUnsigned16(address + entryNum * 2) * 2;
+            return memory.ReadUnsigned16(address + entryNum * 2) * 2;
         }
     }
 }

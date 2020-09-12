@@ -163,7 +163,7 @@ namespace Zmpp.Core.Vm
 
         public bool isAttributeSet(int objectNum, int attributeNum)
         {
-            char value = memory.readUnsigned8(
+            char value = memory.ReadUnsigned8(
               getAttributeByteAddress(objectNum, attributeNum));
             return (value & (0x80 >> (attributeNum & 7))) > 0;
         }
@@ -172,18 +172,18 @@ namespace Zmpp.Core.Vm
         {
             int attributeByteAddress = getAttributeByteAddress(objectNum,
               attributeNum);
-            char value = memory.readUnsigned8(attributeByteAddress);
+            char value = memory.ReadUnsigned8(attributeByteAddress);
             value |= (char)(0x80 >> (attributeNum & 7));
-            memory.writeUnsigned8(attributeByteAddress, value);
+            memory.WriteUnsigned8(attributeByteAddress, value);
         }
 
         public void clearAttribute(int objectNum, int attributeNum)
         {
             int attributeByteAddress = getAttributeByteAddress(objectNum,
                 attributeNum);
-            char value = memory.readUnsigned8(attributeByteAddress);
+            char value = memory.ReadUnsigned8(attributeByteAddress);
             value &= (char)(~(0x80 >> (attributeNum & 7)));
-            memory.writeUnsigned8(attributeByteAddress, value);
+            memory.WriteUnsigned8(attributeByteAddress, value);
         }
 
         /// <summary>
@@ -262,12 +262,12 @@ namespace Zmpp.Core.Vm
             int value;
             if (numBytes == 1)
             {
-                value = memory.readUnsigned8(propertyDataAddress) & 0xff;
+                value = memory.ReadUnsigned8(propertyDataAddress) & 0xff;
             }
             else
             {
-                int byte1 = memory.readUnsigned8(propertyDataAddress);
-                int byte2 = memory.readUnsigned8(propertyDataAddress + 1);
+                int byte1 = memory.ReadUnsigned8(propertyDataAddress);
+                int byte2 = memory.ReadUnsigned8(propertyDataAddress + 1);
                 value = (byte1 << 8 | (byte2 & 0xff));
             }
             return (char)(value & 0xffff);
@@ -286,11 +286,11 @@ namespace Zmpp.Core.Vm
                 int propsize = getPropertyLength(propertyDataAddress);
                 if (propsize == 1)
                 {
-                    memory.writeUnsigned8(propertyDataAddress, (char)(value & 0xff));
+                    memory.WriteUnsigned8(propertyDataAddress, (char)(value & 0xff));
                 }
                 else
                 {
-                    memory.writeUnsigned16(propertyDataAddress, toUnsigned16(value));
+                    memory.WriteUnsigned16(propertyDataAddress, ToUnsigned16(value));
                 }
             }
         }
@@ -345,7 +345,7 @@ namespace Zmpp.Core.Vm
         private int getDescriptionHeaderSize(int objectNum)
         {
             int startAddr = getPropertyTableAddress(objectNum);
-            return memory.readUnsigned8(startAddr) * 2 + 1;
+            return memory.ReadUnsigned8(startAddr) * 2 + 1;
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace Zmpp.Core.Vm
         private char getPropertyDefault(int propertyNum)
         {
             int index = propertyNum - 1;
-            return memory.readUnsigned16(address + index * 2);
+            return memory.ReadUnsigned16(address + index * 2);
         }
 
         #endregion

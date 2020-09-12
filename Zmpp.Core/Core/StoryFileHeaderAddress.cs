@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 2006/02/10
+ * Created on 2005/09/23
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -29,17 +29,29 @@
 
 namespace Zmpp.Core
 {
-    /// <summary>
-    /// This interface indicates that objects implementing it can interrupt
-    /// their current execution temporarily, executing the given routine and
-    /// returning to the former execution after finishing with that routine.
-    /// </summary>
-    public interface IInterruptable
+    public static class StoryFileHeaderAddress
     {
-        /// <summary>
-        /// Indicates to the receiver that an interrupt should be started.
-        /// </summary>
-        /// <param name="routineAddress">the routine address</param>
-        void setInterruptRoutine(int routineAddress);
+        public const int Release = 0x02;
+        public const int ProgramStart = 0x06;
+        public const int Dictionary = 0x08;
+        public const int ObjectTable = 0x0a;
+        public const int Globals = 0x0c;
+        public const int StaticMem = 0x0e;
+        public const int Abbreviations = 0x18;
+        public const int Checksum = 0x1c;
+        public const int InterpreterNumber = 0x1e;
+        public const int ScreenHeight = 0x20;
+        public const int ScreenWidth = 0x21;
+        public const int ScreenWidthUnits = 0x22;
+        public const int ScreenHeightUnits = 0x24;
+        public const int RoutineOffset = 0x28;
+        public const int StaticStringOffset = 0x2a;
+        public const int DefaultBackground = 0x2c;
+        public const int DefaultForeground = 0x2d;
+        public const int Terminators = 0x2e;
+        public const int OutputStream3Width = 0x30; // 16 bit
+        public const int StdRevisionMajor = 0x32;
+        public const int StdRevisionMinor = 0x33;
+        public const int CustomAlphabet = 0x34;
     }
 }

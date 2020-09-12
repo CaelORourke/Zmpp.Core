@@ -34,19 +34,14 @@ namespace Zmpp.Core
     /// <summary>
     /// Utility functions for address conversion.
     /// </summary>
-    public sealed class MemoryUtil
+    public static class MemoryUtil
     {
         /// <summary>
-        /// Private constructor.
+        /// Converts an integer to a char.
         /// </summary>
-        private MemoryUtil() { }
-
-        /// <summary>
-        /// Convert an integer value to a char, which is an unsigned 16 bit value.
-        /// </summary>
-        /// <param name="value">the value to convert</param>
-        /// <returns>the converted value</returns>
-        public static char toUnsigned16(int value)
+        /// <param name="value">The value to convert.</param>
+        /// <returns>The unsigned 16 bit value.</returns>
+        public static char ToUnsigned16(int value)
         {
             return (char)(value & 0xffff);
         }
@@ -54,38 +49,38 @@ namespace Zmpp.Core
         /// <summary>
         /// Reads the unsigned 32 bit word at the specified address.
         /// </summary>
-        /// <param name="memory">the Memory object</param>
-        /// <param name="address">the address</param>
-        /// <returns>the 32 bit unsigned value as long</returns>
-        public static long readUnsigned32(IMemory memory, int address)
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The address.</param>
+        /// <returns>The unsigned 32 bit value.</returns>
+        public static long ReadUnsigned32(IMemory memory, int address)
         {
-            long a24 = (memory.readUnsigned8(address) & 0xffL) << 24;
-            long a16 = (memory.readUnsigned8(address + 1) & 0xffL) << 16;
-            long a8 = (memory.readUnsigned8(address + 2) & 0xffL) << 8;
-            long a0 = (memory.readUnsigned8(address + 3) & 0xffL);
+            long a24 = (memory.ReadUnsigned8(address) & 0xffL) << 24;
+            long a16 = (memory.ReadUnsigned8(address + 1) & 0xffL) << 16;
+            long a8 = (memory.ReadUnsigned8(address + 2) & 0xffL) << 8;
+            long a0 = (memory.ReadUnsigned8(address + 3) & 0xffL);
             return a24 | a16 | a8 | a0;
         }
 
         /// <summary>
         /// Writes an unsigned 32 bit value to the specified address.
         /// </summary>
-        /// <param name="memory">the Memory object</param>
-        /// <param name="address">the address to write to</param>
-        /// <param name="value">the value to write</param>
-        public static void writeUnsigned32(IMemory memory, int address, long value)
+        /// <param name="memory">The Memory object</param>
+        /// <param name="address">The address.</param>
+        /// <param name="value">The value to write.</param>
+        public static void WriteUnsigned32(IMemory memory, int address, long value)
         {
-            memory.writeUnsigned8(address, (char)((value & 0xff000000) >> 24));
-            memory.writeUnsigned8(address + 1, (char)((value & 0x00ff0000) >> 16));
-            memory.writeUnsigned8(address + 2, (char)((value & 0x0000ff00) >> 8));
-            memory.writeUnsigned8(address + 3, (char)(value & 0x000000ff));
+            memory.WriteUnsigned8(address, (char)((value & 0xff000000) >> 24));
+            memory.WriteUnsigned8(address + 1, (char)((value & 0x00ff0000) >> 16));
+            memory.WriteUnsigned8(address + 2, (char)((value & 0x0000ff00) >> 8));
+            memory.WriteUnsigned8(address + 3, (char)(value & 0x000000ff));
         }
 
         /// <summary>
         /// Converts the specified signed 16 bit value to an unsigned 16 bit value.
         /// </summary>
-        /// <param name="value">the signed value</param>
-        /// <returns>the unsigned value</returns>
-        public static char signedToUnsigned16(short value)
+        /// <param name="value">The signed 16 bit value.</param>
+        /// <returns>The unsigned 16 bit value.</returns>
+        public static char SignedToUnsigned16(short value)
         {
             return (char)(value >= 0 ? value : char.MaxValue + (value + 1));
         }
@@ -93,9 +88,9 @@ namespace Zmpp.Core
         /// <summary>
         /// Converts the specified unsigned 16 bit value to a signed 16 bit value.
         /// </summary>
-        /// <param name="value">the unsigned value</param>
-        /// <returns>the signed value</returns>
-        public static short unsignedToSigned16(char value)
+        /// <param name="value">The unsigned 16 bit value.</param>
+        /// <returns>The signed 16 bit value.</returns>
+        public static short UnsignedToSigned16(char value)
         {
             return (short)(value > short.MaxValue ?
               -(char.MaxValue - (value - 1)) : value);
@@ -103,17 +98,18 @@ namespace Zmpp.Core
 
         /// <summary>
         /// Converts the specified unsigned 8 bit value to a signed 8 bit value.
-        /// If the value specified is actually a 16 bit value, only the lower 8 bit
-        /// will be used.
         /// </summary>
-        /// <param name="value">the unsigned value</param>
-        /// <returns>the signed value</returns>
-        public static short unsignedToSigned8(char value)
+        /// <param name="value">The unsigned 8 bit value.</param>
+        /// <returns>The signed 8 bit value.</returns>
+        /// <remarks>
+        /// If the value specified is actually a 16 bit value only
+        /// the lower 8 bits will be used.
+        /// </remarks>
+        public static short UnsignedToSigned8(char value)
         {
             char workvalue = (char)(value & 0xff);
             return (short)(workvalue > SByte.MaxValue ?
               -(255 - (workvalue - 1)) : workvalue);
         }
-
     }
 }

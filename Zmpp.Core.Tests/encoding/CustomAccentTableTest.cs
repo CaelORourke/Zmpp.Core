@@ -64,14 +64,14 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(ADDRESS)).Returns((char)3);
+            memory.Setup(m => m.ReadUnsigned8(ADDRESS)).Returns((char)3);
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
             var result = accentTable.getLength();
 
             // assert
-            memory.Verify(m => m.readUnsigned8(ADDRESS), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.Once());
             Assert.AreEqual(3, result);
         }
 
@@ -94,14 +94,14 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned16(ADDRESS + 7)).Returns('^');
+            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 7)).Returns('^');
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
             var result = accentTable.getAccent(3);
 
             // assert
-            memory.Verify(m => m.readUnsigned16(ADDRESS + 7), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 7), Times.Once());
             Assert.AreEqual('^', result);
         }
 
@@ -110,20 +110,20 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(ADDRESS)).Returns((char)80);
-            memory.Setup(m => m.readUnsigned16(ADDRESS + 2 * 6 + 1)).Returns('B');
-            memory.Setup(m => m.readUnsigned16(ADDRESS + 1)).Returns('a');
-            memory.Setup(m => m.readUnsigned16(ADDRESS + 2 + 1)).Returns('b');
+            memory.Setup(m => m.ReadUnsigned8(ADDRESS)).Returns((char)80);
+            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 2 * 6 + 1)).Returns('B');
+            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 1)).Returns('a');
+            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 2 + 1)).Returns('b');
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
             var result = accentTable.getIndexOfLowerCase(6);
 
             // assert
-            memory.Verify(m => m.readUnsigned8(ADDRESS), Times.Once());
-            memory.Verify(m => m.readUnsigned16(ADDRESS + 2 * 6 + 1), Times.Once());
-            memory.Verify(m => m.readUnsigned16(ADDRESS + 1), Times.Once());
-            memory.Verify(m => m.readUnsigned16(ADDRESS + 2 + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 2 * 6 + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 2 + 1), Times.Once());
             Assert.AreEqual(1, result);
         }
 
@@ -132,18 +132,18 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.readUnsigned8(ADDRESS)).Returns((char)2);
-            memory.Setup(m => m.readUnsigned16(ADDRESS + 2 * 1 + 1)).Returns('^');
-            memory.Setup(m => m.readUnsigned16(ADDRESS + 1)).Returns('a');
+            memory.Setup(m => m.ReadUnsigned8(ADDRESS)).Returns((char)2);
+            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 2 * 1 + 1)).Returns('^');
+            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 1)).Returns('a');
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
             var result = accentTable.getIndexOfLowerCase(1);
 
             // assert
-            memory.Verify(m => m.readUnsigned8(ADDRESS), Times.AtLeastOnce());
-            memory.Verify(m => m.readUnsigned16(ADDRESS + 2 * 1 + 1), Times.AtLeastOnce());
-            memory.Verify(m => m.readUnsigned16(ADDRESS + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.AtLeastOnce());
+            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 2 * 1 + 1), Times.AtLeastOnce());
+            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 1), Times.Once());
             Assert.AreEqual(1, result);
         }
     }

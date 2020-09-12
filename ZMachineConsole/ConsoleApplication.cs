@@ -90,20 +90,20 @@ namespace ZMachineConsole
             // ZMPP should support everything by default
             if (version <= 3)
             {
-                enableHeaderFlag(StoryFileHeaderAttribute.DEFAULT_FONT_IS_VARIABLE);
-                enableHeaderFlag(StoryFileHeaderAttribute.SUPPORTS_STATUSLINE);
-                enableHeaderFlag(StoryFileHeaderAttribute.SUPPORTS_SCREEN_SPLITTING);
+                enableHeaderFlag(StoryFileHeaderAttribute.DefaultFontIsVariable);
+                enableHeaderFlag(StoryFileHeaderAttribute.SupportsStatusLine);
+                enableHeaderFlag(StoryFileHeaderAttribute.SupportsScreenSplitting);
             }
             if (version >= 4)
             {
-                enableHeaderFlag(StoryFileHeaderAttribute.SUPPORTS_BOLD);
-                enableHeaderFlag(StoryFileHeaderAttribute.SUPPORTS_FIXED_FONT);
-                enableHeaderFlag(StoryFileHeaderAttribute.SUPPORTS_ITALIC);
-                enableHeaderFlag(StoryFileHeaderAttribute.SUPPORTS_TIMED_INPUT);
+                enableHeaderFlag(StoryFileHeaderAttribute.SupportsBold);
+                enableHeaderFlag(StoryFileHeaderAttribute.SupportsFixedFont);
+                enableHeaderFlag(StoryFileHeaderAttribute.SupportsItalic);
+                enableHeaderFlag(StoryFileHeaderAttribute.SupportsTimedInput);
             }
             if (version >= 5)
             {
-                enableHeaderFlag(StoryFileHeaderAttribute.SUPPORTS_COLOURS);
+                enableHeaderFlag(StoryFileHeaderAttribute.SupportsColours);
             }
             int defaultForeground = getDefaultForeground();
             int defaultBackground = getDefaultBackground();
@@ -128,7 +128,7 @@ namespace ZMachineConsole
         /// <param name="attr">the header attribute to enable</param>
         private void enableHeaderFlag(StoryFileHeaderAttribute attr)
         {
-            getFileHeader().setEnabled(attr, true);
+            getFileHeader().SetEnabled(attr, true);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace ZMachineConsole
         /// <returns>default background color</returns>
         public int getDefaultBackground()
         {
-            return machine.readUnsigned8(StoryFileHeaderBase.DEFAULT_BACKGROUND);
+            return machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultBackground);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace ZMachineConsole
         /// <returns>default foreground color</returns>
         public int getDefaultForeground()
         {
-            return machine.readUnsigned8(StoryFileHeaderBase.DEFAULT_FOREGROUND);
+            return machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultForeground);
         }
 
 

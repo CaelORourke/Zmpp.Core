@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 2005/09/23
+ * Created on 2006/02/10
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -29,29 +29,18 @@
 
 namespace Zmpp.Core
 {
-    public abstract class StoryFileHeaderBase
+    /// <summary>
+    /// Allows an object to interrupt its current execution
+    /// to execute the given routine.
+    /// </summary>
+    /// <remarks>The object returns to its former execution
+    /// after completing the given routine.</remarks>
+    public interface IInterruptible
     {
-        public static int RELEASE = 0x02;
-        public static int PROGRAM_START = 0x06;
-        public static int DICTIONARY = 0x08;
-        public static int OBJECT_TABLE = 0x0a;
-        public static int GLOBALS = 0x0c;
-        public static int STATIC_MEM = 0x0e;
-        public static int ABBREVIATIONS = 0x18;
-        public static int CHECKSUM = 0x1c;
-        public static int INTERPRETER_NUMBER = 0x1e;
-        public static int SCREEN_HEIGHT = 0x20;
-        public static int SCREEN_WIDTH = 0x21;
-        public static int SCREEN_WIDTH_UNITS = 0x22;
-        public static int SCREEN_HEIGHT_UNITS = 0x24;
-        public static int ROUTINE_OFFSET = 0x28;
-        public static int STATIC_STRING_OFFSET = 0x2a;
-        public static int DEFAULT_BACKGROUND = 0x2c;
-        public static int DEFAULT_FOREGROUND = 0x2d;
-        public static int TERMINATORS = 0x2e;
-        public static int OUTPUT_STREAM3_WIDTH = 0x30; // 16 bit
-        public static int STD_REVISION_MAJOR = 0x32;
-        public static int STD_REVISION_MINOR = 0x33;
-        public static int CUSTOM_ALPHABET = 0x34;
+        /// <summary>
+        /// Interrupt current execution and execute the routine at the given address.
+        /// </summary>
+        /// <param name="routineAddress">The address of the interrupt routine.</param>
+        void SetInterruptRoutine(int routineAddress);
     }
 }

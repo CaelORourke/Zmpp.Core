@@ -63,8 +63,8 @@ namespace Zmpp.Core.Vm.Tests
             var logger = new Mock<ILogger>();
 
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-            IMemory minizorkmap = new DefaultMemory(data);
-            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.readUnsigned16(StoryFileHeaderBase.OBJECT_TABLE));
+            IMemory minizorkmap = new Memory(data);
+            IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
             machine = new MachineImpl(logger.Object);
             machine.initialize(data, null);
             fileheader = machine.getFileHeader();
@@ -272,7 +272,7 @@ namespace Zmpp.Core.Vm.Tests
             // act
             machine.setVariable((char)0x10, (char)2);
             machine.setStatusLine(statusLine.Object); // set the "time" flag
-            machine.writeUnsigned8(1, (char)2);
+            machine.WriteUnsigned8(1, (char)2);
             machine.updateStatusLine();
 
             // assert
@@ -354,7 +354,7 @@ namespace Zmpp.Core.Vm.Tests
 
             // act
             machine.selectOutputStream(OutputBase.OUTPUTSTREAM_TRANSCRIPT, true);
-            var result = machine.getFileHeader().isEnabled(StoryFileHeaderAttribute.TRANSCRIPTING);
+            var result = machine.getFileHeader().IsEnabled(StoryFileHeaderAttribute.Transcripting);
 
             // assert
             outputStream2.Verify(os => os.select(true), Times.Once());

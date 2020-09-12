@@ -77,37 +77,37 @@ namespace Zmpp.Core.Vm
 
         public override int getChild(int objectNum)
         {
-            return getMemory().readUnsigned8(getObjectAddress(objectNum) + OFFSET_CHILD);
+            return getMemory().ReadUnsigned8(getObjectAddress(objectNum) + OFFSET_CHILD);
         }
 
         public override void setChild(int objectNum, int child)
         {
-            getMemory().writeUnsigned8(getObjectAddress(objectNum) + OFFSET_CHILD, (char)(child & 0xff));
+            getMemory().WriteUnsigned8(getObjectAddress(objectNum) + OFFSET_CHILD, (char)(child & 0xff));
         }
 
         public override int getParent(int objectNum)
         {
-            return getMemory().readUnsigned8(getObjectAddress(objectNum) + OFFSET_PARENT);
+            return getMemory().ReadUnsigned8(getObjectAddress(objectNum) + OFFSET_PARENT);
         }
 
         public override void setParent(int objectNum, int parent)
         {
-            getMemory().writeUnsigned8(getObjectAddress(objectNum) + OFFSET_PARENT, (char)(parent & 0xff));
+            getMemory().WriteUnsigned8(getObjectAddress(objectNum) + OFFSET_PARENT, (char)(parent & 0xff));
         }
 
         public override int getSibling(int objectNum)
         {
-            return getMemory().readUnsigned8(getObjectAddress(objectNum) + OFFSET_SIBLING);
+            return getMemory().ReadUnsigned8(getObjectAddress(objectNum) + OFFSET_SIBLING);
         }
 
         public override void setSibling(int objectNum, int sibling)
         {
-            getMemory().writeUnsigned8(getObjectAddress(objectNum) + OFFSET_SIBLING, (char)(sibling & 0xff));
+            getMemory().WriteUnsigned8(getObjectAddress(objectNum) + OFFSET_SIBLING, (char)(sibling & 0xff));
         }
 
         protected override int getPropertyTableAddress(int objectNum)
         {
-            return getMemory().readUnsigned16(getObjectAddress(objectNum) + OFFSET_PROPERTYTABLE);
+            return getMemory().ReadUnsigned16(getObjectAddress(objectNum) + OFFSET_PROPERTYTABLE);
         }
 
         protected override int getNumPropertySizeBytes(int propertyDataAddress)
@@ -122,7 +122,7 @@ namespace Zmpp.Core.Vm
 
         protected override int getPropertyNum(int propertyAddress)
         {
-            int sizeByte = getMemory().readUnsigned8(propertyAddress);
+            int sizeByte = getMemory().ReadUnsigned8(propertyAddress);
             return sizeByte - 32 * (getPropertyLength(propertyAddress + 1) - 1);
         }
 
@@ -144,7 +144,7 @@ namespace Zmpp.Core.Vm
             // The size byte is always the byte before the property data in any
             // version, so this is consistent
             char sizebyte =
-              memaccess.readUnsigned8(addressOfPropertyData - 1);
+              memaccess.ReadUnsigned8(addressOfPropertyData - 1);
 
             return sizebyte / 32 + 1;
         }

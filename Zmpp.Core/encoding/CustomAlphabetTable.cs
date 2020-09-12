@@ -56,20 +56,20 @@ namespace Zmpp.Core.Encoding
         public char getA0Char(byte zchar)
         {
             if (zchar == 0) return ' ';
-            return (char)memory.readUnsigned8(tableAddress + (zchar - ALPHABET_START));
+            return (char)memory.ReadUnsigned8(tableAddress + (zchar - ALPHABET_START));
         }
 
         public char getA1Char(byte zchar)
         {
             if (zchar == 0) return ' ';
-            return (char)memory.readUnsigned8(tableAddress + ALPHABET_SIZE + (zchar - ALPHABET_START));
+            return (char)memory.ReadUnsigned8(tableAddress + ALPHABET_SIZE + (zchar - ALPHABET_START));
         }
 
         public char getA2Char(byte zchar)
         {
             if (zchar == 0) return ' ';
             if (zchar == 7) return (char)((short)'\n');
-            return (char)memory.readUnsigned8(tableAddress + 2 * ALPHABET_SIZE + (zchar - ALPHABET_START));
+            return (char)memory.ReadUnsigned8(tableAddress + 2 * ALPHABET_SIZE + (zchar - ALPHABET_START));
         }
 
         public int getA0CharCode(char zsciiChar)

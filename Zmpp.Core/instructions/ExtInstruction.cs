@@ -176,7 +176,7 @@ namespace Zmpp.Core.Instructions
             short number = getSignedValue(0);
             short places = getSignedValue(1);
             number = (short)((places >= 0) ? number << places : number >> (-places));
-            storeUnsignedResult(signedToUnsigned16(number));
+            storeUnsignedResult(SignedToUnsigned16(number));
             nextInstruction();
         }
 
@@ -276,9 +276,9 @@ namespace Zmpp.Core.Instructions
                   getMachine().getPictureManager().getPictureSize(picnum);
                 if (picdim != null)
                 {
-                    getMachine().writeUnsigned16(array, toUnsigned16(picdim.getHeight()));
-                    getMachine().writeUnsigned16(array + 2,
-                                                 toUnsigned16(picdim.getWidth()));
+                    getMachine().WriteUnsigned16(array, ToUnsigned16(picdim.getHeight()));
+                    getMachine().WriteUnsigned16(array + 2,
+                                                 ToUnsigned16(picdim.getWidth()));
                     result = true;
                 }
             }
@@ -291,10 +291,10 @@ namespace Zmpp.Core.Instructions
         /// <param name="array">an array address</param>
         private void writePictureFileInfo(int array)
         {
-            getMachine().writeUnsigned16(array,
-                toUnsigned16(getMachine().getPictureManager().getNumPictures()));
-            getMachine().writeUnsigned16(array + 2,
-                toUnsigned16(getMachine().getPictureManager().getRelease()));
+            getMachine().WriteUnsigned16(array,
+                ToUnsigned16(getMachine().getPictureManager().getNumPictures()));
+            getMachine().WriteUnsigned16(array + 2,
+                ToUnsigned16(getMachine().getPictureManager().getRelease()));
         }
 
         /// <summary>

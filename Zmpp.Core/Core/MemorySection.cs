@@ -30,75 +30,76 @@
 namespace Zmpp.Core
 {
     /// <summary>
-    /// A MemorySection object wraps a Memory object, a length and a start to
-    /// support subsections within memory.
-    /// 
-    /// All access functions will be relative to the initialized start offset
-    /// within the global memory.
+    /// Represents a subsection within a memory map.
     /// </summary>
+    /// <remarks>
+    /// All addresses are relative to the start of
+    /// this <see cref="Zmpp.Core.MemorySection"/>.
+    /// </remarks>
     public class MemorySection : IMemory
     {
-        private IMemory memory;
-        private int start;
-        private int length;
+        private readonly IMemory memory;
+        private readonly int start;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.MemorySection"/>
+        /// class for the specified <see cref="Zmpp.Core.Memory"/>, start address,
+        /// and length.
         /// </summary>
-        /// <param name="memory">the Memory object to wrap</param>
-        /// <param name="start">the start of the section</param>
-        /// <param name="length">the length of the section</param>
+        /// <param name="memory">The parent <see cref="Zmpp.Core.Memory"/> object.</param>
+        /// <param name="start">The start address of this <see cref="Zmpp.Core.MemorySection"/>.</param>
+        /// <param name="length">the length in bytes of this <see cref="Zmpp.Core.MemorySection"/>.</param>
         public MemorySection(IMemory memory, int start, int length)
         {
             this.memory = memory;
             this.start = start;
-            this.length = length;
+            this.Length = length;
         }
 
         /// <summary>
-        /// Returns the length of this object in bytes.
+        /// Gets the number of bytes in the current
+        /// <see cref="Zmpp.Core.MemorySection"/> object.
         /// </summary>
-        /// <returns>the length in bytes</returns>
-        public int getLength() { return length; }
+        public int Length { get; }
 
-        public void writeUnsigned16(int address, char value)
+        public void WriteUnsigned16(int address, char value)
         {
-            memory.writeUnsigned16(address + start, value);
+            memory.WriteUnsigned16(address + start, value);
         }
 
-        public void writeUnsigned8(int address, char value)
+        public void WriteUnsigned8(int address, char value)
         {
-            memory.writeUnsigned8(address + start, value);
+            memory.WriteUnsigned8(address + start, value);
         }
 
-        public char readUnsigned16(int address)
+        public char ReadUnsigned16(int address)
         {
-            return memory.readUnsigned16(address + start);
+            return memory.ReadUnsigned16(address + start);
         }
 
-        public char readUnsigned8(int address)
+        public char ReadUnsigned8(int address)
         {
-            return memory.readUnsigned8(address + start);
+            return memory.ReadUnsigned8(address + start);
         }
 
-        public void copyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes)
+        public void CopyBytesToArray(byte[] dstData, int dstOffset, int srcOffset, int numBytes)
         {
-            memory.copyBytesToArray(dstData, dstOffset, srcOffset + start, numBytes);
+            memory.CopyBytesToArray(dstData, dstOffset, srcOffset + start, numBytes);
         }
 
-        public void copyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes)
+        public void CopyBytesFromArray(byte[] srcData, int srcOffset, int dstOffset, int numBytes)
         {
-            memory.copyBytesFromArray(srcData, srcOffset, dstOffset + start, numBytes);
+            memory.CopyBytesFromArray(srcData, srcOffset, dstOffset + start, numBytes);
         }
 
-        public void copyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes)
+        public void CopyBytesFromMemory(IMemory srcMem, int srcOffset, int dstOffset, int numBytes)
         {
-            memory.copyBytesFromMemory(srcMem, srcOffset, dstOffset + start, numBytes);
+            memory.CopyBytesFromMemory(srcMem, srcOffset, dstOffset + start, numBytes);
         }
 
-        public void copyArea(int src, int dst, int numBytes)
+        public void CopyArea(int src, int dst, int numBytes)
         {
-            memory.copyArea(src + start, dst + start, numBytes);
+            memory.CopyArea(src + start, dst + start, numBytes);
         }
     }
 }

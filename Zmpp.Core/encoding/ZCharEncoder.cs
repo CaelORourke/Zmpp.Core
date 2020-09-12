@@ -108,14 +108,14 @@ namespace Zmpp.Core.Encoding
                 {
                     resultword = writeZcharToWord(resultword, PAD_CHAR, i);
                 }
-                state.writeUnsigned16(toUnsigned16(resultword));
+                state.writeUnsigned16(ToUnsigned16(resultword));
             }
 
             // If we did not encode 3 16-bit words, fill the remaining ones with
             // 0x14a5's (= 0-{5,5,5})
             while (state.getTargetOffset() < state.getNumEntryBytes())
             {
-                state.writeUnsigned16(toUnsigned16(0x14a5));
+                state.writeUnsigned16(ToUnsigned16(0x14a5));
             }
 
             // Always mark the last word as such
@@ -205,7 +205,7 @@ namespace Zmpp.Core.Encoding
             if (state.currentWordWasProcessed() && !state.atLastWord16())
             {
                 // Write the result and increment the target position
-                state.writeUnsigned16(toUnsigned16(state.currentWord));
+                state.writeUnsigned16(ToUnsigned16(state.currentWord));
                 state.currentWord = 0;
                 state.wordPosition = 0;
             }
@@ -329,7 +329,7 @@ namespace Zmpp.Core.Encoding
         /// Returns the next character.
         /// </summary>
         /// <returns>next character</returns>
-        public virtual char nextChar() { return memory.readUnsigned8(source++); }
+        public virtual char nextChar() { return memory.ReadUnsigned8(source++); }
 
         /// <summary>
         /// Marks the last word.
@@ -337,8 +337,8 @@ namespace Zmpp.Core.Encoding
         public void markLastWord()
         {
             int lastword =
-                memory.readUnsigned16(targetStart + getLastWord16Offset());
-            memory.writeUnsigned16(targetStart + getLastWord16Offset(), toUnsigned16(lastword | 0x8000));
+                memory.ReadUnsigned16(targetStart + getLastWord16Offset());
+            memory.WriteUnsigned16(targetStart + getLastWord16Offset(), ToUnsigned16(lastword | 0x8000));
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace Zmpp.Core.Encoding
         /// <param name="value">the value to write</param>
         public void writeUnsigned16(char value)
         {
-            memory.writeUnsigned16(target, value);
+            memory.WriteUnsigned16(target, value);
             target += 2;
         }
 
