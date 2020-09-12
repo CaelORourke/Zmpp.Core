@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.media
+namespace Zmpp.Core.Media
 {
     /// <summary>
     /// This class holds Inform meta information.

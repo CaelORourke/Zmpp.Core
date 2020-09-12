@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.media
+namespace Zmpp.Core.Media
 {
     /// <summary>
     /// This interface defines the sound system of the Z-machine preservation

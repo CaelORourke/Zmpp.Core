@@ -27,12 +27,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace test.zmpp.vm
+namespace Zmpp.Core.Vm.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using org.zmpp.@base;
-    using org.zmpp.encoding;
-    using org.zmpp.vm;
+    using Zmpp.Core;
+    using Zmpp.Core.Encoding;
+    using Zmpp.Core.Vm;
     using System.IO;
 
     /// <summary>

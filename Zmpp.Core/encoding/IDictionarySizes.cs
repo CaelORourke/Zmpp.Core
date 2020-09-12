@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.encoding
+namespace Zmpp.Core.Encoding
 {
     /// <summary>
     /// Z-code compilers seem to truncate dictionary string pretty

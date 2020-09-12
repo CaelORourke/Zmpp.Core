@@ -27,11 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.encoding
+namespace Zmpp.Core.Encoding
 {
-    using org.zmpp.@base;
+    using Zmpp.Core;
     using System;
-    using static org.zmpp.@base.MemoryUtil;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// This class encodes ZSCII strings into dictionary encoded strings.

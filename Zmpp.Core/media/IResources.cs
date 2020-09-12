@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.media
+namespace Zmpp.Core.Media
 {
     /// <summary>
     /// This interface defines access to the Z-machine's media resources.

@@ -1,7 +1,7 @@
 ﻿namespace ZMachineConsole
 {
-    using org.zmpp.io;
-    using org.zmpp.windowing;
+    using Zmpp.Core.IO;
+    using Zmpp.Core.UI;
     using System;
 
     public class ConsoleScreenModel : IScreenModel

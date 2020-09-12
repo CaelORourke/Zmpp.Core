@@ -1,8 +1,8 @@
 ﻿namespace ZMachineConsole
 {
-    using org.zmpp.@base;
-    using org.zmpp.iff;
-    using org.zmpp.vm;
+    using Zmpp.Core;
+    using Zmpp.Core.Iff;
+    using Zmpp.Core.Vm;
     using System.IO;
 
     public class FileSaveGameDataStore : ISaveGameDataStore

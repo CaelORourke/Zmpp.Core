@@ -1,6 +1,6 @@
 ﻿namespace ZMachineConsole
 {
-    using org.zmpp.windowing;
+    using Zmpp.Core.UI;
     using System;
 
     public class ConsoleStatusLine : IStatusLine

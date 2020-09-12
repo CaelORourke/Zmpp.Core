@@ -27,13 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.instructions
+namespace Zmpp.Core.Instructions
 {
-    using org.zmpp.media;
-    using org.zmpp.vm;
-    using org.zmpp.windowing;
-    using static org.zmpp.@base.MemoryUtil;
-    using static org.zmpp.vm.Instruction;
+    using Zmpp.Core.Media;
+    using Zmpp.Core.Vm;
+    using Zmpp.Core.UI;
+    using static Zmpp.Core.MemoryUtil;
+    using static Zmpp.Core.Vm.Instruction;
 
     /// <summary>
     /// Implementation of instructions with EXT operand count.

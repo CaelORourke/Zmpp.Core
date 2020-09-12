@@ -27,18 +27,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace test.zmpp.vm
+namespace Zmpp.Core.Vm.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Text;
     using System.IO;
-    using org.zmpp.@base;
-    using org.zmpp.iff;
-    using org.zmpp.vm;
+    using Zmpp.Core;
+    using Zmpp.Core.Iff;
+    using Zmpp.Core.Vm;
     using Moq;
-    using static org.zmpp.vm.PortableGameState;
+    using static Zmpp.Core.Vm.PortableGameState;
 
     /// <summary>
     /// These tests simply analyze a given Quetzal file.

@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.instructions
+namespace Zmpp.Core.Instructions
 {
-    using org.zmpp.vm;
-    using static org.zmpp.vm.Instruction;
+    using Zmpp.Core.Vm;
+    using static Zmpp.Core.Vm.Instruction;
 
     /// <summary>
     /// Implementation of 1OP instructions.

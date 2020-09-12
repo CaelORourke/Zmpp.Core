@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
     /// <summary>
     /// This class holds information about a subroutine.

@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.@base;
-    using static org.zmpp.@base.MemoryUtil;
+    using Zmpp.Core;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// This class implements the object tree for story file version >= 4.

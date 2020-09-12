@@ -27,14 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.iff
+namespace Zmpp.Core.Iff
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using IMemory = org.zmpp.@base.IMemory;
-    using MemorySection = org.zmpp.@base.MemorySection;
+    using IMemory = Zmpp.Core.IMemory;
+    using MemorySection = Zmpp.Core.MemorySection;
 
     /// <summary>
     /// This class implements the FormChunk interface.

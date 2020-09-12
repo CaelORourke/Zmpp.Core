@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.encoding
+namespace Zmpp.Core.Encoding
 {
     /// <summary>
     /// The alphabet table is a central part of the Z encoding system. It stores

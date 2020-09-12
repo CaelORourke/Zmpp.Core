@@ -27,9 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.encoding
+namespace Zmpp.Core.Encoding
 {
-    using org.zmpp.@base;
+    using Zmpp.Core;
 
     /// <summary>
     /// If the story file header defines a custom alphabet table, instances

@@ -27,16 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace test.zmpp.vm
+namespace Zmpp.Core.Vm.Tests
 {
     using Microsoft.Extensions.Logging;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using org.zmpp.@base;
-    using org.zmpp.iff;
-    using org.zmpp.io;
-    using org.zmpp.vm;
-    using org.zmpp.windowing;
+    using Zmpp.Core;
+    using Zmpp.Core.Iff;
+    using Zmpp.Core.IO;
+    using Zmpp.Core.Vm;
+    using Zmpp.Core.UI;
     using System;
     using System.IO;
 

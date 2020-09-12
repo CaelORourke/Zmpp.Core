@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.media
+namespace Zmpp.Core.Media
 {
     /// <summary>
     /// This class defines the interface to play a Blorb sound.

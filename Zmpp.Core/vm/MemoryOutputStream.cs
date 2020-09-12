@@ -27,11 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.io;
+    using Zmpp.Core.IO;
     using System.Collections.Generic;
-    using static org.zmpp.@base.MemoryUtil;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// This class implements output stream 3. This stream writes to dynamic

@@ -27,12 +27,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.iff
+namespace Zmpp.Core.Iff
 {
-    using org.zmpp.@base;
+    using Zmpp.Core;
     using System;
     using System.Text;
-    using static org.zmpp.@base.MemoryUtil;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// This is the default implementation of the Chunk interface.

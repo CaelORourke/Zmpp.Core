@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace test.zmpp.iff
+namespace Zmpp.Core.Iff.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using org.zmpp.iff;
+    using Zmpp.Core.Iff;
     using System.Text;
 
     /// <summary>

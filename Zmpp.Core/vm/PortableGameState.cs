@@ -27,14 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.@base;
-    using org.zmpp.iff;
+    using Zmpp.Core;
+    using Zmpp.Core.Iff;
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using static org.zmpp.@base.MemoryUtil;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// This class represents the state of the Z machine in an external format,

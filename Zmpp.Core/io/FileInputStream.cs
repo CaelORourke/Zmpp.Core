@@ -28,12 +28,12 @@
 // * POSSIBILITY OF SUCH DAMAGE.
 // */
 
-//namespace org.zmpp.io
+//namespace Zmpp.Core.IO
 //{
 //    using System;
 //    using System.Collections.Generic;
 //    using System.Text;
-//    using org.zmpp.encoding;
+//    using Zmpp.Core.encoding;
 //    using Microsoft.Extensions.Logging;
 //    using System.IO;
 

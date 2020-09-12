@@ -27,9 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.encoding;
+    using Zmpp.Core.Encoding;
 
     /// <summary>
     /// The dictionary size definitions for the story file versions 4-8.

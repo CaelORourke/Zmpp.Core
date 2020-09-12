@@ -27,9 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.instructions
+namespace Zmpp.Core.Instructions
 {
-    using org.zmpp.vm;
+    using Zmpp.Core.Vm;
     using System;
     using System.Collections.Generic;
 

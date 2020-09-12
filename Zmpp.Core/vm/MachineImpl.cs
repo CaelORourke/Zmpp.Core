@@ -27,16 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
     using Microsoft.Extensions.Logging;
-    using org.zmpp.@base;
-    using org.zmpp.encoding;
-    using org.zmpp.iff;
-    using org.zmpp.io;
-    using org.zmpp.media;
-    using org.zmpp.vmutil;
-    using org.zmpp.windowing;
+    using Zmpp.Core;
+    using Zmpp.Core.Encoding;
+    using Zmpp.Core.Iff;
+    using Zmpp.Core.IO;
+    using Zmpp.Core.Media;
+    using Zmpp.Core.Vm.Utility;
+    using Zmpp.Core.UI;
     using System;
     using System.Collections.Generic;
     using System.Text;

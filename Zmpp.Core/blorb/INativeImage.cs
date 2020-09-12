@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.blorb
+namespace Zmpp.Core.Blorb
 {
     /// <summary>
     /// An interface that should be implemented using system-specific classes.

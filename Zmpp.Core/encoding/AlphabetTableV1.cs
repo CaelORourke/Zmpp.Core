@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.encoding
+namespace Zmpp.Core.Encoding
 {
     /// <summary>
     /// An alphabet table in V1 story files behaves like an alphabet table in

@@ -1,6 +1,6 @@
 ﻿namespace ZMachineConsole
 {
-    using org.zmpp.io;
+    using Zmpp.Core.IO;
     using System;
 
     public class ConsoleOutput : IOutputStream

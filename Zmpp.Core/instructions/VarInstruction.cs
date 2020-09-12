@@ -27,14 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.instructions
+namespace Zmpp.Core.Instructions
 {
     using Microsoft.Extensions.Logging;
-    using org.zmpp.media;
-    using org.zmpp.vm;
-    using org.zmpp.windowing;
+    using Zmpp.Core.Media;
+    using Zmpp.Core.Vm;
+    using Zmpp.Core.UI;
     using System;
-    using static org.zmpp.vm.Instruction;
+    using static Zmpp.Core.Vm.Instruction;
 
     /// <summary>
     /// Implementation of instructions with operand count VAR.

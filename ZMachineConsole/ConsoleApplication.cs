@@ -30,9 +30,9 @@
 namespace ZMachineConsole
 {
     using Microsoft.Extensions.Logging;
-    using org.zmpp.@base;
-    using org.zmpp.instructions;
-    using org.zmpp.vm;
+    using Zmpp.Core;
+    using Zmpp.Core.Instructions;
+    using Zmpp.Core.Vm;
     using System;
     using System.IO;
 

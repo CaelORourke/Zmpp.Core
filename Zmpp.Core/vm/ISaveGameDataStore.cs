@@ -27,9 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.iff;
+    using Zmpp.Core.Iff;
 
     /// <summary>
     /// This interface should be implemented by user interfaces that implement

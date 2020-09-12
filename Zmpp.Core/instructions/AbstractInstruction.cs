@@ -27,11 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.instructions
+namespace Zmpp.Core.Instructions
 {
-    using org.zmpp.@base;
-    using org.zmpp.vm;
-    using org.zmpp.windowing;
+    using Zmpp.Core;
+    using Zmpp.Core.Vm;
+    using Zmpp.Core.UI;
     using System;
     using System.Text;
 

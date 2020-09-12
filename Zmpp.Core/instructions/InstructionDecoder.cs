@@ -27,13 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.instructions
+namespace Zmpp.Core.Instructions
 {
-    using org.zmpp.vm;
+    using Zmpp.Core.Vm;
     using System;
-    using static org.zmpp.instructions.AbstractInstruction;
-    using static org.zmpp.instructions.InstructionInfoDb;
-    using static org.zmpp.vm.Instruction;
+    using static Zmpp.Core.Instructions.AbstractInstruction;
+    using static Zmpp.Core.Instructions.InstructionInfoDb;
+    using static Zmpp.Core.Vm.Instruction;
 
     /// <summary>
     /// The revised instruction decoder, a direct port from the Erlang implementation

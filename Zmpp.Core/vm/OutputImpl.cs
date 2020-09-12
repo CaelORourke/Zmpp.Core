@@ -27,11 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.@base;
-    using org.zmpp.encoding;
-    using org.zmpp.io;
+    using Zmpp.Core;
+    using Zmpp.Core.Encoding;
+    using Zmpp.Core.IO;
     using System;
 
     /// <summary>

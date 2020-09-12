@@ -27,11 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.@base;
+    using Zmpp.Core;
     using System;
-    using static org.zmpp.@base.MemoryUtil;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// This class is the abstract super class of object trees.

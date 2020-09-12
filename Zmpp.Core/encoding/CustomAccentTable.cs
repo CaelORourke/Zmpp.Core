@@ -27,9 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.encoding
+namespace Zmpp.Core.Encoding
 {
-    using org.zmpp.@base;
+    using Zmpp.Core;
 
     /// <summary>
     /// This accent table is used in case that there is an extension header

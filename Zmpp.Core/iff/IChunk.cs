@@ -27,9 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.iff
+namespace Zmpp.Core.Iff
 {
-    using org.zmpp.@base;
+    using Zmpp.Core;
     using System;
 
     /// <summary>

@@ -27,15 +27,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
     using Microsoft.Extensions.Logging;
-    using org.zmpp.@base;
-    using org.zmpp.vmutil;
+    using Zmpp.Core;
+    using Zmpp.Core.Vm.Utility;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using static org.zmpp.@base.MemoryUtil;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// Cpu interface implementation.

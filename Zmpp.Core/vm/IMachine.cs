@@ -27,12 +27,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.@base;
-    using org.zmpp.encoding;
-    using org.zmpp.media;
-    using org.zmpp.windowing;
+    using Zmpp.Core;
+    using Zmpp.Core.Encoding;
+    using Zmpp.Core.Media;
+    using Zmpp.Core.UI;
     using System;
 
     /// <summary>

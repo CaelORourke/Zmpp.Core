@@ -1,7 +1,7 @@
 ﻿namespace ZMachineConsole
 {
-    using org.zmpp.io;
-    using org.zmpp.vm;
+    using Zmpp.Core.IO;
+    using Zmpp.Core.Vm;
     using System;
     using System.Globalization;
 

@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.blorb
+namespace Zmpp.Core.Blorb
 {
-    using org.zmpp.iff;
-    using org.zmpp.media;
+    using Zmpp.Core.Iff;
+    using Zmpp.Core.Media;
 
     /// <summary>
     /// SoundEffectFactory interface.

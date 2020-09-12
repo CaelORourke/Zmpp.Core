@@ -28,9 +28,9 @@
  */
 
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.@base;
+    using Zmpp.Core;
 
     /// <summary>
     /// This class implements the object tree for story file version <= 3.

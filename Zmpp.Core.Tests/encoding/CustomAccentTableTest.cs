@@ -26,12 +26,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace test.zmpp.encoding
+namespace Zmpp.Core.Encoding.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using org.zmpp.@base;
-    using org.zmpp.encoding;
+    using Zmpp.Core;
+    using Zmpp.Core.Encoding;
 
     /// <summary>
     /// Tests for the CustomAccentTable class.

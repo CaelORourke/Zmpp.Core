@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.iff
+namespace Zmpp.Core.Iff
 {
     public abstract class ChunkBase
     {

@@ -27,13 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.vm
+namespace Zmpp.Core.Vm
 {
-    using org.zmpp.@base;
-    using org.zmpp.encoding;
+    using Zmpp.Core;
+    using Zmpp.Core.Encoding;
     using System;
     using System.Text;
-    using static org.zmpp.@base.MemoryUtil;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// Abstract super class of dictionaries.

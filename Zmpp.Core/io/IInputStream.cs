@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.io
+namespace Zmpp.Core.IO
 {
     using System;
 

@@ -27,11 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace test.zmpp.iff
+namespace Zmpp.Core.Iff.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using org.zmpp.@base;
-    using org.zmpp.iff;
+    using Zmpp.Core;
+    using Zmpp.Core.Iff;
 
     /// <summary>
     /// Tests for the DefaultChunk class.

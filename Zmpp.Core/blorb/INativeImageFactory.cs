@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.blorb
+namespace Zmpp.Core.Blorb
 {
     using System.IO;
 

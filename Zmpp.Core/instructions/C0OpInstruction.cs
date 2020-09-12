@@ -27,11 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.instructions
+namespace Zmpp.Core.Instructions
 {
-    using org.zmpp.vm;
+    using Zmpp.Core.Vm;
     using System;
-    using static org.zmpp.vm.Instruction;
+    using static Zmpp.Core.Vm.Instruction;
 
     /// <summary>
     /// Instruction of form 0Op.

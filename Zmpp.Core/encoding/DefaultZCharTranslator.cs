@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace org.zmpp.encoding
+namespace Zmpp.Core.Encoding
 {
     using System;
-    using static org.zmpp.encoding.AlphabetTableBase;
+    using static Zmpp.Core.Encoding.AlphabetTableBase;
 
     /// <summary>
     /// The default implementation of ZCharTranslator
