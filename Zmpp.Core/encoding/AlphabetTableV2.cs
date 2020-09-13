@@ -30,30 +30,33 @@
 namespace Zmpp.Core.Encoding
 {
     /// <summary>
-    /// An alphabet table in a V2 story file behaves "almost like" the default
+    /// Represent an alphabet table in a V2 story file.
+    /// </summary>
+    /// <remarks>
+    /// Behaves "almost like" the default
     /// alphabet table, in that they have the same characters in the alphabets.
     /// There are however two differences: It only supports one abbreviation code
     /// and it supports shift-lock.
-    /// </summary>
-    public class AlphabetTableV2 : DefaultAlphabetTable
+    /// </remarks>
+    public class AlphabetTableV2 : AlphabetTable
     {
         private const long serialVersionUID = 1L;
 
-        public override bool isAbbreviation(char zchar) { return zchar == 1; }
+        public override bool IsAbbreviation(char zchar) { return zchar == 1; }
 
-        public override bool isShift1(char zchar)
+        public override bool IsShift1(char zchar)
         {
-            return zchar == SHIFT_2 || zchar == SHIFT_4;
+            return zchar == Shift2 || zchar == Shift4;
         }
 
-        public override bool isShift2(char zchar)
+        public override bool IsShift2(char zchar)
         {
-            return zchar == SHIFT_3 || zchar == SHIFT_5;
+            return zchar == Shift3 || zchar == Shift5;
         }
 
-        public override bool isShiftLock(char zchar)
+        public override bool IsShiftLock(char zchar)
         {
-            return zchar == SHIFT_4 || zchar == SHIFT_5;
+            return zchar == Shift4 || zchar == Shift5;
         }
     }
 }

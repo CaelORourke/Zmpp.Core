@@ -157,14 +157,14 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             Abbreviations abbreviations = new Abbreviations(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.Abbreviations));
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbreviations);
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbreviations);
 
             // act
             int propaddress = objectTree.getPropertiesDescriptionAddress(OBJECT1);
-            var result = decoder.decode2Zscii(minizorkmap, propaddress, 0);
+            var result = decoder.Decode2Zscii(minizorkmap, propaddress, 0);
 
             // assert
             Assert.AreEqual("forest", result);

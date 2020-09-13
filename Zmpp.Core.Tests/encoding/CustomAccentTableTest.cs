@@ -53,7 +53,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAccentTable noAccentTable = new CustomAccentTable(memory.Object, 0);
 
             // act
-            var result = noAccentTable.getLength();
+            var result = noAccentTable.Length;
 
             // assert
             Assert.AreEqual(0, result);
@@ -68,7 +68,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
-            var result = accentTable.getLength();
+            var result = accentTable.Length;
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.Once());
@@ -83,7 +83,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAccentTable noAccentTable = new CustomAccentTable(memory.Object, 0);
 
             // act
-            var result = noAccentTable.getAccent(42);
+            var result = noAccentTable.GetAccent(42);
 
             // assert
             Assert.AreEqual('?', result);
@@ -98,7 +98,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
-            var result = accentTable.getAccent(3);
+            var result = accentTable.GetAccent(3);
 
             // assert
             memory.Verify(m => m.ReadUnsigned16(ADDRESS + 7), Times.Once());
@@ -117,7 +117,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
-            var result = accentTable.getIndexOfLowerCase(6);
+            var result = accentTable.GetIndexOfLowerCase(6);
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.Once());
@@ -138,7 +138,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
 
             // act
-            var result = accentTable.getIndexOfLowerCase(1);
+            var result = accentTable.GetIndexOfLowerCase(1);
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.AtLeastOnce());

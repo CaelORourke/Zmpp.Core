@@ -68,7 +68,7 @@ namespace Zmpp.Core.Vm.Tests
                 context.setLocalVariable((char)2, (char)815);
                 Assert.Fail();
             }
-            catch (IndexOutOfRangeException expected)
+            catch (IndexOutOfRangeException)
             {
                 // this is good
             }

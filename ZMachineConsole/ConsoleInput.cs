@@ -21,7 +21,7 @@
 
         private String convertToZsciiInputLine(String input)
         {
-            return machine.convertToZscii(input.ToLower(CultureInfo.DefaultThreadCurrentCulture)) + "\r";
+            return machine.ToZsciiString(input.ToLower(CultureInfo.DefaultThreadCurrentCulture)) + "\r";
         }
 
         public string readLine()

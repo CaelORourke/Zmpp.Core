@@ -32,94 +32,98 @@ namespace Zmpp.Core.Encoding
     using Zmpp.Core;
 
     /// <summary>
-    /// If the story file header defines a custom alphabet table, instances
-    /// of this class are used to retrieve the alphabet characters.
+    /// Represents a custom alphabet table.
     /// </summary>
+    /// <remarks>
+    /// If the story file header defines a custom alphabet table
+    /// instances of this class are used to retrieve the alphabet characters.
+    /// </remarks>
     public class CustomAlphabetTable : AlphabetTableBase, IAlphabetTable
     {
         private const long serialVersionUID = 1L;
-        private const int ALPHABET_SIZE = 26;
-        private IMemory memory;
-        private int tableAddress;
+        private const int AlphabetSize = 26;
+        private readonly IMemory memory;
+        private readonly int tableAddress;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Encoding.CustomAlphabetTable"/>
+        /// class for the specified memory and address.
         /// </summary>
-        /// <param name="memory">the Memory object</param>
-        /// <param name="address">the table address</param>
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The table address.</param>
         public CustomAlphabetTable(IMemory memory, int address)
         {
             this.memory = memory;
             tableAddress = address;
         }
 
-        public char getA0Char(byte zchar)
+        public override char GetA0Char(byte zchar)
         {
             if (zchar == 0) return ' ';
-            return (char)memory.ReadUnsigned8(tableAddress + (zchar - ALPHABET_START));
+            return (char)memory.ReadUnsigned8(tableAddress + (zchar - AlphabetStart));
         }
 
-        public char getA1Char(byte zchar)
+        public override char GetA1Char(byte zchar)
         {
             if (zchar == 0) return ' ';
-            return (char)memory.ReadUnsigned8(tableAddress + ALPHABET_SIZE + (zchar - ALPHABET_START));
+            return (char)memory.ReadUnsigned8(tableAddress + AlphabetSize + (zchar - AlphabetStart));
         }
 
-        public char getA2Char(byte zchar)
+        public override char GetA2Char(byte zchar)
         {
             if (zchar == 0) return ' ';
             if (zchar == 7) return (char)((short)'\n');
-            return (char)memory.ReadUnsigned8(tableAddress + 2 * ALPHABET_SIZE + (zchar - ALPHABET_START));
+            return (char)memory.ReadUnsigned8(tableAddress + 2 * AlphabetSize + (zchar - AlphabetStart));
         }
 
-        public int getA0CharCode(char zsciiChar)
+        public override int GetA0CharCode(char zsciiChar)
         {
-            for (int i = ALPHABET_START; i < ALPHABET_START + ALPHABET_SIZE; i++)
+            for (int i = AlphabetStart; i < AlphabetStart + AlphabetSize; i++)
             {
-                if (getA0Char((byte)i) == zsciiChar) return i;
+                if (GetA0Char((byte)i) == zsciiChar) return i;
             }
             return -1;
         }
 
-        public int getA1CharCode(char zsciiChar)
+        public override int GetA1CharCode(char zsciiChar)
         {
-            for (int i = ALPHABET_START; i < ALPHABET_START + ALPHABET_SIZE; i++)
+            for (int i = AlphabetStart; i < AlphabetStart + AlphabetSize; i++)
             {
-                if (getA1Char((byte)i) == zsciiChar) return i;
+                if (GetA1Char((byte)i) == zsciiChar) return i;
             }
             return -1;
         }
 
-        public int getA2CharCode(char zsciiChar)
+        public override int GetA2CharCode(char zsciiChar)
         {
-            for (int i = ALPHABET_START; i < ALPHABET_START + ALPHABET_SIZE; i++)
+            for (int i = AlphabetStart; i < AlphabetStart + AlphabetSize; i++)
             {
-                if (getA2Char((byte)i) == zsciiChar) return i;
+                if (GetA2Char((byte)i) == zsciiChar) return i;
             }
             return -1;
         }
 
 
-        public bool isAbbreviation(char zchar)
+        public override bool IsAbbreviation(char zchar)
         {
             return 1 <= zchar && zchar <= 3;
         }
 
-        public bool isShift1(char zchar)
+        public override bool IsShift1(char zchar)
         {
-            return zchar == AlphabetTableBase.SHIFT_4;
+            return zchar == AlphabetTableBase.Shift4;
         }
 
-        public bool isShift2(char zchar)
+        public override bool IsShift2(char zchar)
         {
-            return zchar == AlphabetTableBase.SHIFT_5;
+            return zchar == AlphabetTableBase.Shift5;
         }
 
-        public bool isShiftLock(char zchar) { return false; }
+        public override bool IsShiftLock(char zchar) { return false; }
 
-        public bool isShift(char zchar)
+        public override bool IsShift(char zchar)
         {
-            return isShift1(zchar) || isShift2(zchar);
+            return IsShift1(zchar) || IsShift2(zchar);
         }
     }
 }

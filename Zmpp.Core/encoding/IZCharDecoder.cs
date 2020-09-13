@@ -29,8 +29,8 @@
 
 namespace Zmpp.Core.Encoding
 {
-    using Zmpp.Core;
     using System;
+    using Zmpp.Core;
 
     /// <summary>
     /// This interface provides decoding for the Z character encoding into
@@ -46,53 +46,41 @@ namespace Zmpp.Core.Encoding
     public interface IZCharDecoder
     {
         /// <summary>
-        /// This interface defines the abstract access to an abbreviations
-        /// table in memory, this will be used for decoding if needed.
-        /// </summary>
-        public interface AbbreviationsTable
-        {
-            /// <summary>
-            /// Returns the word address of the specified entry.
-            /// </summary>
-            /// <param name="entryNum">entry number</param>
-            /// <returns>word address</returns>
-            int getWordAddress(int entryNum);
-        }
-
-        /// <summary>
         /// Performs a ZSCII decoding at the specified position of
-        /// the given memory object, this method is exclusively designed to
+        /// the given memory object.
+        /// </summary>
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The string address.</param>
+        /// <param name="length">The maximum length in bytes.</param>
+        /// <returns>The decoded string.</returns>
+        /// <remarks>
+        /// This method is exclusively designed to
         /// deal with the problems of dictionary entries.These can be cropped,
         /// leaving the string in a state, that can not be decoded properly
         /// otherwise.If the provided length is 0, the semantics are
         /// equal to the method without the length parameter.
-        /// </summary>
-        /// <param name="memory">a Memory object</param>
-        /// <param name="address">the address of the string</param>
-        /// <param name="length">the maximum length in bytes</param>
-        /// <returns>the decoded string</returns>
-        String decode2Zscii(IMemory memory, int address, int length);
+        /// </remarks>
+        String Decode2Zscii(IMemory memory, int address, int length);
 
         /// <summary>
         /// Returns the number of Z encoded bytes at the specified position.
         /// </summary>
-        /// <param name="memory">the Memory object</param>
-        /// <param name="address">the string address</param>
-        /// <returns>the number Z encoded bytes</returns>
-        int getNumZEncodedBytes(IMemory memory, int address);
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The string address.</param>
+        /// <returns>The number of Z encoded bytes.</returns>
+        int GetNumZEncodedBytes(IMemory memory, int address);
 
         /// <summary>
         /// Decodes the given byte value to the specified buffer using the working
         /// alphabet.
         /// </summary>
-        /// <param name="zchar">a z encoded character, needs to be a non-shift character</param>
-        /// <returns>decoded character</returns>
-        char decodeZChar(char zchar);
+        /// <param name="zchar">The Z encoded character, needs to be a non-shift character</param>
+        /// <returns>The decoded character.</returns>
+        char DecodeZChar(char zchar);
 
         /// <summary>
-        /// Returns the ZStringTranslator.
+        /// Gets the translator.
         /// </summary>
-        /// <returns>the translator</returns>
-        IZCharTranslator getTranslator();
+        IZCharTranslator Translator { get; }
     }
 }

@@ -48,20 +48,20 @@ namespace Zmpp.Core.Encoding.Tests
             // arrange
             IAlphabetTable v1Table = new AlphabetTableV1();
             IAlphabetTable v2Table = new AlphabetTableV2();
-            IAlphabetTable defaultTable = new DefaultAlphabetTable();
+            IAlphabetTable defaultTable = new AlphabetTable();
 
             // act
-            var result = v1Table.getA0Char((byte)0);
-            var result2 = v1Table.getA1Char((byte)0);
-            var result3 = v1Table.getA2Char((byte)0);
+            var result = v1Table.GetA0Char((byte)0);
+            var result2 = v1Table.GetA1Char((byte)0);
+            var result3 = v1Table.GetA2Char((byte)0);
 
-            var result4 = v2Table.getA0Char((byte)0);
-            var result5 = v2Table.getA1Char((byte)0);
-            var result6 = v2Table.getA2Char((byte)0);
+            var result4 = v2Table.GetA0Char((byte)0);
+            var result5 = v2Table.GetA1Char((byte)0);
+            var result6 = v2Table.GetA2Char((byte)0);
 
-            var result7 = defaultTable.getA0Char((byte)0);
-            var result8 = defaultTable.getA1Char((byte)0);
-            var result9 = defaultTable.getA2Char((byte)0);
+            var result7 = defaultTable.GetA0Char((byte)0);
+            var result8 = defaultTable.GetA1Char((byte)0);
+            var result9 = defaultTable.GetA2Char((byte)0);
 
             // assert
             Assert.AreEqual(' ', result);
@@ -84,9 +84,9 @@ namespace Zmpp.Core.Encoding.Tests
             IAlphabetTable v1Table = new AlphabetTableV1();
 
             // act
-            var result = v1Table.getA0Char((byte)1);
-            var result2 = v1Table.getA1Char((byte)1);
-            var result3 = v1Table.getA2Char((byte)1);
+            var result = v1Table.GetA0Char((byte)1);
+            var result2 = v1Table.GetA1Char((byte)1);
+            var result3 = v1Table.GetA2Char((byte)1);
 
             // assert
             Assert.AreEqual('\n', result);
@@ -102,13 +102,13 @@ namespace Zmpp.Core.Encoding.Tests
             IAlphabetTable v2Table = new AlphabetTableV2();
 
             // act
-            var result = v1Table.isAbbreviation((char)1);
-            var result2 = v1Table.isAbbreviation((char)2);
-            var result3 = v1Table.isAbbreviation((char)3);
+            var result = v1Table.IsAbbreviation((char)1);
+            var result2 = v1Table.IsAbbreviation((char)2);
+            var result3 = v1Table.IsAbbreviation((char)3);
 
-            var result4 = v2Table.isAbbreviation((char)1);
-            var result5 = v2Table.isAbbreviation((char)2);
-            var result6 = v2Table.isAbbreviation((char)3);
+            var result4 = v2Table.IsAbbreviation((char)1);
+            var result5 = v2Table.IsAbbreviation((char)2);
+            var result6 = v2Table.IsAbbreviation((char)3);
 
             // assert
             Assert.IsFalse(result);
@@ -126,35 +126,35 @@ namespace Zmpp.Core.Encoding.Tests
             // arrange
             IAlphabetTable v1Table = new AlphabetTableV1();
             IAlphabetTable v2Table = new AlphabetTableV2();
-            IAlphabetTable defaultTable = new DefaultAlphabetTable();
+            IAlphabetTable defaultTable = new AlphabetTable();
 
             // act
-            var result = v1Table.isShift((char)AlphabetTableBase.SHIFT_2);
-            var result2 = v1Table.isShift((char)AlphabetTableBase.SHIFT_3);
-            var result3 = v2Table.isShift((char)AlphabetTableBase.SHIFT_2);
-            var result4 = v2Table.isShift((char)AlphabetTableBase.SHIFT_3);
-            var result5 = v1Table.isShiftLock((char)AlphabetTableBase.SHIFT_2);
-            var result6 = v1Table.isShiftLock((char)AlphabetTableBase.SHIFT_3);
-            var result7 = v2Table.isShiftLock((char)AlphabetTableBase.SHIFT_2);
-            var result8 = v2Table.isShiftLock((char)AlphabetTableBase.SHIFT_3);
+            var result = v1Table.IsShift((char)AlphabetTableBase.Shift2);
+            var result2 = v1Table.IsShift((char)AlphabetTableBase.Shift3);
+            var result3 = v2Table.IsShift((char)AlphabetTableBase.Shift2);
+            var result4 = v2Table.IsShift((char)AlphabetTableBase.Shift3);
+            var result5 = v1Table.IsShiftLock((char)AlphabetTableBase.Shift2);
+            var result6 = v1Table.IsShiftLock((char)AlphabetTableBase.Shift3);
+            var result7 = v2Table.IsShiftLock((char)AlphabetTableBase.Shift2);
+            var result8 = v2Table.IsShiftLock((char)AlphabetTableBase.Shift3);
 
-            var result9 = v1Table.isShiftLock((char)AlphabetTableBase.SHIFT_2);
-            var result10 = v1Table.isShiftLock((char)AlphabetTableBase.SHIFT_3);
-            var result11 = v2Table.isShiftLock((char)AlphabetTableBase.SHIFT_2);
-            var result12 = v2Table.isShiftLock((char)AlphabetTableBase.SHIFT_3);
-            var result13 = v1Table.isShiftLock((char)AlphabetTableBase.SHIFT_4);
-            var result14 = v1Table.isShiftLock((char)AlphabetTableBase.SHIFT_5);
-            var result15 = v2Table.isShiftLock((char)AlphabetTableBase.SHIFT_4);
-            var result16 = v2Table.isShiftLock((char)AlphabetTableBase.SHIFT_5);
+            var result9 = v1Table.IsShiftLock((char)AlphabetTableBase.Shift2);
+            var result10 = v1Table.IsShiftLock((char)AlphabetTableBase.Shift3);
+            var result11 = v2Table.IsShiftLock((char)AlphabetTableBase.Shift2);
+            var result12 = v2Table.IsShiftLock((char)AlphabetTableBase.Shift3);
+            var result13 = v1Table.IsShiftLock((char)AlphabetTableBase.Shift4);
+            var result14 = v1Table.IsShiftLock((char)AlphabetTableBase.Shift5);
+            var result15 = v2Table.IsShiftLock((char)AlphabetTableBase.Shift4);
+            var result16 = v2Table.IsShiftLock((char)AlphabetTableBase.Shift5);
 
-            var result17 = defaultTable.isShift((char)AlphabetTableBase.SHIFT_2);
-            var result18 = defaultTable.isShift((char)AlphabetTableBase.SHIFT_3);
-            var result19 = defaultTable.isShift((char)AlphabetTableBase.SHIFT_4);
-            var result20 = defaultTable.isShift((char)AlphabetTableBase.SHIFT_5);
-            var result21 = defaultTable.isShiftLock((char)AlphabetTableBase.SHIFT_2);
-            var result22 = defaultTable.isShiftLock((char)AlphabetTableBase.SHIFT_3);
-            var result23 = defaultTable.isShiftLock((char)AlphabetTableBase.SHIFT_4);
-            var result24 = defaultTable.isShiftLock((char)AlphabetTableBase.SHIFT_5);
+            var result17 = defaultTable.IsShift((char)AlphabetTableBase.Shift2);
+            var result18 = defaultTable.IsShift((char)AlphabetTableBase.Shift3);
+            var result19 = defaultTable.IsShift((char)AlphabetTableBase.Shift4);
+            var result20 = defaultTable.IsShift((char)AlphabetTableBase.Shift5);
+            var result21 = defaultTable.IsShiftLock((char)AlphabetTableBase.Shift2);
+            var result22 = defaultTable.IsShiftLock((char)AlphabetTableBase.Shift3);
+            var result23 = defaultTable.IsShiftLock((char)AlphabetTableBase.Shift4);
+            var result24 = defaultTable.IsShiftLock((char)AlphabetTableBase.Shift5);
 
             // assert
             Assert.IsTrue(result);

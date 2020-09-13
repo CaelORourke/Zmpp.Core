@@ -129,8 +129,8 @@ namespace Zmpp.Core.Vm
         /// <returns>the truncated token</returns>
         protected String truncateToken(String token)
         {
-            return token.Length > sizes.getMaxEntryChars() ?
-                token.Substring(0, sizes.getMaxEntryChars()) : token;
+            return token.Length > sizes.MaxEntryChars ?
+                token.Substring(0, sizes.MaxEntryChars) : token;
         }
 
         /// <summary>
@@ -140,9 +140,9 @@ namespace Zmpp.Core.Vm
         /// <returns>the truncated token as a byte array</returns>
         protected byte[] truncateTokenToBytes(String token)
         {
-            byte[] result = new byte[sizes.getNumEntryBytes()];
+            byte[] result = new byte[sizes.NumEntryBytes];
             IMemory buffer = new Memory(result);
-            encoder.encode(token, buffer, 0);
+            encoder.Encode(token, buffer, 0);
             return result;
         }
 
@@ -180,8 +180,8 @@ namespace Zmpp.Core.Vm
             while (true)
             {
                 entryAddress = getEntryAddress(i);
-                String str = getDecoder().decode2Zscii(getMemory(),
-                    entryAddress, sizes.getNumEntryBytes());
+                String str = getDecoder().Decode2Zscii(getMemory(),
+                    entryAddress, sizes.NumEntryBytes);
                 buffer.Append(String.Format("[%4d] '%-9s' ", (i + 1), str));
                 i++;
                 if ((i % 4) == 0) { buffer.Append("\n"); }

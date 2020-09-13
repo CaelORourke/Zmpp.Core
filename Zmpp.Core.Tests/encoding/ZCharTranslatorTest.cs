@@ -46,28 +46,28 @@ namespace Zmpp.Core.Encoding.Tests
         public void testTranslate()
         {
             // arrange
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
 
             // act
 
             // Unknown
-            var result = translator.translate((char)255);
+            var result = translator.Translate((char)255);
 
             // alphabet 0
-            var result2 = translator.translate((char)6);
+            var result2 = translator.Translate((char)6);
 
             // Alphabet 1
-            translator.translate((char)AlphabetTableBase.SHIFT_4);
-            var result3 = translator.translate((char)8);
+            translator.Translate((char)AlphabetTableBase.Shift4);
+            var result3 = translator.Translate((char)8);
 
             // Alphabet 2
-            translator.translate((char)AlphabetTableBase.SHIFT_5);
-            var result4 = translator.translate((char)10);
+            translator.Translate((char)AlphabetTableBase.Shift5);
+            var result4 = translator.Translate((char)10);
 
             // Alphabet 2, NEWLINE
-            translator.translate((char)AlphabetTableBase.SHIFT_5);
-            var result5 = translator.translate((char)7);
+            translator.Translate((char)AlphabetTableBase.Shift5);
+            var result5 = translator.Translate((char)7);
 
             // assert
             Assert.AreEqual('?', result); // Unknown
@@ -81,23 +81,23 @@ namespace Zmpp.Core.Encoding.Tests
         public void test0IsSpace()
         {
             // arrange
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            var result = translator.translate((char)0);
-            translator.translate((char)AlphabetTableBase.SHIFT_4);
-            var result2 = translator.translate((char)0);
-            translator.translate((char)AlphabetTableBase.SHIFT_5);
-            var result3 = translator.translate((char)0);
+            var result = translator.Translate((char)0);
+            translator.Translate((char)AlphabetTableBase.Shift4);
+            var result2 = translator.Translate((char)0);
+            translator.Translate((char)AlphabetTableBase.Shift5);
+            var result3 = translator.Translate((char)0);
 
-            var result4 = translatorV2.translate((char)0);
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_4);
-            var result5 = translatorV2.translate((char)0);
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_5);
-            var result6 = translatorV2.translate((char)0);
+            var result4 = translatorV2.Translate((char)0);
+            translatorV2.Translate((char)AlphabetTableBase.Shift4);
+            var result5 = translatorV2.Translate((char)0);
+            translatorV2.Translate((char)AlphabetTableBase.Shift5);
+            var result6 = translatorV2.Translate((char)0);
 
             // assert
             Assert.AreEqual(' ', result);
@@ -115,18 +115,18 @@ namespace Zmpp.Core.Encoding.Tests
         public void testShiftFromA0()
         {
             // arrange
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
 
             // act
-            var result = translator.translate((char)AlphabetTableBase.SHIFT_4);
-            var result2 = translator.getCurrentAlphabet();
+            var result = translator.Translate((char)AlphabetTableBase.Shift4);
+            var result2 = translator.CurrentAlphabet;
 
-            translator.reset();
-            var result3 = translator.getCurrentAlphabet();
+            translator.Reset();
+            var result3 = translator.CurrentAlphabet;
 
-            var result4 = translator.translate((char)AlphabetTableBase.SHIFT_5);
-            var result5 = translator.getCurrentAlphabet();
+            var result4 = translator.Translate((char)AlphabetTableBase.Shift5);
+            var result5 = translator.CurrentAlphabet;
 
             // assert
             Assert.AreEqual('\0', result);
@@ -142,23 +142,23 @@ namespace Zmpp.Core.Encoding.Tests
         public void testShiftFromA1()
         {
             // arrange
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
 
             // act
 
             // Switch to A1
-            var result = translator.translate((char)AlphabetTableBase.SHIFT_4);
+            var result = translator.Translate((char)AlphabetTableBase.Shift4);
 
-            var result2 = translator.translate((char)AlphabetTableBase.SHIFT_4);
-            var result3 = translator.getCurrentAlphabet();
+            var result2 = translator.Translate((char)AlphabetTableBase.Shift4);
+            var result3 = translator.CurrentAlphabet;
 
             // Switch to A1 again
-            translator.reset();
-            var result4 = translator.translate((char)AlphabetTableBase.SHIFT_4);
+            translator.Reset();
+            var result4 = translator.Translate((char)AlphabetTableBase.Shift4);
 
-            var result5 = translator.translate((char)AlphabetTableBase.SHIFT_5);
-            var result6 = translator.getCurrentAlphabet();
+            var result5 = translator.Translate((char)AlphabetTableBase.Shift5);
+            var result6 = translator.CurrentAlphabet;
 
             // assert
 
@@ -175,23 +175,23 @@ namespace Zmpp.Core.Encoding.Tests
         public void testShiftFromA2()
         {
             // arrange
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
 
             // act
 
             // Switch to A2
-            var result = translator.translate((char)AlphabetTableBase.SHIFT_5);
+            var result = translator.Translate((char)AlphabetTableBase.Shift5);
 
-            var result2 = translator.translate((char)AlphabetTableBase.SHIFT_4);
-            var result3 = translator.getCurrentAlphabet();
+            var result2 = translator.Translate((char)AlphabetTableBase.Shift4);
+            var result3 = translator.CurrentAlphabet;
 
             // Switch to A2 again
-            translator.reset();
-            var result4 = translator.translate((char)AlphabetTableBase.SHIFT_5);
+            translator.Reset();
+            var result4 = translator.Translate((char)AlphabetTableBase.Shift5);
 
-            var result5 = translator.translate((char)AlphabetTableBase.SHIFT_5);
-            var result6 = translator.getCurrentAlphabet();
+            var result5 = translator.Translate((char)AlphabetTableBase.Shift5);
+            var result6 = translator.CurrentAlphabet;
 
             // assert
 
@@ -214,77 +214,77 @@ namespace Zmpp.Core.Encoding.Tests
         public void testImplicitReset()
         {
             // arrange
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
 
             // act
 
-            translator.translate((char)AlphabetTableBase.SHIFT_4);
-            translator.translate((char)7);
-            var result = translator.getCurrentAlphabet();
+            translator.Translate((char)AlphabetTableBase.Shift4);
+            translator.Translate((char)7);
+            var result = translator.CurrentAlphabet;
 
-            translator.translate((char)AlphabetTableBase.SHIFT_5);
-            translator.translate((char)7);
-            var result2 = translator.getCurrentAlphabet();
+            translator.Translate((char)AlphabetTableBase.Shift5);
+            translator.Translate((char)7);
+            var result2 = translator.CurrentAlphabet;
 
             // assert
-            Assert.AreEqual(Alphabet.A0, translator.getCurrentAlphabet());
-            Assert.AreEqual(Alphabet.A0, translator.getCurrentAlphabet());
+            Assert.AreEqual(Alphabet.A0, translator.CurrentAlphabet);
+            Assert.AreEqual(Alphabet.A0, translator.CurrentAlphabet);
         }
 
         [TestMethod]
         public void testGetAlphabetElement()
         {
             // arrange
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
 
             // act
 
             // Alphabet A0
-            var elem1 = translator.getAlphabetElementFor('c');
-            var elem1b = translator.getAlphabetElementFor('a');
-            var elem2 = translator.getAlphabetElementFor('d');
+            var elem1 = translator.GetAlphabetElementFor('c');
+            var elem1b = translator.GetAlphabetElementFor('a');
+            var elem2 = translator.GetAlphabetElementFor('d');
 
             // Alphabet A1
-            var elem3 = translator.getAlphabetElementFor('C');
+            var elem3 = translator.GetAlphabetElementFor('C');
 
             // Alphabet A2
-            var elem4 = translator.getAlphabetElementFor('#');
+            var elem4 = translator.GetAlphabetElementFor('#');
 
             // ZSCII code
-            var elem5 = translator.getAlphabetElementFor('@');
+            var elem5 = translator.GetAlphabetElementFor('@');
 
             // Newline is tricky, this is always A2/7 !!!
-            var newline = translator.getAlphabetElementFor('\n');
+            var newline = translator.GetAlphabetElementFor('\n');
 
             // assert
 
             // Alphabet A0
-            Assert.AreEqual(Alphabet.A0, elem1.getAlphabet());
-            Assert.AreEqual(8, elem1.getZCharCode());
+            Assert.AreEqual(Alphabet.A0, elem1.Alphabet);
+            Assert.AreEqual(8, elem1.Code);
 
-            Assert.AreEqual(Alphabet.A0, elem1b.getAlphabet());
-            Assert.AreEqual(6, elem1b.getZCharCode());
+            Assert.AreEqual(Alphabet.A0, elem1b.Alphabet);
+            Assert.AreEqual(6, elem1b.Code);
 
-            Assert.AreEqual(Alphabet.A0, elem2.getAlphabet());
-            Assert.AreEqual(9, elem2.getZCharCode());
+            Assert.AreEqual(Alphabet.A0, elem2.Alphabet);
+            Assert.AreEqual(9, elem2.Code);
 
             // Alphabet A1
-            Assert.AreEqual(Alphabet.A1, elem3.getAlphabet());
-            Assert.AreEqual(8, elem3.getZCharCode());
+            Assert.AreEqual(Alphabet.A1, elem3.Alphabet);
+            Assert.AreEqual(8, elem3.Code);
 
             // Alphabet A2
-            Assert.AreEqual(Alphabet.A2, elem4.getAlphabet());
-            Assert.AreEqual(23, elem4.getZCharCode());
+            Assert.AreEqual(Alphabet.A2, elem4.Alphabet);
+            Assert.AreEqual(23, elem4.Code);
 
             // ZSCII code
-            Assert.AreEqual(Alphabet.Unknown, elem5.getAlphabet());
-            Assert.AreEqual(64, elem5.getZCharCode());
+            Assert.AreEqual(Alphabet.NotSet, elem5.Alphabet);
+            Assert.AreEqual(64, elem5.Code);
 
             // Newline is tricky, this is always A2/7 !!!
-            Assert.AreEqual(Alphabet.A2, newline.getAlphabet());
-            Assert.AreEqual(7, newline.getZCharCode());
+            Assert.AreEqual(Alphabet.A2, newline.Alphabet);
+            Assert.AreEqual(7, newline.Code);
         }
 
         #region Shifting in V2
@@ -294,23 +294,23 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            var result = translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
-            var result2 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
+            var result = translatorV2.Translate((char)AlphabetTableBase.Shift2);
+            var result2 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
 
-            var result3 = translatorV2.translate((char)AlphabetTableBase.SHIFT_4);
-            var result4 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
+            var result3 = translatorV2.Translate((char)AlphabetTableBase.Shift4);
+            var result4 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
 
-            var result5 = translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
-            var result6 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
+            var result5 = translatorV2.Translate((char)AlphabetTableBase.Shift3);
+            var result6 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
 
-            var result7 = translatorV2.translate((char)AlphabetTableBase.SHIFT_5);
-            var result8 = translatorV2.getCurrentAlphabet();
+            var result7 = translatorV2.Translate((char)AlphabetTableBase.Shift5);
+            var result8 = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(0, result);
@@ -331,28 +331,28 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
+            translatorV2.Translate((char)AlphabetTableBase.Shift2);
 
-            var result = translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
-            var result2 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
+            var result = translatorV2.Translate((char)AlphabetTableBase.Shift2);
+            var result2 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
+            translatorV2.Translate((char)AlphabetTableBase.Shift2);
 
-            var result3 = translatorV2.translate((char)AlphabetTableBase.SHIFT_4);
-            var result4 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
+            var result3 = translatorV2.Translate((char)AlphabetTableBase.Shift4);
+            var result4 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
+            translatorV2.Translate((char)AlphabetTableBase.Shift2);
 
-            var result5 = translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
-            var result6 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
+            var result5 = translatorV2.Translate((char)AlphabetTableBase.Shift3);
+            var result6 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
+            translatorV2.Translate((char)AlphabetTableBase.Shift2);
 
-            var result7 = translatorV2.translate((char)AlphabetTableBase.SHIFT_5);
-            var result8 = translatorV2.getCurrentAlphabet();
+            var result7 = translatorV2.Translate((char)AlphabetTableBase.Shift5);
+            var result8 = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(0, result);
@@ -373,28 +373,28 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
+            translatorV2.Translate((char)AlphabetTableBase.Shift3);
 
-            var result = translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
-            var result2 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
+            var result = translatorV2.Translate((char)AlphabetTableBase.Shift2);
+            var result2 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
+            translatorV2.Translate((char)AlphabetTableBase.Shift3);
 
-            var result3 = translatorV2.translate((char)AlphabetTableBase.SHIFT_4);
-            var result4 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
+            var result3 = translatorV2.Translate((char)AlphabetTableBase.Shift4);
+            var result4 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
+            translatorV2.Translate((char)AlphabetTableBase.Shift3);
 
-            var result5 = translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
-            var result6 = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
+            var result5 = translatorV2.Translate((char)AlphabetTableBase.Shift3);
+            var result6 = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
+            translatorV2.Translate((char)AlphabetTableBase.Shift3);
 
-            var result7 = translatorV2.translate((char)AlphabetTableBase.SHIFT_5);
-            var result8 = translatorV2.getCurrentAlphabet();
+            var result7 = translatorV2.Translate((char)AlphabetTableBase.Shift5);
+            var result8 = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(0, result);
@@ -415,16 +415,16 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
-            translatorV2.translate((char)10);
-            var result = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift2);
+            translatorV2.Translate((char)10);
+            var result = translatorV2.CurrentAlphabet;
 
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
-            translatorV2.translate((char)10);
-            var result2 = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift3);
+            translatorV2.Translate((char)10);
+            var result2 = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(Alphabet.A0, result);
@@ -436,16 +436,16 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
-            translatorV2.translate((char)0);
-            var result = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift2);
+            translatorV2.Translate((char)0);
+            var result = translatorV2.CurrentAlphabet;
 
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
-            translatorV2.translate((char)0);
-            var result2 = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift3);
+            translatorV2.Translate((char)0);
+            var result2 = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(Alphabet.A0, result);
@@ -457,19 +457,19 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
 
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_4);
-            translatorV2.translate((char)10);
-            var result = translatorV2.getCurrentAlphabet();
-            translatorV2.reset();
-            var result2 = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift4);
+            translatorV2.Translate((char)10);
+            var result = translatorV2.CurrentAlphabet;
+            translatorV2.Reset();
+            var result2 = translatorV2.CurrentAlphabet;
 
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_5);
-            translatorV2.translate((char)10);
-            var result3 = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift5);
+            translatorV2.Translate((char)10);
+            var result3 = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(Alphabet.A1, result);
@@ -486,13 +486,13 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_4);
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_2);
-            translatorV2.translate((char)10);
-            var result = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift4);
+            translatorV2.Translate((char)AlphabetTableBase.Shift2);
+            translatorV2.Translate((char)10);
+            var result = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(Alphabet.A1, result);
@@ -503,13 +503,13 @@ namespace Zmpp.Core.Encoding.Tests
         {
             // arrange
             IAlphabetTable alphabetTableV2 = new AlphabetTableV2();
-            IZCharTranslator translatorV2 = new DefaultZCharTranslator(alphabetTableV2);
+            IZCharTranslator translatorV2 = new ZCharTranslator(alphabetTableV2);
 
             // act
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_5);
-            translatorV2.translate((char)AlphabetTableBase.SHIFT_3);
-            translatorV2.translate((char)10);
-            var result = translatorV2.getCurrentAlphabet();
+            translatorV2.Translate((char)AlphabetTableBase.Shift5);
+            translatorV2.Translate((char)AlphabetTableBase.Shift3);
+            translatorV2.Translate((char)10);
+            var result = translatorV2.CurrentAlphabet;
 
             // assert
             Assert.AreEqual(Alphabet.A2, result);

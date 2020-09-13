@@ -89,7 +89,7 @@ namespace Zmpp.Core.Vm
             if (version >= 5)
             {
                 // Check if was cancelled
-                char numCharsTyped = (terminateChar == ZsciiEncoding.NULL) ?
+                char numCharsTyped = (terminateChar == ZsciiEncoding.Null) ?
                     (char)0 : (char)(textpointer - 2);
 
                 // Write the number of characters typed in byte 1
@@ -100,7 +100,7 @@ namespace Zmpp.Core.Vm
                 // Terminate with 0 byte in versions < 5
                 // Check if input was cancelled
                 int terminatepos = textpointer; // (textpointer - textbuffer + 2);
-                if (terminateChar == ZsciiEncoding.NULL)
+                if (terminateChar == ZsciiEncoding.Null)
                 {
                     terminatepos = 0;
                 }
@@ -168,12 +168,12 @@ namespace Zmpp.Core.Vm
         /// <returns>a terminating character that can be stored as a result</returns>
         public char handleTerminateChar(char terminateChar)
         {
-            if (terminateChar == ZsciiEncoding.NEWLINE)
+            if (terminateChar == ZsciiEncoding.Newline)
             {
                 // Echo a newline into the streams
                 // must be called with isInput == false since we are not
                 // in input mode anymore when we receive NEWLINE
-                machine.printZsciiChar(ZsciiEncoding.NEWLINE);
+                machine.printZsciiChar(ZsciiEncoding.Newline);
             }
             return terminateChar;
         }

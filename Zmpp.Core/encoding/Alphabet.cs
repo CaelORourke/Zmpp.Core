@@ -30,7 +30,7 @@
 namespace Zmpp.Core.Encoding
 {
     /// <summary>
-    /// Defines the possible alphabets here.
+    /// Defines the possible alphabets.
     /// </summary>
-    public enum Alphabet { Unknown, A0, A1, A2 }
+    public enum Alphabet { NotSet, A0, A1, A2 }
 }

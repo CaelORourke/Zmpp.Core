@@ -73,7 +73,7 @@ namespace Zmpp.Core.Vm
 
         public void print(String str) { printZsciiChars(str); }
 
-        public void newline() { printZsciiChar(ZsciiEncoding.NEWLINE); }
+        public void newline() { printZsciiChar(ZsciiEncoding.Newline); }
 
         public void printZsciiChar(char zchar)
         {

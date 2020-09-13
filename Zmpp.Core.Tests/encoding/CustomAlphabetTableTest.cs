@@ -54,9 +54,9 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
-            var result = alphabetTable.getA0Char((byte)6);
-            var result2 = alphabetTable.getA0Char((byte)12);
-            var result3 = alphabetTable.getA0Char((byte)0);
+            var result = alphabetTable.GetA0Char((byte)6);
+            var result2 = alphabetTable.GetA0Char((byte)12);
+            var result3 = alphabetTable.GetA0Char((byte)0);
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(1000), Times.Once());
@@ -76,9 +76,9 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
-            var result = alphabetTable.getA1Char((byte)6);
-            var result2 = alphabetTable.getA1Char((byte)12);
-            var result3 = alphabetTable.getA1Char((byte)0);
+            var result = alphabetTable.GetA1Char((byte)6);
+            var result2 = alphabetTable.GetA1Char((byte)12);
+            var result3 = alphabetTable.GetA1Char((byte)0);
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(1026), Times.Once());
@@ -98,10 +98,10 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
-            var result = alphabetTable.getA2Char((byte)6);
-            var result2 = alphabetTable.getA2Char((byte)12);
-            var result3 = alphabetTable.getA2Char((byte)0);
-            var result4 = alphabetTable.getA2Char((byte)7);
+            var result = alphabetTable.GetA2Char((byte)6);
+            var result2 = alphabetTable.GetA2Char((byte)12);
+            var result3 = alphabetTable.GetA2Char((byte)0);
+            var result4 = alphabetTable.GetA2Char((byte)7);
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(1052), Times.Once());
@@ -121,7 +121,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
-            var result = alphabetTable.getA0CharCode('@');
+            var result = alphabetTable.GetA0CharCode('@');
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(It.IsInRange<int>(1000, 1026, Range.Inclusive)), Times.AtLeastOnce());
@@ -137,7 +137,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
-            var result = alphabetTable.getA1CharCode('@');
+            var result = alphabetTable.GetA1CharCode('@');
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(It.IsInRange<int>(1026, 1052, Range.Inclusive)), Times.AtLeastOnce());
@@ -153,7 +153,7 @@ namespace Zmpp.Core.Encoding.Tests
             CustomAlphabetTable alphabetTable = new CustomAlphabetTable(memory.Object, 1000);
 
             // act
-            var result = alphabetTable.getA2CharCode('@');
+            var result = alphabetTable.GetA2CharCode('@');
 
             // assert
             memory.Verify(m => m.ReadUnsigned8(It.Is<int>(i => i >= 1052 && i <= 1078 && i % 2 == 0)), Times.AtLeastOnce());

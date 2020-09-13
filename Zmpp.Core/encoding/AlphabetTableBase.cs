@@ -29,19 +29,39 @@
 
 namespace Zmpp.Core.Encoding
 {
-    public abstract class AlphabetTableBase
+    /// <summary>
+    /// Provides a generic alphabet table.
+    /// </summary>
+    /// <remarks>
+    /// The alphabet table is a central part of the Z encoding system. It stores
+    /// the characters that are mapped to each alphabet and provides information
+    /// about shift and escape situations.
+    /// </remarks>
+    public abstract class AlphabetTableBase : IAlphabetTable
     {
-        public const int ALPHABET_START = 6;
-        public const int ALPHABET_END = 31;
+        public const int AlphabetStart = 6;
+        public const int AlphabetEnd = 31;
 
-        public const char SHIFT_2 = (char)0x02; // Shift 1
-        public const char SHIFT_3 = (char)0x03; // Shift 2
-        public const char SHIFT_4 = (char)0x04; // Shift lock 1
-        public const char SHIFT_5 = (char)0x05; // Shift lock 2
+        public const char Shift2 = (char)0x02; // Shift 1
+        public const char Shift3 = (char)0x03; // Shift 2
+        public const char Shift4 = (char)0x04; // Shift lock 1
+        public const char Shift5 = (char)0x05; // Shift lock 2
 
         /// <summary>
-        /// This character code, used from A2, denotes that a 10 bit value follows.
+        /// This character code from A2 denotes that a 10 bit value follows.
         /// </summary>
-        public const char A2_ESCAPE = (char)0x06; // escape character
+        public const char A2Escape = (char)0x06; // escape character
+
+        public abstract char GetA0Char(byte zchar);
+        public abstract int GetA0CharCode(char zsciiChar);
+        public abstract char GetA1Char(byte zchar);
+        public abstract int GetA1CharCode(char zsciiChar);
+        public abstract char GetA2Char(byte zchar);
+        public abstract int GetA2CharCode(char zsciiChar);
+        public abstract bool IsAbbreviation(char zchar);
+        public abstract bool IsShift(char zchar);
+        public abstract bool IsShift1(char zchar);
+        public abstract bool IsShift2(char zchar);
+        public abstract bool IsShiftLock(char zchar);
     }
 }

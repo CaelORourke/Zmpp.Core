@@ -50,14 +50,14 @@ namespace Zmpp.Core.Encoding.Tests
         public void testDecodeByte()
         {
             // arrange
-            var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbrev.Object);
+            var abbrev = new Mock<IAbbreviationsTable>();
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbrev.Object);
 
             // act
-            var result = decoder.decodeZChar((char)6);
+            var result = decoder.DecodeZChar((char)6);
 
             // assert
             Assert.AreEqual('a', result);
@@ -72,15 +72,15 @@ namespace Zmpp.Core.Encoding.Tests
             IMemory memory1 = new Memory(hello);
             IMemory memory2 = new Memory(Hello);
 
-            var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbrev.Object);
+            var abbrev = new Mock<IAbbreviationsTable>();
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbrev.Object);
 
             // act
-            var result = decoder.decode2Zscii(memory1, 0, 0).ToString();
-            var result2 = decoder.decode2Zscii(memory2, 0, 0).ToString();
+            var result = decoder.Decode2Zscii(memory1, 0, 0).ToString();
+            var result2 = decoder.Decode2Zscii(memory2, 0, 0).ToString();
 
             // assert
             Assert.AreEqual("hello", result);
@@ -96,15 +96,15 @@ namespace Zmpp.Core.Encoding.Tests
             byte[] zork1data = System.IO.File.ReadAllBytes("testfiles/minizork.z3");
             IMemory mem = new Memory(zork1data);
 
-            IZCharDecoder.AbbreviationsTable abbr = new Abbreviations(mem, mem.ReadUnsigned16(StoryFileHeaderAddress.Abbreviations));
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            DefaultAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder dec = new DefaultZCharDecoder(encoding, translator, abbr);
+            IAbbreviationsTable abbr = new Abbreviations(mem, mem.ReadUnsigned16(StoryFileHeaderAddress.Abbreviations));
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            AlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder dec = new ZCharDecoder(encoding, translator, abbr);
 
             // act
-            var result = dec.decode2Zscii(mem, 0xc120, 0).ToString();
-            var result2 = dec.decode2Zscii(mem, 0x3e6d, 0).ToString();
+            var result = dec.Decode2Zscii(mem, 0xc120, 0).ToString();
+            var result2 = dec.Decode2Zscii(mem, 0x3e6d, 0).ToString();
 
             // assert
             Assert.AreEqual("The Great Underground Empire", result);
@@ -161,13 +161,13 @@ namespace Zmpp.Core.Encoding.Tests
 
             IMemory mem = new Memory(data);
 
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
             AlphabetTableV1 alphabetTable = new AlphabetTableV1();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder dec = new DefaultZCharDecoder(encoding, translator, null);
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder dec = new ZCharDecoder(encoding, translator, null);
 
             // act
-            String decoded = dec.decode2Zscii(mem, 0, 0).ToString();
+            String decoded = dec.Decode2Zscii(mem, 0, 0).ToString();
 
             // assert
             Assert.AreEqual(originalString, decoded);
@@ -188,18 +188,18 @@ namespace Zmpp.Core.Encoding.Tests
             };
             IMemory mem = new Memory(helloAbbrev);
 
-            var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
-            abbrev.Setup(a => a.getWordAddress(2)).Returns(10);
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbrev.Object);
+            var abbrev = new Mock<IAbbreviationsTable>();
+            abbrev.Setup(a => a.GetWordAddress(2)).Returns(10);
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbrev.Object);
 
             // act
-            var result = decoder.decode2Zscii(mem, 0, 0).ToString();
+            var result = decoder.Decode2Zscii(mem, 0, 0).ToString();
 
             // assert
-            abbrev.Verify(a => a.getWordAddress(2), Times.Once());
+            abbrev.Verify(a => a.GetWordAddress(2), Times.Once());
             Assert.AreEqual("helloHello", result);
         }
 
@@ -211,8 +211,8 @@ namespace Zmpp.Core.Encoding.Tests
             char endWord = (char)0x8123;
 
             // act
-            var result = DefaultZCharDecoder.isEndWord(notEndWord);
-            var result2 = DefaultZCharDecoder.isEndWord(endWord);
+            var result = ZCharDecoder.IsEndWord(notEndWord);
+            var result2 = ZCharDecoder.IsEndWord(endWord);
 
             // assert
             Assert.IsFalse(result);
@@ -225,7 +225,7 @@ namespace Zmpp.Core.Encoding.Tests
             // arrange
             var memory = new Mock<IMemory>();
             memory.Setup(m => m.ReadUnsigned16(0)).Returns((char)0x9865);
-            char[] data = DefaultZCharDecoder.extractZbytes(memory.Object, 0, 0);
+            char[] data = ZCharDecoder.ExtractZbytes(memory.Object, 0, 0);
 
             // act
             var result = data.Length;
@@ -249,7 +249,7 @@ namespace Zmpp.Core.Encoding.Tests
             memory.Setup(m => m.ReadUnsigned16(0)).Returns((char)0x5432);
             memory.Setup(m => m.ReadUnsigned16(2)).Returns((char)0x1234);
             memory.Setup(m => m.ReadUnsigned16(4)).Returns((char)0x9865);
-            char[] data = DefaultZCharDecoder.extractZbytes(memory.Object, 0, 0);
+            char[] data = ZCharDecoder.ExtractZbytes(memory.Object, 0, 0);
 
             // act
             var result = data.Length;
@@ -282,15 +282,15 @@ namespace Zmpp.Core.Encoding.Tests
             byte[] data = { (byte)0x35, (byte)0x51, (byte)0x46, (byte)0x86, (byte)0xc6, (byte)0x85 };
             IMemory mem = new Memory(data);
 
-            var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbrev.Object);
+            var abbrev = new Mock<IAbbreviationsTable>();
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbrev.Object);
 
             // act
-            var result = decoder.decode2Zscii(mem, 0, 0).ToString(); // With length = 0
-            var result2 = decoder.decode2Zscii(mem, 0, length).ToString(); // With length = 4
+            var result = decoder.Decode2Zscii(mem, 0, 0).ToString(); // With length = 0
+            var result2 = decoder.Decode2Zscii(mem, 0, length).ToString(); // With length = 4
 
             // assert
             Assert.AreEqual("helloalo", result); // With length = 0
@@ -306,14 +306,14 @@ namespace Zmpp.Core.Encoding.Tests
             byte[] data = { (byte)0x34, (byte)0x8a, (byte)0x45, (byte)0xc4 };
             IMemory mem = new Memory(data);
 
-            var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbrev.Object);
+            var abbrev = new Mock<IAbbreviationsTable>();
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbrev.Object);
 
             // act
-            var result = decoder.decode2Zscii(mem, 0, length).ToString();
+            var result = decoder.Decode2Zscii(mem, 0, length).ToString();
 
             // assert
             Assert.AreEqual("hEli", result);
@@ -331,14 +331,14 @@ namespace Zmpp.Core.Encoding.Tests
             byte[] data = { (byte)0x34, (byte)0xd1, (byte)0x14, (byte)0xc1, (byte)0x80, (byte)0xa5 };
             IMemory mem = new Memory(data);
 
-            var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbrev.Object);
+            var abbrev = new Mock<IAbbreviationsTable>();
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbrev.Object);
 
             // act
-            var result = decoder.decode2Zscii(mem, 0, length).ToString();
+            var result = decoder.Decode2Zscii(mem, 0, length).ToString();
 
             // assert
             Assert.AreEqual("hal", result);
@@ -356,14 +356,14 @@ namespace Zmpp.Core.Encoding.Tests
             byte[] data = { (byte)0x34, (byte)0xd1, (byte)0x44, (byte)0xa6, (byte)0x84, (byte)0x05 };
             IMemory mem = new Memory(data);
 
-            var abbrev = new Mock<IZCharDecoder.AbbreviationsTable>();
-            ZsciiEncoding encoding = new ZsciiEncoding(new DefaultAccentTable());
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
-            IZCharDecoder decoder = new DefaultZCharDecoder(encoding, translator, abbrev.Object);
+            var abbrev = new Mock<IAbbreviationsTable>();
+            ZsciiEncoding encoding = new ZsciiEncoding(new AccentTable());
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
+            IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbrev.Object);
 
             // act
-            var result = decoder.decode2Zscii(mem, 0, length).ToString();
+            var result = decoder.Decode2Zscii(mem, 0, length).ToString();
 
             // assert
             Assert.AreEqual("hall", result);

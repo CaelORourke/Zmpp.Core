@@ -32,7 +32,7 @@ namespace Zmpp.Core
     using System;
 
     /// <summary>
-    /// Provides read and write access to the memory map.
+    /// Provides read and write access to a memory map.
     /// </summary>
     public class Memory : IMemory
     {

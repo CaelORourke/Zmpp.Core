@@ -36,8 +36,7 @@ namespace Zmpp.Core.Vm
     /// </summary>
     public class DictionarySizesV1ToV3 : IDictionarySizes
     {
-        public int getNumEntryBytes() { return 4; }
-
-        public int getMaxEntryChars() { return 6; }
+        public int NumEntryBytes => 4;
+        public int MaxEntryChars => 6;
     }
 }

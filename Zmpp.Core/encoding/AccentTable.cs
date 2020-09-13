@@ -30,11 +30,11 @@
 namespace Zmpp.Core.Encoding
 {
     /// <summary>
-    /// Default implementation of AccentTable
+    /// Implements a standard accent table.
     /// </summary>
-    public class DefaultAccentTable : IAccentTable
+    public class AccentTable : IAccentTable
     {
-        private static readonly char[] STANDARD_TRANSLATION_TABLE = new char[] {
+        private static readonly char[] StandardTranslationTable = new char[] {
             '\u00e4', '\u00f6', '\u00fc', '\u00c4', '\u00d6', '\u00dc', '\u00df',
             '\u00bb', '\u00ab',
             '\u00eb', '\u00ef', '\u00ff', '\u00cb', '\u00cf',
@@ -51,24 +51,21 @@ namespace Zmpp.Core.Encoding
             '\u00a3', '\u0153', '\u0152', '\u00a1', '\u00bf' 
         };
 
-        public int getLength()
+        public int Length => StandardTranslationTable.Length;
+
+        public char GetAccent(int index)
         {
-            return STANDARD_TRANSLATION_TABLE.Length;
+            return StandardTranslationTable[index];
         }
 
-        public char getAccent(int index)
+        public int GetIndexOfLowerCase(int index)
         {
-            return STANDARD_TRANSLATION_TABLE[index];
-        }
-
-        public int getIndexOfLowerCase(int index)
-        {
-            char c = (char)getAccent(index);
+            char c = (char)GetAccent(index);
             char lower = char.ToLower(c);
-            int length = getLength();
+            int length = Length;
             for (int i = 0; i < length; i++)
             {
-                if (getAccent(i) == lower) return i;
+                if (GetAccent(i) == lower) return i;
             }
             return index;
         }

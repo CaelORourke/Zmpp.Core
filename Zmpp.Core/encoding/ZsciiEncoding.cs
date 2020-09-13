@@ -29,213 +29,241 @@
 
 namespace Zmpp.Core.Encoding
 {
-    using System;
     using System.Text;
 
     /// <summary>
-    /// The usage of ZSCII is a little confusing, within a story file it uses
-    /// alphabet tables to encode/decode it to an unreadable format, for input
-    /// and output it uses a more readable encoding which resembles iso-8859-n.
-    /// ZsciiEncoding therefore captures this input/output aspect of ZSCII
-    /// whereas ZsciiConverter and ZsciiString handle story file encoded strings.
-    /// 
-    /// This class has a nonmodifiable state, so it can be shared throughout
-    /// the whole application.
+    /// Represents a ZSCII encoding.
     /// </summary>
-    public class ZsciiEncoding : ZsciiEncodingBase, IZsciiEncoding
+    /// <remarks>
+    /// <para>This is for encoding and decoding input and output strings.</para>
+    /// <para>For encoding and decoding within a story file alphabet tables are used.</para>
+    /// </remarks>
+    public class ZsciiEncoding : IZsciiEncoding
     {
-        private IAccentTable accentTable;
+        #region Constants
+
+        public const char Null = (char)0;
+        public const char Delete = (char)8;
+        public const char Newline10 = (char)10;
+        public const char Newline = (char)13;
+        public const char Escape = (char)27;
+        public const char CursorUp = (char)129;
+        public const char CursorDown = (char)130;
+        public const char CursorLeft = (char)131;
+        public const char CursorRight = (char)132;
+        public const char AsciiStart = (char)32;
+        public const char AsciiEnd = (char)126;
 
         /// <summary>
-        /// Constructor.
+        /// The start of the accent range.
         /// </summary>
-        /// <param name="accentTable">the accent table.</param>
+        public const char AccentStart = (char)155;
+
+        /// <summary>
+        /// End of the accent range.
+        /// </summary>
+        public const char AccentEnd = (char)251;
+
+        public const char MouseDoubleClick = (char)253;
+        public const char MouseSingleClick = (char)254;
+
+        #endregion
+
+        private readonly IAccentTable accentTable;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Encoding.ZsciiEncoding"/>
+        /// class for the specified accent table.
+        /// </summary>
+        /// <param name="accentTable">The accent table.</param>
         public ZsciiEncoding(IAccentTable accentTable)
         {
             this.accentTable = accentTable;
         }
 
         /// <summary>
-        /// Returns true if the input is a valid ZSCII character, false otherwise.
+        /// Indicates whether the specified character is a
+        /// valid ZSCII character.
         /// </summary>
-        /// <param name="zchar">a ZSCII character</param>
-        /// <returns>true if valid, false otherwise</returns>
-        public bool isZsciiCharacter(char zchar)
+        /// <param name="zchar">The ZSCII character.</param>
+        /// <returns>true if the specified character is a
+        /// valid ZSCII character; otherwise false.</returns>
+        public bool IsZscii(char zchar)
         {
             switch (zchar)
             {
-                case NULL:
-                case DELETE:
-                case NEWLINE:
-                case ESCAPE:
+                case Null:
+                case Delete:
+                case Newline:
+                case Escape:
                     return true;
                 default:
-                    return isAscii(zchar) || isAccent(zchar) || isUnicodeCharacter(zchar);
+                    return IsAscii(zchar) || IsAccent(zchar) || IsUnicode(zchar);
             }
         }
 
         /// <summary>
-        /// Returns true if the specified character can be converted to a ZSCII
-        /// character, false otherwise.
+        /// Indicates whether the specified character can be converted
+        /// to a ZSCII character.
         /// </summary>
-        /// <param name="c">a unicode character</param>
-        /// <returns>true if c can be converted, false, otherwise</returns>
-        public bool isConvertableToZscii(char c)
+        /// <param name="c">The Unicode character.</param>
+        /// <returns>true if the specified character can be converted; otherwise false.</returns>
+        public bool IsConvertibleToZscii(char c)
         {
-            return isAscii(c) || isInTranslationTable(c) || c == '\n' || c == 0 || isUnicodeCharacter(c);
+            return IsAscii(c) || IsInTranslationTable(c) || c == '\n' || c == 0 || IsUnicode(c);
         }
 
         /// <summary>
-        /// Converts a ZSCII character to a unicode character. Will return
-        /// '?' if the given character is not known.
+        /// Converts the specified ZSCII character to a Unicode character.
         /// </summary>
-        /// <param name="zchar">a ZSCII character.</param>
-        /// <returns>the unicode representation</returns>
-        public char getUnicodeChar(char zchar)
+        /// <param name="zchar">The ZSCII character.</param>
+        /// <returns>The Unicode character.</returns>
+        public char ToUnicodeChar(char zchar)
         {
-            if (isAscii(zchar)) return zchar;
-            if (isAccent(zchar))
+            if (IsAscii(zchar)) return zchar;
+            if (IsAccent(zchar))
             {
-                int index = zchar - ACCENT_START;
-                if (index < accentTable.getLength())
+                int index = zchar - AccentStart;
+                if (index < accentTable.Length)
                 {
-                    return (char)accentTable.getAccent(index);
+                    return (char)accentTable.GetAccent(index);
                 }
             }
-            if (zchar == NULL) return '\0';
-            if (zchar == NEWLINE || zchar == NEWLINE_10) return '\n';
-            if (isUnicodeCharacter(zchar)) return zchar;
+            if (zchar == Null) return '\0';
+            if (zchar == Newline || zchar == Newline10) return '\n';
+            if (IsUnicode(zchar)) return zchar;
             return '?';
         }
 
         /// <summary>
-        /// Converts the specified string into its ZSCII representation.
+        /// Converts the specified Unicode string to a ZSCII string.
         /// </summary>
-        /// <param name="str">the input string</param>
-        /// <returns>the ZSCII representation</returns>
-        public String convertToZscii(String str)
+        /// <param name="str">The Unicode string.</param>
+        /// <returns>The ZSCII string.</returns>
+        public string ToZsciiString(string str)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < str.Length; i++)
             {
-                result.Append(getZsciiChar(str[i]));
+                result.Append(ToZsciiChar(str[i]));
             }
             return result.ToString();
         }
 
         /// <summary>
-        /// Converts the specified unicode character to a ZSCII character.
-        /// Will return 0 if the character can not be converted.
+        /// Converts the specified Unicode character to a ZSCII character.
         /// </summary>
-        /// <param name="c">the unicode character to convert</param>
-        /// <returns>the ZSCII character</returns>
-        public char getZsciiChar(char c)
+        /// <param name="c">The Unicode character.</param>
+        /// <returns>The ZSCII character or '0' if the character cannot be converted.</returns>
+        public char ToZsciiChar(char c)
         {
-            if (isAscii(c))
+            if (IsAscii(c))
             {
                 return c;
             }
-            else if (isInTranslationTable(c))
+            else if (IsInTranslationTable(c))
             {
-                return (char)(getIndexInTranslationTable(c) + ACCENT_START);
+                return (char)(GetIndexInTranslationTable(c) + AccentStart);
             }
             else if (c == '\n')
             {
-                return NEWLINE;
+                return Newline;
             }
             return (char)0;
         }
 
         /// <summary>
-        /// Determines whether the specified character is in the
+        /// Indicates whether the specified character is in the
         /// translation table.
         /// </summary>
-        /// <param name="c">character</param>
-        /// <returns>true if in translation table, false otherwise</returns>
-        private bool isInTranslationTable(char c)
+        /// <param name="c">The character.</param>
+        /// <returns>true if the specified character is in the translation table; otherwise false.</returns>
+        private bool IsInTranslationTable(char c)
         {
-            return getIndexInTranslationTable(c) >= 0;
+            return GetIndexInTranslationTable(c) >= 0;
         }
 
         /// <summary>
-        /// Determines the index of character c in the translation
-        /// table.
+        /// Gets the index of the specified character in the
+        /// translation table.
         /// </summary>
-        /// <param name="c">character</param>
-        /// <returns>index in translation table</returns>
-        private int getIndexInTranslationTable(char c)
+        /// <param name="c">The character.</param>
+        /// <returns>The index of the specified character in the translation
+        /// table or -1 if the specified character is not found.</returns>
+        private int GetIndexInTranslationTable(char c)
         {
-            for (int i = 0; i < accentTable.getLength(); i++)
+            for (int i = 0; i < accentTable.Length; i++)
             {
-                if (accentTable.getAccent(i) == c) return i;
+                if (accentTable.GetAccent(i) == c) return i;
             }
             return -1;
         }
 
         /// <summary>
-        /// Tests the given ZSCII character if it falls in the ASCII range.
+        /// Indicates whether the specified ZSCII character is in the ASCII range.
         /// </summary>
-        /// <param name="zchar">the input character</param>
-        /// <returns>true if in the ASCII range, false, otherwise</returns>
-        public static bool isAscii(char zchar)
+        /// <param name="zchar">The character.</param>
+        /// <returns>true if the specified character is in the ASCII range; otherwise false.</returns>
+        public static bool IsAscii(char zchar)
         {
-            return zchar >= ASCII_START && zchar <= ASCII_END;
+            return zchar >= AsciiStart && zchar <= AsciiEnd;
         }
 
         /// <summary>
-        /// Tests the given ZSCII character for whether it is in the special range.
+        /// Indicates whether the specified ZSCII character
+        /// is in the special range.
         /// </summary>
-        /// <param name="zchar">the input character</param>
-        /// <returns>true if in special range, false, otherwise</returns>
-        public static bool isAccent(char zchar)
+        /// <param name="zchar">The character.</param>
+        /// <returns>true if the specified character is in the special range; otherwise false.</returns>
+        public static bool IsAccent(char zchar)
         {
-            return zchar >= ACCENT_START && zchar <= ACCENT_END;
+            return zchar >= AccentStart && zchar <= AccentEnd;
         }
 
         /// <summary>
-        /// Returns true if zsciiChar is a cursor key.
+        /// Indicates whether the specified ZSCII character is a cursor key.
         /// </summary>
-        /// <param name="zsciiChar">a cursor key</param>
-        /// <returns>true if cursor key, false, otherwise</returns>
-        public static bool isCursorKey(char zsciiChar)
+        /// <param name="zsciiChar">The character.</param>
+        /// <returns>true if the specified character is a cursor key; otherwise false.</returns>
+        public static bool IsCursorKey(char zsciiChar)
         {
-            return zsciiChar >= CURSOR_UP && zsciiChar <= CURSOR_RIGHT;
+            return zsciiChar >= CursorUp && zsciiChar <= CursorRight;
         }
 
         /// <summary>
-        /// Returns true if zchar is in the unicode range.
+        /// Indicates whether the specified ZSCII character is in the Unicode range.
         /// </summary>
-        /// <param name="zchar">a zscii character</param>
-        /// <returns>the unicode character</returns>
-        private static bool isUnicodeCharacter(char zchar)
+        /// <param name="zchar">The ZSCII character.</param>
+        /// <returns>true if the specified character is in the Unicode range; otherwise false.</returns>
+        private static bool IsUnicode(char zchar)
         {
             return zchar >= 256;
         }
 
         /// <summary>
-        /// Returns true if zsciiChar is a function key.
+        /// Indicates whether the specified ZSCII character is a function key.
         /// </summary>
-        /// <param name="zsciiChar">the zscii char</param>
-        /// <returns>true if function key, false, otherwise</returns>
-        public static bool isFunctionKey(char zsciiChar)
+        /// <param name="zsciiChar">The ZSCII character.</param>
+        /// <returns>true if the specified character is a function key; otherwise false.</returns>
+        public static bool IsFunctionKey(char zsciiChar)
         {
             return (zsciiChar >= 129 && zsciiChar <= 154) || (zsciiChar >= 252 && zsciiChar <= 254);
         }
 
         /// <summary>
-        /// Converts the character to lower case.
+        /// Converts the specified character to lower case.
         /// </summary>
-        /// <param name="zsciiChar">the ZSCII character to convert</param>
-        /// <returns>the lower case character</returns>
-        public char toLower(char zsciiChar)
+        /// <param name="zsciiChar">The ZSCII character.</param>
+        /// <returns>The lower case of the ZSCII character.</returns>
+        public char ToLower(char zsciiChar)
         {
-            if (isAscii(zsciiChar))
+            if (IsAscii(zsciiChar))
             {
                 return char.ToLower(zsciiChar);
             }
-            if (isAccent(zsciiChar))
+            if (IsAccent(zsciiChar))
             {
-                return (char)(accentTable.getIndexOfLowerCase(zsciiChar - ACCENT_START) + ACCENT_START);
+                return (char)(accentTable.GetIndexOfLowerCase(zsciiChar - AccentStart) + AccentStart);
             }
             return zsciiChar;
         }

@@ -30,45 +30,49 @@
 namespace Zmpp.Core.Encoding
 {
     /// <summary>
-    /// An alphabet table in V1 story files behaves like an alphabet table in
-    /// V2, except that it has a different A2 alphabet and does not support
+    /// Represents an alphabet table in a V1 story file.
+    /// </summary>
+    /// <remarks>
+    /// Behaves like an alphabet table in V2, except that
+    /// it has a different A2 alphabet and does not support
     /// abbreviations.
+    /// 
     /// Furthermore, character 1 returns '\n'. This is a thing that leads
     /// to the extension of the getAnChar() methods, handling index -5.
-    /// </summary>
+    /// </remarks>
     public class AlphabetTableV1 : AlphabetTableV2
     {
         private const long serialVersionUID = 1L;
 
         /// <summary>
-        /// V1 Alphabet 2 has a slightly different structure.
+        /// Alphabet 2 has a slightly different structure in V1.
         /// </summary>
         private const string A2CHARS = " 0123456789.,!?_#'\"/\\<-:()";
 
-        public override char getA0Char(byte zchar)
+        public override char GetA0Char(byte zchar)
         {
             if (zchar == 1) return '\n';
-            return base.getA0Char(zchar);
+            return base.GetA0Char(zchar);
         }
 
-        public override char getA1Char(byte zchar)
+        public override char GetA1Char(byte zchar)
         {
             if (zchar == 1) return '\n';
-            return base.getA1Char(zchar);
+            return base.GetA1Char(zchar);
         }
 
-        public override char getA2Char(byte zchar)
+        public override char GetA2Char(byte zchar)
         {
             if (zchar == 0) return ' ';
             if (zchar == 1) return '\n';
-            return A2CHARS[zchar - ALPHABET_START];
+            return A2CHARS[zchar - AlphabetStart];
         }
 
-        public override int getA2CharCode(char zsciiChar)
+        public override int GetA2CharCode(char zsciiChar)
         {
             return getCharCodeFor(A2CHARS, zsciiChar);
         }
 
-        public override bool isAbbreviation(char zchar) { return false; }
+        public override bool IsAbbreviation(char zchar) { return false; }
     }
 }

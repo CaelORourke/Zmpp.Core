@@ -29,32 +29,35 @@
 
 namespace Zmpp.Core.Encoding
 {
-    using Zmpp.Core;
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using Zmpp.Core;
 
     /// <summary>
     /// This is the default implementation of the ZCharDecoder interface.
+    /// </summary>
+    /// <remarks>
     /// The central method is decode2Unicode which handles abbreviations,
     /// 10 Bit escape characters and alphabet table characters.Alphabet
     /// table characters and shift states are handled by the ZCharTranslator
     /// object.
-    /// </summary>
-    public sealed class DefaultZCharDecoder : IZCharDecoder
+    /// </remarks>
+    public sealed class ZCharDecoder : IZCharDecoder
     {
-        private IZCharTranslator translator;
-        private IZsciiEncoding encoding;
-        private IZCharDecoder.AbbreviationsTable abbreviations;
+        private readonly IZCharTranslator translator;
+        private readonly IZsciiEncoding encoding;
+        private readonly IAbbreviationsTable abbreviations;
         private IZCharDecoder abbreviationDecoder;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Encoding.ZCharDecoder"/>
+        /// class for the specified encoding, translator, and abbreviation table.
         /// </summary>
-        /// <param name="encoding">the ZsciiEncoding object</param>
-        /// <param name="translator">the ZStringTranslator object</param>
-        /// <param name="abbreviations">the abbreviations table used for decoding</param>
-        public DefaultZCharDecoder(IZsciiEncoding encoding, IZCharTranslator translator, IZCharDecoder.AbbreviationsTable abbreviations)
+        /// <param name="encoding">The IZsciiEncoding object</param>
+        /// <param name="translator">The IZCharTranslator object.</param>
+        /// <param name="abbreviations">The abbreviations table.</param>
+        public ZCharDecoder(IZsciiEncoding encoding, IZCharTranslator translator, IAbbreviationsTable abbreviations)
         {
             this.abbreviations = abbreviations;
             this.translator = translator;
@@ -63,21 +66,24 @@ namespace Zmpp.Core.Encoding
 
         /// <summary>
         /// Performs a ZSCII decoding at the specified position of
-        /// the given memory object, this method is exclusively designed to
+        /// the given memory object.
+        /// </summary>
+        /// <param name="memory">The Memory object</param>
+        /// <param name="address">The address of the string.</param>
+        /// <param name="length">The maximum length in bytes.</param>
+        /// <returns>The decoded string.</returns>
+        /// <remarks>
+        /// This method is exclusively designed to
         /// deal with the problems of dictionary entries.These can be cropped,
         /// leaving the string in a state, that can not be decoded properly
         /// otherwise.If the provided length is 0, the semantics are
         /// equal to the method without the length parameter.
-        /// </summary>
-        /// <param name="memory">a Memory object</param>
-        /// <param name="address">the address of the string</param>
-        /// <param name="length">the maximum length in bytes</param>
-        /// <returns>the decoded string</returns>
-        public String decode2Zscii(IMemory memory, int address, int length)
+        /// </remarks>
+        public String Decode2Zscii(IMemory memory, int address, int length)
         {
             StringBuilder builder = new StringBuilder();
-            translator.reset();
-            char[] zbytes = extractZbytes(memory, address, length);
+            translator.Reset();
+            char[] zbytes = ExtractZbytes(memory, address, length);
             char zchar;
             int i = 0, newpos;
 
@@ -85,19 +91,19 @@ namespace Zmpp.Core.Encoding
             {
                 bool decoded = false;
                 zchar = zbytes[i];
-                newpos = handleAbbreviation(builder, memory, zbytes, i);
+                newpos = HandleAbbreviation(builder, memory, zbytes, i);
                 decoded = (newpos > i);
                 i = newpos;
 
                 if (!decoded)
                 {
-                    newpos = handleEscapeA2(builder, zbytes, i);
+                    newpos = HandleEscapeA2(builder, zbytes, i);
                     decoded = newpos > i;
                     i = newpos;
                 }
                 if (!decoded)
                 {
-                    decodeZchar(builder, zchar);
+                    DecodeZchar(builder, zchar);
                     i++;
                 }
             }
@@ -107,17 +113,17 @@ namespace Zmpp.Core.Encoding
         /// <summary>
         /// Process the abbreviation at the specified memory position.
         /// </summary>
-        /// <param name="builder">StringBuilder</param>
-        /// <param name="memory">memory object</param>
-        /// <param name="data">byte data</param>
-        /// <param name="pos">original position</param>
-        /// <returns>new position</returns>
-        private int handleAbbreviation(StringBuilder builder, IMemory memory, char[] data, int pos)
+        /// <param name="builder">The StringBuilder object.</param>
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="data">The byte data.</param>
+        /// <param name="pos">The original position.</param>
+        /// <returns>The new position.</returns>
+        private int HandleAbbreviation(StringBuilder builder, IMemory memory, char[] data, int pos)
         {
             int position = pos;
             char zchar = data[position];
 
-            if (translator.isAbbreviation(zchar))
+            if (translator.IsAbbreviation(zchar))
             {
 
                 // we need to check if we are at the end of the buffer, even if an
@@ -132,9 +138,9 @@ namespace Zmpp.Core.Encoding
                     {
                         int x = data[position];
                         int entryNum = 32 * (zchar - 1) + x;
-                        int entryAddress = abbreviations.getWordAddress(entryNum);
-                        createAbbreviationDecoderIfNotExists();
-                        appendAbbreviationAtAddress(memory, entryAddress, builder);
+                        int entryAddress = abbreviations.GetWordAddress(entryNum);
+                        CreateAbbreviationDecoderIfNotExists();
+                        AppendAbbreviationAtAddress(memory, entryAddress, builder);
                     }
                 }
                 position++;
@@ -145,7 +151,7 @@ namespace Zmpp.Core.Encoding
         /// <summary>
         /// Creates the abbreviation decoder if it does not exist.
         /// </summary>
-        private void createAbbreviationDecoderIfNotExists()
+        private void CreateAbbreviationDecoderIfNotExists()
         {
             // TODO: How can we do this in a more elegant way?
             if (abbreviationDecoder == null)
@@ -156,13 +162,11 @@ namespace Zmpp.Core.Encoding
                 // will not influence the continuation of the decoding process
                 try
                 {
-                    abbreviationDecoder = new DefaultZCharDecoder(encoding,
-                            (IZCharTranslator)translator.Clone(), null);
+                    abbreviationDecoder = new ZCharDecoder(encoding, (IZCharTranslator)translator.Clone(), null);
                 }
-                catch (NotSupportedException ex)
+                catch (NotSupportedException)
                 {
                     // should never happen
-                    //ex.printStackTrace();
                 }
             }
         }
@@ -171,15 +175,14 @@ namespace Zmpp.Core.Encoding
         /// Appends the abbreviation at the specified memory address to the
         /// StringBuilder.
         /// </summary>
-        /// <param name="memory">Memory object</param>
-        /// <param name="entryAddress">entry address</param>
-        /// <param name="builder">StringBuilder to append to</param>
-        private void appendAbbreviationAtAddress(IMemory memory, int entryAddress, StringBuilder builder)
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="entryAddress">The entry address.</param>
+        /// <param name="builder">The StringBuilder object.</param>
+        private void AppendAbbreviationAtAddress(IMemory memory, int entryAddress, StringBuilder builder)
         {
             if (abbreviationDecoder != null)
             {
-                String abbrev = abbreviationDecoder.decode2Zscii(memory,
-                  entryAddress, 0);
+                string abbrev = abbreviationDecoder.Decode2Zscii(memory, entryAddress, 0);
                 builder.Append(abbrev);
             }
         }
@@ -188,77 +191,77 @@ namespace Zmpp.Core.Encoding
         /// Handles the escape character from alphabet 2 and appends the result
         /// to the StringBuidler.
         /// </summary>
-        /// <param name="builder">a StringBuilder to append to</param>
-        /// <param name="data">byte data</param>
-        /// <param name="pos">old position</param>
-        /// <returns>new position</returns>
-        private int handleEscapeA2(StringBuilder builder, char[] data, int pos)
+        /// <param name="builder">The StringBuilder object.</param>
+        /// <param name="data">The byte data.</param>
+        /// <param name="pos">The old position.</param>
+        /// <returns>The new position.</returns>
+        private int HandleEscapeA2(StringBuilder builder, char[] data, int pos)
         {
             int position = pos;
-            if (translator.willEscapeA2(data[position]))
+            if (translator.WillEscapeA2(data[position]))
             {
 
                 // If the data is truncated, do not continue (check if the
                 // constant should be 2 or 3)
                 if (position < data.Length - 2)
                 {
-                    joinToZsciiChar(builder, data[position + 1], data[position + 2]);
+                    JoinToZsciiChar(builder, data[position + 1], data[position + 2]);
                     // skip the three characters read (including the loop increment)
                     position += 2;
                 }
                 position++;
-                translator.resetToLastAlphabet();
+                translator.ResetToLastAlphabet();
             }
             return position;
         }
 
-        public char decodeZChar(char zchar)
+        public char DecodeZChar(char zchar)
         {
-            if (ZsciiEncoding.isAscii(zchar) || ZsciiEncoding.isAccent(zchar))
+            if (ZsciiEncoding.IsAscii(zchar) || ZsciiEncoding.IsAccent(zchar))
             {
                 return zchar;
             }
             else
             {
-                return translator.translate(zchar);
+                return translator.Translate(zchar);
             }
         }
 
         /// <summary>
-        /// Decodes an encoded character and adds it to the specified builder object.
+        /// Decodes the specified encoded character and adds it to the specified builder object.
         /// </summary>
-        /// <param name="builder">a ZsciiStringBuilder object</param>
-        /// <param name="zchar">the encoded character to decode and add</param>
-        /// <returns>decoded character</returns>
-        private char decodeZchar(StringBuilder builder, char zchar)
+        /// <param name="builder">The StringBuilder object.</param>
+        /// <param name="zchar">The encoded character.</param>
+        /// <returns>The decoded character.</returns>
+        private char DecodeZchar(StringBuilder builder, char zchar)
         {
-            char c = decodeZChar(zchar);
+            char c = DecodeZChar(zchar);
             if (c != 0) builder.Append(c);
             return c;
         }
 
-        public IZCharTranslator getTranslator() { return translator; }
+        public IZCharTranslator Translator => translator;
 
         /// <summary>
-        /// Determines the last word in a z sequence. The last word has the
-        /// MSB set.
+        /// Indicates whether the specified word is the last word in a z sequence.
         /// </summary>
-        /// <param name="zword">the zword</param>
-        /// <returns>true if zword is the last word, false, otherwise</returns>
-        public static bool isEndWord(char zword)
+        /// <param name="zword">The Z-word.</param>
+        /// <returns>true if the specified word is the last word in a z sequence; otherwise false.</returns>
+        /// <remarks>The last word in a z sequence has the MSB set.</remarks>
+        public static bool IsEndWord(char zword)
         {
             return (zword & 0x8000) > 0;
         }
 
         /// <summary>
         /// This function unfortunately generates a List object on each invocation,
-        /// the advantage is that it will return all the characters of the Z string.
+        /// the advantage is that it will return all the characters of the Z-string.
         /// </summary>
-        /// <param name="memory">the memory access object</param>
-        /// <param name="address">the address of the z string</param>
-        /// <param name="length">the maximum length that the array should have or 0 for unspecified</param>
-        /// <returns>the z characters of the string</returns>
-        public static char[] extractZbytes(IMemory memory, int address, int length)
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The address of the Z-string.</param>
+        /// <param name="length">The maximum length that the array should have or 0 for unspecified.</param>
+        /// <returns>The Z-characters of the string.</returns>
+        public static char[] ExtractZbytes(IMemory memory, int address, int length)
         {
             char zword = (char)0;
             int currentAddr = address;
@@ -267,7 +270,7 @@ namespace Zmpp.Core.Encoding
             do
             {
                 zword = memory.ReadUnsigned16(currentAddr);
-                byteList.Add(extractZEncodedBytes(zword));
+                byteList.Add(ExtractZEncodedBytes(zword));
                 currentAddr += 2; // increment pointer
 
                 // if this is a dictionary entry, we need to provide the
@@ -276,7 +279,7 @@ namespace Zmpp.Core.Encoding
                 {
                     break;
                 }
-            } while (!isEndWord(zword));
+            } while (!IsEndWord(zword));
 
             char[] result = new char[byteList.Count * 3];
             int i = 0;
@@ -290,7 +293,7 @@ namespace Zmpp.Core.Encoding
             return result;
         }
 
-        public int getNumZEncodedBytes(IMemory memory, int address)
+        public int GetNumZEncodedBytes(IMemory memory, int address)
         {
             char zword = (char)0;
             int currentAddress = address;
@@ -298,18 +301,19 @@ namespace Zmpp.Core.Encoding
             {
                 zword = memory.ReadUnsigned16(currentAddress);
                 currentAddress += 2;
-            } while (!isEndWord(zword));
+            } while (!IsEndWord(zword));
             return currentAddress - address;
         }
 
         #region Private
+
         /// <summary>
         /// Extracts three 5 bit fields from the given 16 bit word and returns
         /// an array of three bytes containing these characters.
         /// </summary>
-        /// <param name="zword">a 16 bit word</param>
-        /// <returns>an array of three bytes containing the three 5-bit ZSCII characters encoded in the word</returns>
-        private static char[] extractZEncodedBytes(char zword)
+        /// <param name="zword">The 16 bit word.</param>
+        /// <returns>The array of three bytes containing the three 5-bit ZSCII characters encoded in the word.</returns>
+        private static char[] ExtractZEncodedBytes(char zword)
         {
             char[] result = new char[3];
             result[2] = (char)(zword & 0x1f);
@@ -321,13 +325,14 @@ namespace Zmpp.Core.Encoding
         /// <summary>
         /// Joins the specified two bytes into a 10 bit ZSCII character.
         /// </summary>
-        /// <param name="builder">the StringBuilder to write to</param>
-        /// <param name="top">the byte holding the top 5 bit of the zchar</param>
-        /// <param name="bottom">the byte holding the bottom 5 bit of the zchar</param>
-        private void joinToZsciiChar(StringBuilder builder, char top, char bottom)
+        /// <param name="builder">The StringBuilder object.</param>
+        /// <param name="top">The byte holding the top 5 bits of the Z-character.</param>
+        /// <param name="bottom">The byte holding the bottom 5 bits of the Z-character.</param>
+        private void JoinToZsciiChar(StringBuilder builder, char top, char bottom)
         {
             builder.Append((char)(top << 5 | bottom));
         }
+
         #endregion
     }
 }

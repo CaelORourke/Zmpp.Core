@@ -30,87 +30,85 @@
 namespace Zmpp.Core.Encoding
 {
     /// <summary>
-    /// The alphabet table is a central part of the Z encoding system. It stores
-    /// the characters that are mapped to each alphabet and provides information
-    /// about shift and escape situations.
+    /// Defines methods to support getting the mapped character from an alphabet table.
     /// </summary>
     public interface IAlphabetTable
     {
         /// <summary>
         /// Returns the ZSCII character from alphabet 0 at the specified index.
         /// </summary>
-        /// <param name="zchar">a Z encoded character</param>
-        /// <returns>the specified character from alphabet 0</returns>
-        char getA0Char(byte zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>The mapped character from alphabet 0.</returns>
+        char GetA0Char(byte zchar);
 
         /// <summary>
         /// Returns the ZSCII character from alphabet 1 at the specified index.
         /// </summary>
-        /// <param name="zchar">a Z encoded character</param>
-        /// <returns>the specified character from alphabet 1</returns>
-        char getA1Char(byte zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>The mapped character from alphabet 1.</returns>
+        char GetA1Char(byte zchar);
 
         /// <summary>
         /// Returns the ZSCII character from alphabet 2 at the specified index.
         /// </summary>
-        /// <param name="zchar">a Z encoded character</param>
-        /// <returns>the specified character from alphabet 2</returns>
-        char getA2Char(byte zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>The mapped character from alphabet 2.</returns>
+        char GetA2Char(byte zchar);
 
         /// <summary>
         /// Returns the index of the specified ZSCII character in alphabet 0.
         /// </summary>
-        /// <param name="zsciiChar">a ZSCII chararacter</param>
-        /// <returns>the index of the character in this alphabet or -1</returns>
-        int getA0CharCode(char zsciiChar);
+        /// <param name="zsciiChar">The ZSCII character.</param>
+        /// <returns>The index of the character in this alphabet or -1.</returns>
+        int GetA0CharCode(char zsciiChar);
 
         /// <summary>
         /// Returns the index of the specified ZSCII character in alphabet 2.
         /// </summary>
-        /// <param name="zsciiChar">a ZSCII chararacter</param>
-        /// <returns>the index of the character in this alphabet or -1</returns>
-        int getA1CharCode(char zsciiChar);
+        /// <param name="zsciiChar">The ZSCII character.</param>
+        /// <returns>The index of the character in this alphabet or -1.</returns>
+        int GetA1CharCode(char zsciiChar);
 
         /// <summary>
         /// Returns the index of the specified ZSCII character in alphabet 2.
         /// </summary>
-        /// <param name="zsciiChar">a ZSCII chararacter</param>
-        /// <returns>the index of the character in this alphabet or -1</returns>
-        int getA2CharCode(char zsciiChar);
+        /// <param name="zsciiChar">The ZSCII character.</param>
+        /// <returns>The index of the character in this alphabet or -1.</returns>
+        int GetA2CharCode(char zsciiChar);
 
         /// <summary>
         /// Determines if the specified character marks a abbreviation.
         /// </summary>
-        /// <param name="zchar">the zchar</param>
-        /// <returns>true if abbreviation, false, otherwise</returns>
-        bool isAbbreviation(char zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>true if the specified character is an abbreviation; otherwise false.</returns>
+        bool IsAbbreviation(char zchar);
 
         /// <summary>
         /// Returns true if the specified character is a shift level 1 character.
         /// </summary>
-        /// <param name="zchar">a Z encoded character</param>
-        /// <returns>true if shift, false, otherwise</returns>
-        bool isShift1(char zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>true if the specified character is a shift level 1 character; otherwise false.</returns>
+        bool IsShift1(char zchar);
 
         /// <summary>
         /// Returns true if the specified character is a shift level 2 character.
         /// </summary>
-        /// <param name="zchar">a Z encoded character</param>
-        /// <returns>true if shift, false, otherwise</returns>
-        bool isShift2(char zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>true if the specified character is a shift level 2 character; otherwise false.</returns>
+        bool IsShift2(char zchar);
 
         /// <summary>
         /// Returns true if the specified character is a shift lock character.
         /// </summary>
-        /// <param name="zchar">a Z encoded character</param>
-        /// <returns>true if shift lock, false otherwise</returns>
-        bool isShiftLock(char zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>true if the specified character is a shift lock character; otherwise false.</returns>
+        bool IsShiftLock(char zchar);
 
         /// <summary>
-        /// Returns true if the specified character is a shift character. Includes
+        /// Returns true if the specified character is a shift character.
         /// </summary>
-        /// <param name="zchar">a Z encoded character</param>
-        /// <returns>true if either shift or shift lock</returns>
-        bool isShift(char zchar);
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>true if the specified character is a shift or shift lock character; otherwise false.</returns>
+        bool IsShift(char zchar);
     }
 }

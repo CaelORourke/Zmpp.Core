@@ -29,46 +29,48 @@
 namespace Zmpp.Core.Encoding
 {
     /// <summary>
-    /// This class represents an alphabet element which is an alphabet and
-    /// an index to that alphabet.We need this to determine what kind of
-    /// encoding we need.
+    /// Represents an alphabet element which is an alphabet and
+    /// an index to that alphabet. 
     /// </summary>
+    /// <remarks>
+    /// The alphabet is needed to determine the type of encoding.
+    /// </remarks>
     public class AlphabetElement
     {
         /// <summary>
-        /// The zchar code or the ZSCII code, if alphabet is null.
+        /// The Z character code or the ZSCII code if the alphabet is not set.
         /// </summary>
-        private char zcharCode;
+        private readonly char code;
 
         /// <summary>
-        /// The alphabet or null, if index is a ZSCII code.
+        /// The alphabet.
         /// </summary>
-        private Alphabet alphabet;
+        private readonly Alphabet alphabet;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="alphabet">the alphabet (can be null)</param>
-        /// <param name="zcharCode">the zcharCode in the alphabet or the ZSCII code</param>
-        public AlphabetElement(Alphabet alphabet, char zcharCode)
+        /// <param name="alphabet">The alphabet.</param>
+        /// <param name="code">The Z character code in the alphabet or the ZSCII code if the alphabet is not set.</param>
+        public AlphabetElement(Alphabet alphabet, char code)
         {
             this.alphabet = alphabet;
-            this.zcharCode = zcharCode;
+            this.code = code;
         }
 
         /// <summary>
-        /// Returns the alphabet. Can be null, in that case index represents the
-        /// ZSCII code.
+        /// Gets the alphabet for this alphabet element.
         /// </summary>
-        /// <returns>the alphabet</returns>
-        public Alphabet getAlphabet() { return alphabet; }
+        public Alphabet Alphabet => alphabet;
 
         /// <summary>
-        /// Returns the index to the table. If the alphabet is null, this is the
-        /// plain ZSCII code and should be turned into a 10-bit code by the
-        /// encoder.
+        /// Gets the code for this alphabet element.
         /// </summary>
-        /// <returns>the z char code in the specified alphabet or the ZSCII code</returns>
-        public char getZCharCode() { return zcharCode; }
+        /// <remarks>
+        /// If the alphabet is not set this is the ZSCII code and
+        /// should be turned into a 10-bit code by the encoder.
+        /// </remarks>
+        /// <returns>The Z character code in the specified alphabet or the ZSCII code if the alphabet is not set.</returns>
+        public char Code => code;
     }
 }

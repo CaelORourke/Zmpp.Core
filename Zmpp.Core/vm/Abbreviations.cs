@@ -39,7 +39,7 @@ namespace Zmpp.Core.Vm
     /// as opposed to all other addresses in the memory map, therefore the
     /// actual value has to multiplied by two to get the real address.
     /// </summary>
-    public class Abbreviations : IZCharDecoder.AbbreviationsTable
+    public class Abbreviations : IAbbreviationsTable
     {
         /// <summary>
         /// The memory object.
@@ -69,7 +69,7 @@ namespace Zmpp.Core.Vm
         /// </summary>
         /// <param name="entryNum">the entry index in the abbreviations table</param>
         /// <returns>the word address</returns>
-        public int getWordAddress(int entryNum)
+        public int GetWordAddress(int entryNum)
         {
             return memory.ReadUnsigned16(address + entryNum * 2) * 2;
         }

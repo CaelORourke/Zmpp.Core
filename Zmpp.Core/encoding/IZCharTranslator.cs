@@ -58,17 +58,22 @@ namespace Zmpp.Core.Encoding
     public interface IZCharTranslator
     {
         /// <summary>
-        /// Resets the state of the translator. This should be called before
-        /// a new decoding is started to reset this object to its initial state.
+        /// Resets the state of the translator.
         /// </summary>
-        void reset();
+        /// <remarks>
+        /// This should be called before a new decoding is started to reset
+        /// this object to its initial state.
+        /// </remarks>
+        void Reset();
 
         /// <summary>
         /// This method should be invoked within the decoding of one single string.
-        /// In story file versions >= 3 this is the same as invoking reset(), in
-        /// V1 and V2, the object will reset to the last shift-locked alphabet.
         /// </summary>
-        void resetToLastAlphabet();
+        /// <remarks>
+        /// In story file versions >= 3 this is the same as invoking Reset(). In
+        /// V1 and V2 the object will reset to the last shift-locked alphabet.
+        /// </remarks>
+        void ResetToLastAlphabet();
 
         /// <summary>
         /// Clones this object. Needed, since this object has a modifiable state.
@@ -80,14 +85,14 @@ namespace Zmpp.Core.Encoding
         /// Returns the current alphabet this object works in.
         /// </summary>
         /// <returns>the current alphabet</returns>
-        Alphabet getCurrentAlphabet();
+        Alphabet CurrentAlphabet { get; }
 
         /// <summary>
         /// Translates the given zchar to a Unicode character.
         /// </summary>
         /// <param name="zchar">a z encoded character</param>
         /// <returns>a Unicode character</returns>
-        char translate(char zchar);
+        char Translate(char zchar);
 
         /// <summary>
         /// If this object is in alphabet A2 now, this function determines if the
@@ -95,7 +100,7 @@ namespace Zmpp.Core.Encoding
         /// </summary>
         /// <param name="zchar">the character</param>
         /// <returns>true if A2 escape, false otherwise</returns>
-        bool willEscapeA2(char zchar);
+        bool WillEscapeA2(char zchar);
 
         /// <summary>
         /// Return true if this the specified character is an abbreviation in the
@@ -103,7 +108,7 @@ namespace Zmpp.Core.Encoding
         /// </summary>
         /// <param name="zchar">a Z encoded character</param>
         /// <returns>true if abbreviation, false otherwise</returns>
-        bool isAbbreviation(char zchar);
+        bool IsAbbreviation(char zchar);
 
         /// <summary>
         /// Provides a reverse translation. Given a ZSCII character, determine
@@ -112,6 +117,6 @@ namespace Zmpp.Core.Encoding
         /// </summary>
         /// <param name="zsciiChar">a ZSCII character</param>
         /// <returns>the reverse translation</returns>
-        AlphabetElement getAlphabetElementFor(char zsciiChar);
+        AlphabetElement GetAlphabetElementFor(char zsciiChar);
     }
 }

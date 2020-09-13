@@ -64,14 +64,14 @@ namespace Zmpp.Core.Encoding.Tests
             // we expect to have an end word, padded out with shift 5's
             data[sourceAddress] = (byte)'a'; // Encode an 'a'
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -96,14 +96,14 @@ namespace Zmpp.Core.Encoding.Tests
             data[sourceAddress] = (byte)'a';
             data[sourceAddress + 1] = (byte)'b';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -130,14 +130,14 @@ namespace Zmpp.Core.Encoding.Tests
             data[sourceAddress + 2] = (byte)'c';
             data[sourceAddress + 3] = (byte)'d';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -162,14 +162,14 @@ namespace Zmpp.Core.Encoding.Tests
 
             data[sourceAddress] = (byte)'A';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -195,14 +195,14 @@ namespace Zmpp.Core.Encoding.Tests
             data[sourceAddress + 1] = (byte)'b';
             data[sourceAddress + 2] = (byte)'C';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -226,14 +226,14 @@ namespace Zmpp.Core.Encoding.Tests
             data[sourceAddress + 1] = (byte)'b';
             data[sourceAddress + 2] = (byte)'3';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -263,14 +263,14 @@ namespace Zmpp.Core.Encoding.Tests
 
             data[sourceAddress] = (byte)'@';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -298,14 +298,14 @@ namespace Zmpp.Core.Encoding.Tests
 
             data[sourceAddress] = (byte)'~';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -331,14 +331,14 @@ namespace Zmpp.Core.Encoding.Tests
             data[sourceAddress] = (byte)'a';
             data[sourceAddress + 1] = (byte)'~';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -379,14 +379,14 @@ namespace Zmpp.Core.Encoding.Tests
             data[sourceAddress + 5] = (byte)'e';
             data[sourceAddress + 6] = (byte)'f';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -419,14 +419,14 @@ namespace Zmpp.Core.Encoding.Tests
             data[sourceAddress + 5] = (byte)'f';
             data[sourceAddress + 6] = (byte)'@';
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode(realmem, sourceAddress, length, targetAddress);
+            encoderV4.Encode(realmem, sourceAddress, length, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -446,8 +446,8 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
@@ -455,7 +455,7 @@ namespace Zmpp.Core.Encoding.Tests
             // act
 
             // we expect to have an end word, padded out with shift 5's
-            encoderV4.encode("a", realmem, targetAddress);
+            encoderV4.Encode("a", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -475,14 +475,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("ab", realmem, targetAddress);
+            encoderV4.Encode("ab", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -502,14 +502,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("abcd", realmem, targetAddress);
+            encoderV4.Encode("abcd", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -530,14 +530,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("a", realmem, targetAddress);
+            encoderV4.Encode("a", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -557,14 +557,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("abc", realmem, targetAddress);
+            encoderV4.Encode("abc", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -582,14 +582,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("ab3", realmem, targetAddress);
+            encoderV4.Encode("ab3", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -612,14 +612,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("@", realmem, targetAddress);
+            encoderV4.Encode("@", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -643,14 +643,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("~", realmem, targetAddress);
+            encoderV4.Encode("~", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -671,14 +671,14 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
 
             // act
-            encoderV4.encode("a~", realmem, targetAddress);
+            encoderV4.Encode("a~", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -706,8 +706,8 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
@@ -717,7 +717,7 @@ namespace Zmpp.Core.Encoding.Tests
             // Situation 1: there are lower case letters at the end, we need
             // to ensure that the dictionary is cropped and the characters
             // that exceed the buffer are ommitted
-            encoderV4.encode("@abcdef", realmem, targetAddress);
+            encoderV4.Encode("@abcdef", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);
@@ -737,8 +737,8 @@ namespace Zmpp.Core.Encoding.Tests
             int targetAddress = 199;
             byte[] data = new byte[206];
 
-            IAlphabetTable alphabetTable = new DefaultAlphabetTable();
-            IZCharTranslator translator = new DefaultZCharTranslator(alphabetTable);
+            IAlphabetTable alphabetTable = new AlphabetTable();
+            IZCharTranslator translator = new ZCharTranslator(alphabetTable);
             //ZCharEncoder encoderV1 = new ZCharEncoder(translator, new DictionarySizesV1ToV3());
             ZCharEncoder encoderV4 = new ZCharEncoder(translator, new DictionarySizesV4ToV8());
             IMemory realmem = new Memory(data);
@@ -748,7 +748,7 @@ namespace Zmpp.Core.Encoding.Tests
             // Situation 2: in this case the escaped character is at the end,
             // so we need to ommit that escape sequence completely, padding
             // out the rest of the string
-            encoderV4.encode("abcdef@", realmem, targetAddress);
+            encoderV4.Encode("abcdef@", realmem, targetAddress);
             var result = realmem.ReadUnsigned16(targetAddress);
             var result2 = realmem.ReadUnsigned16(targetAddress + 2);
             var result3 = realmem.ReadUnsigned16(targetAddress + 4);

@@ -32,43 +32,50 @@ namespace Zmpp.Core.Encoding
     using Zmpp.Core;
 
     /// <summary>
-    /// This accent table is used in case that there is an extension header
-    /// that specifies that accent table.
+    /// Represents a custom accent table.
     /// </summary>
+    /// <remarks>
+    /// If an extension header specifies a custom accent table
+    /// instances of this class are used to retrieve the custom accents.
+    /// </remarks>
     public class CustomAccentTable : IAccentTable
     {
         /// <summary>
         /// The Memory object.
         /// </summary>
-        private IMemory memory;
+        private readonly IMemory memory;
 
         /// <summary>
         /// The table adddress.
         /// </summary>
-        private int tableAddress;
+        private readonly int tableAddress;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Encoding.CustomAccentTable"/>
+        /// class for the specified memory and address.
         /// </summary>
-        /// <param name="memory">a Memory object</param>
-        /// <param name="address">the table address</param>
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The table address.</param>
         public CustomAccentTable(IMemory memory, int address)
         {
             this.memory = memory;
             this.tableAddress = address;
         }
 
-        public int getLength()
+        public int Length
         {
-            int result = 0;
-            if (tableAddress > 0)
+            get
             {
-                result = memory.ReadUnsigned8(tableAddress);
+                int result = 0;
+                if (tableAddress > 0)
+                {
+                    result = memory.ReadUnsigned8(tableAddress);
+                }
+                return result;
             }
-            return result;
         }
 
-        public char getAccent(int index)
+        public char GetAccent(int index)
         {
             char result = '?';
             if (tableAddress > 0)
@@ -78,15 +85,15 @@ namespace Zmpp.Core.Encoding
             return result;
         }
 
-        public int getIndexOfLowerCase(int index)
+        public int GetIndexOfLowerCase(int index)
         {
-            char c = (char)getAccent(index);
+            char c = (char)GetAccent(index);
             char lower = char.ToLower(c);
-            int length = getLength();
+            int length = Length;
 
             for (int i = 0; i < length; i++)
             {
-                if (getAccent(i) == lower) return i;
+                if (GetAccent(i) == lower) return i;
             }
             return index;
         }

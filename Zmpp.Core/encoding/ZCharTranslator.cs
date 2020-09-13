@@ -33,38 +33,39 @@ namespace Zmpp.Core.Encoding
     using static Zmpp.Core.Encoding.AlphabetTableBase;
 
     /// <summary>
-    /// The default implementation of ZCharTranslator
+    /// Represents a default implementation of IZCharTranslator.
     /// </summary>
-    public class DefaultZCharTranslator : IZCharTranslator, ICloneable
+    public class ZCharTranslator : IZCharTranslator, ICloneable
     {
-        private IAlphabetTable alphabetTable;
+        private readonly IAlphabetTable alphabetTable;
         private Alphabet currentAlphabet;
         private Alphabet lockAlphabet;
         private bool shiftLock;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Encoding.ZCharTranslator"/>
+        /// class for the specified alphabet table.
         /// </summary>
-        /// <param name="alphabetTable">the alphabet table</param>
-        public DefaultZCharTranslator(IAlphabetTable alphabetTable)
+        /// <param name="alphabetTable">The alphabet table.</param>
+        public ZCharTranslator(IAlphabetTable alphabetTable)
         {
             this.alphabetTable = alphabetTable;
-            reset();
+            Reset();
         }
 
-        public void reset()
+        public void Reset()
         {
             currentAlphabet = Alphabet.A0;
-            lockAlphabet = Alphabet.Unknown;
+            lockAlphabet = Alphabet.NotSet;
             shiftLock = false;
         }
 
         /// <summary>
         /// Reset the translation to use the last alphabet used.
         /// </summary>
-        public void resetToLastAlphabet()
+        public void ResetToLastAlphabet()
         {
-            if (lockAlphabet == Alphabet.Unknown)
+            if (lockAlphabet == Alphabet.NotSet)
             {
                 currentAlphabet = Alphabet.A0;
             }
@@ -77,33 +78,32 @@ namespace Zmpp.Core.Encoding
 
         public Object Clone()
         {
-            DefaultZCharTranslator clone = null;
-            clone = (DefaultZCharTranslator)this.MemberwiseClone();
-            clone.reset();
+            ZCharTranslator clone = null;
+            clone = (ZCharTranslator)this.MemberwiseClone();
+            clone.Reset();
             return clone;
         }
 
-        public Alphabet getCurrentAlphabet() { return currentAlphabet; }
+        public Alphabet CurrentAlphabet => currentAlphabet;
 
-
-        public char translate(char zchar)
+        public char Translate(char zchar)
         {
-            if (shift(zchar)) return '\0';
+            if (Shift(zchar)) return '\0';
 
             char result;
-            if (isInAlphabetRange(zchar))
+            if (IsInAlphabetRange(zchar))
             {
                 switch (currentAlphabet)
                 {
                     case Alphabet.A0:
-                        result = (char)alphabetTable.getA0Char((byte)zchar);
+                        result = (char)alphabetTable.GetA0Char((byte)zchar);
                         break;
                     case Alphabet.A1:
-                        result = (char)alphabetTable.getA1Char((byte)zchar);
+                        result = (char)alphabetTable.GetA1Char((byte)zchar);
                         break;
                     case Alphabet.A2:
                     default:
-                        result = (char)alphabetTable.getA2Char((byte)zchar);
+                        result = (char)alphabetTable.GetA2Char((byte)zchar);
                         break;
                 }
             }
@@ -112,21 +112,21 @@ namespace Zmpp.Core.Encoding
                 result = '?';
             }
             // Only reset if the shift lock flag is not set
-            if (!shiftLock) resetToLastAlphabet();
+            if (!shiftLock) ResetToLastAlphabet();
             return result;
         }
 
-        public bool willEscapeA2(char zchar)
+        public bool WillEscapeA2(char zchar)
         {
-            return currentAlphabet == Alphabet.A2 && zchar == A2_ESCAPE;
+            return currentAlphabet == Alphabet.A2 && zchar == A2Escape;
         }
 
-        public bool isAbbreviation(char zchar)
+        public bool IsAbbreviation(char zchar)
         {
-            return alphabetTable.isAbbreviation(zchar);
+            return alphabetTable.IsAbbreviation(zchar);
         }
 
-        public AlphabetElement getAlphabetElementFor(char zsciiChar)
+        public AlphabetElement GetAlphabetElementFor(char zsciiChar)
         {
             // Special handling for newline !!
             if (zsciiChar == '\n')
@@ -134,8 +134,8 @@ namespace Zmpp.Core.Encoding
                 return new AlphabetElement(Alphabet.A2, (char)7);
             }
 
-            Alphabet alphabet = Alphabet.Unknown;
-            int zcharCode = alphabetTable.getA0CharCode(zsciiChar);
+            Alphabet alphabet = Alphabet.NotSet;
+            int zcharCode = alphabetTable.GetA0CharCode(zsciiChar);
 
             if (zcharCode >= 0)
             {
@@ -143,14 +143,14 @@ namespace Zmpp.Core.Encoding
             }
             else
             {
-                zcharCode = alphabetTable.getA1CharCode(zsciiChar);
+                zcharCode = alphabetTable.GetA1CharCode(zsciiChar);
                 if (zcharCode >= 0)
                 {
                     alphabet = Alphabet.A1;
                 }
                 else
                 {
-                    zcharCode = alphabetTable.getA2CharCode(zsciiChar);
+                    zcharCode = alphabetTable.GetA2CharCode(zsciiChar);
                     if (zcharCode >= 0)
                     {
                         alphabet = Alphabet.A2;
@@ -158,38 +158,37 @@ namespace Zmpp.Core.Encoding
                 }
             }
 
-            if (alphabet == Alphabet.Unknown)
+            if (alphabet == Alphabet.NotSet)
             {
-                // It is not in any alphabet table, we are fine with taking the code
-                // number for the moment
+                // If it is not found in any alphabet table use the Z-character code.
                 zcharCode = zsciiChar;
             }
             return new AlphabetElement(alphabet, (char)zcharCode);
         }
 
         /// <summary>
-        /// Determines if the given byte value falls within the alphabet range.
+        /// Indicates whether the specified Z character falls within the alphabet range.
         /// </summary>
-        /// <param name="zchar">the zchar value</param>
-        /// <returns>true if the value is in the alphabet range, false, otherwise</returns>
-        private static bool isInAlphabetRange(char zchar)
+        /// <param name="zchar">The Z character.</param>
+        /// <returns>true if the specified Z character is in the alphabet range; otherwise false.</returns>
+        private static bool IsInAlphabetRange(char zchar)
         {
-            return 0 <= zchar && zchar <= ALPHABET_END;
+            return 0 <= zchar && zchar <= AlphabetEnd;
         }
 
         /// <summary>
         /// Performs a shift.
         /// </summary>
-        /// <param name="zchar">a z encoded character</param>
-        /// <returns>true if a shift was performed, false, otherwise</returns>
-        private bool shift(char zchar)
+        /// <param name="zchar">The Z encoded character.</param>
+        /// <returns>true if a shift was performed; otherwise false.</returns>
+        private bool Shift(char zchar)
         {
-            if (alphabetTable.isShift(zchar))
+            if (alphabetTable.IsShift(zchar))
             {
-                currentAlphabet = shiftFrom(currentAlphabet, zchar);
+                currentAlphabet = ShiftFrom(currentAlphabet, zchar);
 
                 // Sets the current lock alphabet
-                if (alphabetTable.isShiftLock(zchar))
+                if (alphabetTable.IsShiftLock(zchar))
                 {
                     lockAlphabet = currentAlphabet;
                 }
@@ -201,14 +200,14 @@ namespace Zmpp.Core.Encoding
         /// <summary>
         /// This method contains the rules to shift the alphabets.
         /// </summary>
-        /// <param name="alphabet">the source alphabet</param>
-        /// <param name="shiftChar">the shift character</param>
-        /// <returns>the resulting alphabet</returns>
-        private Alphabet shiftFrom(Alphabet alphabet, char shiftChar)
+        /// <param name="alphabet">The source alphabet.</param>
+        /// <param name="shiftChar">The shift character.</param>
+        /// <returns>The resulting alphabet.</returns>
+        private Alphabet ShiftFrom(Alphabet alphabet, char shiftChar)
         {
-            Alphabet result = Alphabet.Unknown;
+            Alphabet result = Alphabet.NotSet;
 
-            if (alphabetTable.isShift1(shiftChar))
+            if (alphabetTable.IsShift1(shiftChar))
             {
                 if (alphabet == Alphabet.A0)
                 {
@@ -223,7 +222,7 @@ namespace Zmpp.Core.Encoding
                     result = Alphabet.A0;
                 }
             }
-            else if (alphabetTable.isShift2(shiftChar))
+            else if (alphabetTable.IsShift2(shiftChar))
             {
                 if (alphabet == Alphabet.A0)
                 {
@@ -242,7 +241,7 @@ namespace Zmpp.Core.Encoding
             {
                 result = alphabet;
             }
-            shiftLock = alphabetTable.isShiftLock(shiftChar);
+            shiftLock = alphabetTable.IsShiftLock(shiftChar);
             return result;
         }
     }

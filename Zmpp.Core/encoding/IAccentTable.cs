@@ -30,30 +30,32 @@
 namespace Zmpp.Core.Encoding
 {
     /// <summary>
-    /// Accent tables are used by ZsciiEncoding objects to translate encoded
-    /// Z characters to unicode characters.
+    /// Provides read access to an accent table.
     /// </summary>
+    /// <remarks>
+    /// Accent tables are used by <see cref="Zmpp.Core.Encoding.ZsciiEncoding"/>
+    /// objects to translate encoded ZSCII characters to Unicode characters.
+    /// </remarks>
     public interface IAccentTable
     {
         /// <summary>
-        /// Returns the length of the table.
+        /// Gets the length of the accent table.
         /// </summary>
-        /// <returns>the length of the table</returns>
-        int getLength();
+        int Length { get; }
 
         /// <summary>
-        /// Returns the accent at the specified index.
+        /// Gets the accent character at the specified index.
         /// </summary>
-        /// <param name="index">the index</param>
-        /// <returns>the accent</returns>
-        char getAccent(int index);
+        /// <param name="index">The index.</param>
+        /// <returns>The accent character.</returns>
+        char GetAccent(int index);
 
         /// <summary>
-        /// Converts the accent at the specified index to lower case and returns
-        /// the index of that character.
+        /// Gets the the index of the corresponding lower case
+        /// character for the accent character at the specified index.
         /// </summary>
-        /// <param name="index">the character</param>
-        /// <returns>the index of the corresponding lower case</returns>
-        int getIndexOfLowerCase(int index);
+        /// <param name="index">The index.</param>
+        /// <returns>The index of the corresponding lower case character.</returns>
+        int GetIndexOfLowerCase(int index);
     }
 }

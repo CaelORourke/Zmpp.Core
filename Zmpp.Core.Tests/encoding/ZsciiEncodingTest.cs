@@ -48,15 +48,15 @@ namespace Zmpp.Core.Encoding.Tests
         public void testIsZsciiCharacterAscii()
         {
             // arrange
-            encoding = new ZsciiEncoding(new DefaultAccentTable());
+            encoding = new ZsciiEncoding(new AccentTable());
 
             // act
-            var result = encoding.isZsciiCharacter('A');
-            var result2 = encoding.isZsciiCharacter('M');
-            var result3 = encoding.isZsciiCharacter('Z');
-            var result4 = encoding.isZsciiCharacter('a');
-            var result5 = encoding.isZsciiCharacter('m');
-            var result6 = encoding.isZsciiCharacter('z');
+            var result = encoding.IsZscii('A');
+            var result2 = encoding.IsZscii('M');
+            var result3 = encoding.IsZscii('Z');
+            var result4 = encoding.IsZscii('a');
+            var result5 = encoding.IsZscii('m');
+            var result6 = encoding.IsZscii('z');
 
             // assert
             Assert.IsTrue(result);
@@ -71,13 +71,13 @@ namespace Zmpp.Core.Encoding.Tests
         public void testIsZsciiCharacterExtra()
         {
             // arrange
-            encoding = new ZsciiEncoding(new DefaultAccentTable());
+            encoding = new ZsciiEncoding(new AccentTable());
 
             // act
-            var result = encoding.isZsciiCharacter(ZsciiEncoding.NULL);
-            var result2 = encoding.isZsciiCharacter(ZsciiEncoding.NEWLINE);
-            var result3 = encoding.isZsciiCharacter(ZsciiEncoding.ESCAPE);
-            var result4 = encoding.isZsciiCharacter(ZsciiEncoding.DELETE);
+            var result = encoding.IsZscii(ZsciiEncoding.Null);
+            var result2 = encoding.IsZscii(ZsciiEncoding.Newline);
+            var result3 = encoding.IsZscii(ZsciiEncoding.Escape);
+            var result4 = encoding.IsZscii(ZsciiEncoding.Delete);
 
             // assert
             Assert.AreEqual(10, (int)'\n');
@@ -91,18 +91,18 @@ namespace Zmpp.Core.Encoding.Tests
         public void testIsConvertableToZscii()
         {
             // arrange
-            encoding = new ZsciiEncoding(new DefaultAccentTable());
+            encoding = new ZsciiEncoding(new AccentTable());
 
             // act
-            var result = encoding.isConvertableToZscii('A');
-            var result2 = encoding.isConvertableToZscii('M');
-            var result3 = encoding.isConvertableToZscii('Z');
-            var result4 = encoding.isConvertableToZscii('a');
-            var result5 = encoding.isConvertableToZscii('m');
-            var result6 = encoding.isConvertableToZscii('z');
+            var result = encoding.IsConvertibleToZscii('A');
+            var result2 = encoding.IsConvertibleToZscii('M');
+            var result3 = encoding.IsConvertibleToZscii('Z');
+            var result4 = encoding.IsConvertibleToZscii('a');
+            var result5 = encoding.IsConvertibleToZscii('m');
+            var result6 = encoding.IsConvertibleToZscii('z');
 
-            var result7 = encoding.isConvertableToZscii('\n');
-            var result8 = encoding.isConvertableToZscii('\x0007');
+            var result7 = encoding.IsConvertibleToZscii('\n');
+            var result8 = encoding.IsConvertibleToZscii('\x0007');
 
             // assert
             Assert.IsTrue(result);
@@ -120,18 +120,18 @@ namespace Zmpp.Core.Encoding.Tests
         public void testGetUnicode()
         {
             // arrange
-            encoding = new ZsciiEncoding(new DefaultAccentTable());
+            encoding = new ZsciiEncoding(new AccentTable());
 
             // act
-            var result = encoding.getUnicodeChar('A');
-            var result2 = encoding.getUnicodeChar('M');
-            var result3 = encoding.getUnicodeChar('Z');
-            var result4 = encoding.getUnicodeChar('a');
-            var result5 = encoding.getUnicodeChar('m');
-            var result6 = encoding.getUnicodeChar('z');
-            var result7 = encoding.getUnicodeChar(ZsciiEncoding.NEWLINE);
-            var result8 = encoding.getUnicodeChar(ZsciiEncoding.NULL);
-            var result9 = encoding.getUnicodeChar(ZsciiEncoding.DELETE);
+            var result = encoding.ToUnicodeChar('A');
+            var result2 = encoding.ToUnicodeChar('M');
+            var result3 = encoding.ToUnicodeChar('Z');
+            var result4 = encoding.ToUnicodeChar('a');
+            var result5 = encoding.ToUnicodeChar('m');
+            var result6 = encoding.ToUnicodeChar('z');
+            var result7 = encoding.ToUnicodeChar(ZsciiEncoding.Newline);
+            var result8 = encoding.ToUnicodeChar(ZsciiEncoding.Null);
+            var result9 = encoding.ToUnicodeChar(ZsciiEncoding.Delete);
 
             // assert
             Assert.AreEqual('A', result);
@@ -149,17 +149,17 @@ namespace Zmpp.Core.Encoding.Tests
         public void testGetZChar()
         {
             // arrange
-            encoding = new ZsciiEncoding(new DefaultAccentTable());
+            encoding = new ZsciiEncoding(new AccentTable());
 
             // act
-            var result = encoding.getZsciiChar('A');
-            var result2 = encoding.getZsciiChar('M');
-            var result3 = encoding.getZsciiChar('Z');
+            var result = encoding.ToZsciiChar('A');
+            var result2 = encoding.ToZsciiChar('M');
+            var result3 = encoding.ToZsciiChar('Z');
 
-            var result4 = encoding.getZsciiChar('a');
-            var result5 = encoding.getZsciiChar('m');
-            var result6 = encoding.getZsciiChar('z');
-            var result7 = encoding.getZsciiChar('\x0007');
+            var result4 = encoding.ToZsciiChar('a');
+            var result5 = encoding.ToZsciiChar('m');
+            var result6 = encoding.ToZsciiChar('z');
+            var result7 = encoding.ToZsciiChar('\x0007');
 
             // assert
             Assert.AreEqual('A', result);
@@ -178,11 +178,11 @@ namespace Zmpp.Core.Encoding.Tests
             // arrange
 
             // act
-            var result = ZsciiEncoding.isCursorKey(ZsciiEncoding.CURSOR_UP);
-            var result2 = ZsciiEncoding.isCursorKey(ZsciiEncoding.CURSOR_DOWN);
-            var result3 = ZsciiEncoding.isCursorKey(ZsciiEncoding.CURSOR_LEFT);
-            var result4 = ZsciiEncoding.isCursorKey(ZsciiEncoding.CURSOR_RIGHT);
-            var result5 = ZsciiEncoding.isCursorKey(ZsciiEncoding.NEWLINE);
+            var result = ZsciiEncoding.IsCursorKey(ZsciiEncoding.CursorUp);
+            var result2 = ZsciiEncoding.IsCursorKey(ZsciiEncoding.CursorDown);
+            var result3 = ZsciiEncoding.IsCursorKey(ZsciiEncoding.CursorLeft);
+            var result4 = ZsciiEncoding.IsCursorKey(ZsciiEncoding.CursorRight);
+            var result5 = ZsciiEncoding.IsCursorKey(ZsciiEncoding.Newline);
 
             // assert
             Assert.IsTrue(result);
@@ -196,10 +196,10 @@ namespace Zmpp.Core.Encoding.Tests
         public void testStandardTable()
         {
             // arrange
-            var accentTable = new DefaultAccentTable();
+            var accentTable = new AccentTable();
 
             // act
-            var result = accentTable.getLength();
+            var result = accentTable.Length;
 
             // assert
             Assert.AreEqual(69, result);
@@ -209,11 +209,11 @@ namespace Zmpp.Core.Encoding.Tests
         public void testToLowerCase()
         {
             // arrange
-            encoding = new ZsciiEncoding(new DefaultAccentTable());
+            encoding = new ZsciiEncoding(new AccentTable());
 
             // act
-            var result = encoding.toLower('A');
-            var result2 = encoding.toLower((char)158);
+            var result = encoding.ToLower('A');
+            var result2 = encoding.ToLower((char)158);
 
             // assert
             Assert.AreEqual('a', result);

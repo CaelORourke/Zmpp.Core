@@ -32,44 +32,44 @@ namespace Zmpp.Core.Encoding
     using System;
 
     /// <summary>
-    /// The default alphabet table implementation.
+    /// Represents the default alphabet table.
     /// </summary>
-    public class DefaultAlphabetTable : AlphabetTableBase, IAlphabetTable
+    public class AlphabetTable : AlphabetTableBase
     {
         private const long serialVersionUID = 1L;
         private const string A0CHARS = "abcdefghijklmnopqrstuvwxyz";
         private const string A1CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string A2CHARS = " \n0123456789.,!?_#'\"/\\-:()";
 
-        public virtual char getA0Char(byte zchar)
+        public override char GetA0Char(byte zchar)
         {
             if (zchar == 0) return ' ';
-            return A0CHARS[zchar - ALPHABET_START];
+            return A0CHARS[zchar - AlphabetStart];
         }
 
-        public virtual char getA1Char(byte zchar)
+        public override char GetA1Char(byte zchar)
         {
             if (zchar == 0) return ' ';
-            return A1CHARS[zchar - ALPHABET_START];
+            return A1CHARS[zchar - AlphabetStart];
         }
 
-        public virtual char getA2Char(byte zchar)
+        public override char GetA2Char(byte zchar)
         {
             if (zchar == 0) return ' ';
-            return A2CHARS[zchar - ALPHABET_START];
+            return A2CHARS[zchar - AlphabetStart];
         }
 
-        public int getA0CharCode(char zsciiChar)
+        public override int GetA0CharCode(char zsciiChar)
         {
             return getCharCodeFor(A0CHARS, zsciiChar);
         }
 
-        public int getA1CharCode(char zsciiChar)
+        public override int GetA1CharCode(char zsciiChar)
         {
             return getCharCodeFor(A1CHARS, zsciiChar);
         }
 
-        public virtual int getA2CharCode(char zsciiChar)
+        public override int GetA2CharCode(char zsciiChar)
         {
             return getCharCodeFor(A2CHARS, zsciiChar);
         }
@@ -78,29 +78,29 @@ namespace Zmpp.Core.Encoding
         /// Returns the character code for the specified ZSCII character by searching
         /// the index in the specified chars string.
         /// </summary>
-        /// <param name="chars">the search string</param>
-        /// <param name="zsciiChar">the ZSCII character</param>
-        /// <returns>the character code, which is the index of the character in chars or -1 if not found</returns>
+        /// <param name="chars">The search string.</param>
+        /// <param name="zsciiChar">The ZSCII character.</param>
+        /// <returns>The index of the ZSCII character in the search string or -1 if not found.</returns>
         protected static int getCharCodeFor(String chars, char zsciiChar)
         {
             int index = chars.IndexOf(zsciiChar);
-            if (index >= 0) index += ALPHABET_START;
+            if (index >= 0) index += AlphabetStart;
             return index;
         }
 
 
-        public virtual bool isShift1(char zchar) { return zchar == SHIFT_4; }
+        public override bool IsShift1(char zchar) { return zchar == Shift4; }
 
-        public virtual bool isShift2(char zchar) { return zchar == SHIFT_5; }
+        public override bool IsShift2(char zchar) { return zchar == Shift5; }
 
-        public bool isShift(char zchar)
+        public override bool IsShift(char zchar)
         {
-            return isShift1(zchar) || isShift2(zchar);
+            return IsShift1(zchar) || IsShift2(zchar);
         }
 
-        public virtual bool isShiftLock(char zchar) { return false; }
+        public override bool IsShiftLock(char zchar) { return false; }
 
-        public virtual bool isAbbreviation(char zchar)
+        public override bool IsAbbreviation(char zchar)
         {
             return 1 <= zchar && zchar <= 3;
         }

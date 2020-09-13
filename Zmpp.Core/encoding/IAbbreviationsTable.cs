@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 2006/01/15
+ * Created on 2005/09/23
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -29,31 +29,16 @@
 
 namespace Zmpp.Core.Encoding
 {
-    public abstract class ZsciiEncodingBase
+    /// <summary>
+    /// Provides read access to an abbreviations table.
+    /// </summary>
+    public interface IAbbreviationsTable
     {
-		public const char NULL = (char)0;
-		public const char DELETE = (char)8;
-		public const char NEWLINE_10 = (char)10;
-		public const char NEWLINE = (char)13;
-		public const char ESCAPE = (char)27;
-		public const char CURSOR_UP = (char)129;
-		public const char CURSOR_DOWN = (char)130;
-		public const char CURSOR_LEFT = (char)131;
-		public const char CURSOR_RIGHT = (char)132;
-		public const char ASCII_START = (char)32;
-		public const char ASCII_END = (char)126;
-
-		/// <summary>
-		/// The start of the accent range.
-		/// </summary>
-		public const char ACCENT_START = (char)155;
-
-		/// <summary>
-		/// End of the accent range.
-		/// </summary>
-		public const char ACCENT_END = (char)251;
-
-		public const char MOUSE_DOUBLE_CLICK = (char)253;
-		public const char MOUSE_SINGLE_CLICK = (char)254;
-	}
+        /// <summary>
+        /// Gets the word address of the specified entry.
+        /// </summary>
+        /// <param name="entryNum">The entry number.</param>
+        /// <returns>The word address.</returns>
+        int GetWordAddress(int entryNum);
+    }
 }

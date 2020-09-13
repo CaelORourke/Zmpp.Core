@@ -165,7 +165,7 @@ namespace Zmpp.Core.Vm
         private void initEncodingSystem(IDictionarySizes dictionarySizes)
         {
             IAccentTable accentTable = (fileheader.CustomAccentTableAddress == 0) ?
-                (IAccentTable)new DefaultAccentTable() :
+                (IAccentTable)new AccentTable() :
                 (IAccentTable)new CustomAccentTable(memory, fileheader.CustomAccentTableAddress);
             encoding = new ZsciiEncoding(accentTable);
 
@@ -184,7 +184,7 @@ namespace Zmpp.Core.Vm
                 }
                 else
                 {
-                    alphabetTable = new DefaultAlphabetTable();
+                    alphabetTable = new AlphabetTable();
                 }
             }
             else
@@ -193,11 +193,11 @@ namespace Zmpp.Core.Vm
             }
 
             IZCharTranslator translator =
-              new DefaultZCharTranslator(alphabetTable);
+              new ZCharTranslator(alphabetTable);
 
             Abbreviations abbreviations = new Abbreviations(memory,
                 memory.ReadUnsigned16(StoryFileHeaderAddress.Abbreviations));
-            decoder = new DefaultZCharDecoder(encoding, translator, abbreviations);
+            decoder = new ZCharDecoder(encoding, translator, abbreviations);
             encoder = new ZCharEncoder(translator, dictionarySizes);
         }
 
@@ -392,7 +392,7 @@ namespace Zmpp.Core.Vm
             separators.Append(WHITESPACE);
             for (int i = 0, n = getDictionary().getNumberOfSeparators(); i < n; i++)
             {
-                separators.Append(getZCharDecoder().decodeZChar((char)
+                separators.Append(getZCharDecoder().DecodeZChar((char)
                         getDictionary().getSeparator(i)));
             }
             // The tokenizer will also return the delimiters
@@ -415,29 +415,29 @@ namespace Zmpp.Core.Vm
         /// <returns>encoder object</returns>
         private ZCharEncoder getZCharEncoder() { return encoder; }
 
-        public String convertToZscii(String str)
+        public String ToZsciiString(String str)
         {
-            return encoding.convertToZscii(str);
+            return encoding.ToZsciiString(str);
         }
 
         public void encode(int source, int length, int destination)
         {
-            getZCharEncoder().encode(getMemory(), source, length, destination);
+            getZCharEncoder().Encode(getMemory(), source, length, destination);
         }
 
         public int getNumZEncodedBytes(int address)
         {
-            return getZCharDecoder().getNumZEncodedBytes(getMemory(), address);
+            return getZCharDecoder().GetNumZEncodedBytes(getMemory(), address);
         }
 
         public String decode2Zscii(int address, int length)
         {
-            return getZCharDecoder().decode2Zscii(getMemory(), address, length);
+            return getZCharDecoder().Decode2Zscii(getMemory(), address, length);
         }
 
-        public char getUnicodeChar(char zsciiChar)
+        public char ToUnicodeChar(char zsciiChar)
         {
-            return encoding.getUnicodeChar(zsciiChar);
+            return encoding.ToUnicodeChar(zsciiChar);
         }
 
         #endregion
@@ -616,7 +616,7 @@ namespace Zmpp.Core.Vm
             if (getFileHeader().Version <= 3 && statusLine != null)
             {
                 int objNum = cpu.getVariable((char)0x10);
-                String objectName = getZCharDecoder().decode2Zscii(getMemory(),
+                String objectName = getZCharDecoder().Decode2Zscii(getMemory(),
                   getObjectTree().getPropertiesDescriptionAddress(objNum), 0);
                 int global2 = cpu.getVariable((char)0x11);
                 int global3 = cpu.getVariable((char)0x12);

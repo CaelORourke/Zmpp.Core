@@ -37,18 +37,18 @@ namespace Zmpp.Core.Encoding
     public interface IZsciiEncoding
     {
         /// <summary>
-        /// Converts the specified string into its ZSCII representation.
+        /// Converts the specified Unicode string into a ZSCII string.
         /// </summary>
-        /// <param name="str">the input string</param>
-        /// <returns>the ZSCII representation</returns>
-        String convertToZscii(String str);
+        /// <param name="str">The Unicode string.</param>
+        /// <returns>The ZSCII string.</returns>
+        String ToZsciiString(String str);
 
         /// <summary>
-        /// Converts a ZSCII character to a unicode character. Will return
-        /// '?' if the given character is not known.
+        /// Converts a ZSCII character to a Unicode character.
         /// </summary>
-        /// <param name="zsciiChar">a ZSCII character.</param>
-        /// <returns>the unicode representation</returns>
-        char getUnicodeChar(char zsciiChar);
+        /// <param name="zsciiChar">The ZSCII character.</param>
+        /// <returns>The Unicode character.</returns>
+        /// <remarks>Returns '?' if the given character is not known.</remarks>
+        char ToUnicodeChar(char zsciiChar);
     }
 }
