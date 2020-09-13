@@ -38,30 +38,27 @@ namespace Zmpp.Core.Iff
     public interface IFormChunk : IChunk
     {
         /// <summary>
-        /// Returns the sub id.
+        /// Gets the sub id.
         /// </summary>
-        /// <returns>the sub id</returns>
-        String getSubId();
+        string SubId { get; }
 
         /// <summary>
-        /// Returns an iterator of chunks contained in this form chunk.
+        /// Gets an iterator of chunks contained in this form chunk.
         /// </summary>
-        /// <returns>the enumeration of sub chunks</returns>
-        IEnumerator<IChunk> getSubChunks();
+        IEnumerator<IChunk> SubChunks { get; }
 
         /// <summary>
-        /// Returns the chunk with the specified id.
+        /// Gets the sub chunk with the specified id.
         /// </summary>
-        /// <param name="id">the id</param>
-        /// <returns>the chunk with the specified id or null if it does not exist</returns>
-        IChunk getSubChunk(String id);
+        /// <param name="id">The id</param>
+        /// <returns>The chunk with the specified id or null if the chunk is not found.</returns>
+        IChunk GetSubChunk(string id);
 
         /// <summary>
-        /// Returns the sub chunk at the specified address or null if it does
-        /// not exist.
+        /// Gets the sub chunk at the specified address.
         /// </summary>
-        /// <param name="address">the address of the chunk</param>
-        /// <returns>the chunk or null if it does not exist</returns>
-        IChunk getSubChunk(int address);
+        /// <param name="address">The address of the chunk.</param>
+        /// <returns>The chunk at the specified address or null if the chunk is not found.</returns>
+        IChunk GetSubChunk(int address);
     }
 }

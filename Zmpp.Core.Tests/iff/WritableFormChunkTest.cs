@@ -55,11 +55,11 @@ namespace Zmpp.Core.Iff.Tests
             // act
 
             // assert
-            Assert.IsTrue(formChunk.isValid());
-            Assert.IsNotNull(formChunk.getMemory());
-            Assert.IsNotNull(formChunk.getSubChunks());
-            Assert.IsNull(formChunk.getSubChunk(1234));
-            Assert.AreEqual(0, formChunk.getAddress());
+            Assert.IsTrue(formChunk.IsValid);
+            Assert.IsNotNull(formChunk.Memory);
+            Assert.IsNotNull(formChunk.SubChunks);
+            Assert.IsNull(formChunk.GetSubChunk(1234));
+            Assert.AreEqual(0, formChunk.Address);
         }
     }
 }

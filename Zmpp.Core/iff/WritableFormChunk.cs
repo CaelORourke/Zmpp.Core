@@ -37,18 +37,18 @@ namespace Zmpp.Core.Iff
     using IMemory = Zmpp.Core.IMemory;
 
     /// <summary>
-    /// A writable FormChunk class.
+    /// Represents a writable FormChunk.
     /// </summary>
     public class WritableFormChunk : ChunkBase, IFormChunk
     {
-        private byte[] subId;
-        private const String FORM_ID = "FORM";
-        private List<IChunk> subChunks;
+        private readonly byte[] subId;
+        private const string FORM_ID = "FORM";
+        private readonly List<IChunk> subChunks;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Iff.WritableFormChunk"/>class.
         /// </summary>
-        /// <param name="subId">the sub id</param>
+        /// <param name="subId">The sub id.</param>
         public WritableFormChunk(byte[] subId)
         {
             this.subId = subId;
@@ -58,110 +58,109 @@ namespace Zmpp.Core.Iff
         /// <summary>
         /// Adds a sub chunk.
         /// </summary>
-        /// <param name="chunk">the sub chunk to add</param>
-        public void addChunk(IChunk chunk)
+        /// <param name="chunk">The chunk.</param>
+        public void AddChunk(IChunk chunk)
         {
             subChunks.Add(chunk);
         }
 
-        public String getSubId()
-        {
-            return Encoding.UTF8.GetString((byte[])(object)subId, 0, subId.Length);
-        }
+        public string SubId => Encoding.UTF8.GetString((byte[])(object)subId, 0, subId.Length);
 
-        public IEnumerator<IChunk> getSubChunks()
-        {
-            return subChunks.GetEnumerator();
-        }
+        public IEnumerator<IChunk> SubChunks => subChunks.GetEnumerator();
 
-        public IChunk getSubChunk(String id)
+        public IChunk GetSubChunk(string id)
         {
             foreach (IChunk chunk in subChunks)
             {
-                if (chunk.getId().Equals(id)) return chunk;
+                if (chunk.Id.Equals(id)) return chunk;
             }
             return null;
         }
 
-        public IChunk getSubChunk(int address)
+        public IChunk GetSubChunk(int address)
         {
             // We do not need to implement this
             return null;
         }
 
-        public String getId() { return FORM_ID; }
+        public String Id => FORM_ID;
 
-        public int getSize()
+        public int Size
         {
-            int size = subId.Length;
-
-            foreach (IChunk chunk in subChunks)
+            get
             {
-                int chunkSize = chunk.getSize();
-                if ((chunkSize % 2) != 0)
+                int size = subId.Length;
+
+                foreach (IChunk chunk in subChunks)
                 {
-                    chunkSize++; // pad if necessary
+                    int chunkSize = chunk.Size;
+                    if ((chunkSize % 2) != 0)
+                    {
+                        chunkSize++; // pad if necessary
+                    }
+                    size += (ChunkHeaderLength + chunkSize);
                 }
-                size += (CHUNK_HEADER_LENGTH + chunkSize);
+                return size;
             }
-            return size;
         }
 
-        public bool isValid() { return true; }
+        public bool IsValid => true;
 
-        public IMemory getMemory() { return new Memory(getBytes()); }
+        public IMemory Memory => new Memory(Bytes);
 
         /// <summary>
-        /// Returns the data of this chunk.
+        /// Gets the data of this chunk.
         /// </summary>
-        /// <returns>the chunk data</returns>
-        public byte[] getBytes()
+        public byte[] Bytes
         {
-            int datasize = CHUNK_HEADER_LENGTH + getSize();
-            byte[] data = new byte[datasize];
-            IMemory memory = new Memory(data);
-            memory.WriteUnsigned8(0, 'F');
-            memory.WriteUnsigned8(1, 'O');
-            memory.WriteUnsigned8(2, 'R');
-            memory.WriteUnsigned8(3, 'M');
-            WriteUnsigned32(memory, 4, getSize());
-
-            int offset = CHUNK_HEADER_LENGTH;
-
-            // Write sub id
-            memory.CopyBytesFromArray(subId, 0, offset, subId.Length);
-            offset += subId.Length;
-
-            // Write sub chunk data
-            foreach (IChunk chunk in subChunks)
+            get
             {
-                //byte[] chunkId = chunk.getId().getBytes();
-                byte[] chunkId = new byte[Encoding.UTF8.GetByteCount(chunk.getId())];
-                Encoding.UTF8.GetBytes(chunk.getId(), 0, chunk.getId().Length, (byte[])(object)chunkId, 0);
+                int datasize = ChunkHeaderLength + Size;
+                byte[] data = new byte[datasize];
+                IMemory memory = new Memory(data);
+                memory.WriteUnsigned8(0, 'F');
+                memory.WriteUnsigned8(1, 'O');
+                memory.WriteUnsigned8(2, 'R');
+                memory.WriteUnsigned8(3, 'M');
+                WriteUnsigned32(memory, 4, Size);
 
-                int chunkSize = chunk.getSize();
+                int offset = ChunkHeaderLength;
 
-                // Write id
-                memory.CopyBytesFromArray(chunkId, 0, offset, chunkId.Length);
-                offset += chunkId.Length;
+                // Write sub id
+                memory.CopyBytesFromArray(subId, 0, offset, subId.Length);
+                offset += subId.Length;
 
-                // Write chunk size
-                WriteUnsigned32(memory, offset, chunkSize);
-                offset += 4; // add the size word length
-
-                // Write chunk data
-                IMemory chunkMem = chunk.getMemory();
-                memory.CopyBytesFromMemory(chunkMem, CHUNK_HEADER_LENGTH, offset, chunkSize);
-                offset += chunkSize;
-                // Pad if necessary
-                if ((chunkSize % 2) != 0)
+                // Write sub chunk data
+                foreach (IChunk chunk in subChunks)
                 {
-                    memory.WriteUnsigned8(offset++, (char)0);
+                    //byte[] chunkId = chunk.getId().getBytes();
+                    byte[] chunkId = new byte[Encoding.UTF8.GetByteCount(chunk.Id)];
+                    Encoding.UTF8.GetBytes(chunk.Id, 0, chunk.Id.Length, (byte[])(object)chunkId, 0);
+
+                    int chunkSize = chunk.Size;
+
+                    // Write id
+                    memory.CopyBytesFromArray(chunkId, 0, offset, chunkId.Length);
+                    offset += chunkId.Length;
+
+                    // Write chunk size
+                    WriteUnsigned32(memory, offset, chunkSize);
+                    offset += 4; // add the size word length
+
+                    // Write chunk data
+                    IMemory chunkMem = chunk.Memory;
+                    memory.CopyBytesFromMemory(chunkMem, ChunkHeaderLength, offset, chunkSize);
+                    offset += chunkSize;
+                    // Pad if necessary
+                    if ((chunkSize % 2) != 0)
+                    {
+                        memory.WriteUnsigned8(offset++, (char)0);
+                    }
                 }
+                return data;
             }
-            return data;
         }
 
-        public int getAddress() { return 0; }
+        public int Address => 0;
     }
 }

@@ -29,78 +29,81 @@
 
 namespace Zmpp.Core.Iff
 {
-    using Zmpp.Core;
-    using System;
     using System.Text;
+    using Zmpp.Core;
     using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
-    /// This is the default implementation of the Chunk interface.
+    /// Represents the basic data structure for an IFF file.
     /// </summary>
-    public class DefaultChunk : ChunkBase, IChunk
+    public class Chunk : ChunkBase, IChunk
     {
         /// <summary>
-        /// The memory access object.
+        /// The memory map.
         /// </summary>
         protected IMemory memory;
 
         /// <summary>
         /// The chunk id.
         /// </summary>
-        private byte[] id;
+        private readonly byte[] id;
 
         /// <summary>
         /// The chunk size.
         /// </summary>
-        private int chunkSize;
+        private readonly int chunkSize;
 
         /// <summary>
         /// The start address within the form chunk.
         /// </summary>
-        private int address;
+        private readonly int address;
 
         /// <summary>
-        /// Constructor. Used for reading files.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Iff.Chunk"/>
+        /// class for the specified memory and address.
         /// </summary>
-        /// <param name="memory">a Memory object to the chunk data</param>
-        /// <param name="address">the address within the form chunk</param>
-        public DefaultChunk(IMemory memory, int address)
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The address within the form chunk.</param>
+        /// <remarks>This constructor is used when reading files.</remarks>
+        public Chunk(IMemory memory, int address)
         {
             this.memory = memory;
             this.address = address;
-            id = new byte[CHUNK_ID_LENGTH];
-            memory.CopyBytesToArray(id, 0, 0, CHUNK_ID_LENGTH);
-            chunkSize = (int)ReadUnsigned32(memory, CHUNK_ID_LENGTH);
+            id = new byte[ChunkIdLength];
+            memory.CopyBytesToArray(id, 0, 0, ChunkIdLength);
+            chunkSize = (int)ReadUnsigned32(memory, ChunkIdLength);
         }
 
         /// <summary>
-        /// Constructor. Initialize from byte data. This constructor is used
-        /// when writing a file, in that case chunks really are separate
-        /// memory areas.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Iff.Chunk"/>
+        /// class for the specified id and data.
         /// </summary>
-        /// <param name="id">the id</param>
-        /// <param name="chunkdata">the data without header information, number of bytes
+        /// <param name="id">The id.</param>
+        /// <param name="chunkdata">The data without header information. Number of bytes
         /// needs to be even</param>
-        public DefaultChunk(byte[] id, byte[] chunkdata)
+        /// <remarks>
+        /// This constructor is used when writing to a file. In that case
+        /// chunks really are separate memory areas.
+        /// </remarks>
+        public Chunk(byte[] id, byte[] chunkdata)
         {
             this.id = id;
             this.chunkSize = chunkdata.Length;
-            byte[] chunkDataWithHeader =
-              new byte[chunkSize + CHUNK_HEADER_LENGTH];
+            byte[] chunkDataWithHeader = new byte[chunkSize + ChunkHeaderLength];
             this.memory = new Memory(chunkDataWithHeader);
             memory.CopyBytesFromArray(id, 0, 0, id.Length);
             WriteUnsigned32(memory, id.Length, chunkSize);
             memory.CopyBytesFromArray(chunkdata, 0, id.Length + 4, chunkdata.Length);
         }
 
-        public virtual bool isValid() { return true; }
+        public virtual bool IsValid => true;
 
-        public String getId() { return Encoding.UTF8.GetString((byte[])(object)id, 0, id.Length); }
+        public string Id => Encoding.UTF8.GetString((byte[])(object)id, 0, id.Length);
 
-        public int getSize() { return chunkSize; }
+        public int Size => chunkSize;
 
-        public IMemory getMemory() { return memory; }
+        public IMemory Memory => memory;
 
-        public int getAddress() { return address; }
+        public int Address => address;
     }
 }

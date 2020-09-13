@@ -49,16 +49,16 @@ namespace Zmpp.Core.Iff.Tests
             // arrange
             byte[] id = { (byte)'F', (byte)'O', (byte)'R', (byte)'M' };
             byte[] chunkdata = { (byte)0x01, (byte)0x02, (byte)0x03 };
-            IChunk chunk = new DefaultChunk(id, chunkdata);
+            IChunk chunk = new Chunk(id, chunkdata);
 
             // act
-            IMemory mem = chunk.getMemory();
+            IMemory mem = chunk.Memory;
             var result = MemoryUtil.ReadUnsigned32(mem, 4);
 
             // assert
-            Assert.AreEqual(3, chunk.getSize());
-            Assert.AreEqual("FORM", chunk.getId());
-            Assert.AreEqual(0, chunk.getAddress());
+            Assert.AreEqual(3, chunk.Size);
+            Assert.AreEqual("FORM", chunk.Id);
+            Assert.AreEqual(0, chunk.Address);
             Assert.AreEqual('F', mem.ReadUnsigned8(0));
             Assert.AreEqual('O', mem.ReadUnsigned8(1));
             Assert.AreEqual('R', mem.ReadUnsigned8(2));
@@ -79,15 +79,15 @@ namespace Zmpp.Core.Iff.Tests
                 (byte) 0x01, (byte) 0x02, (byte) 0x03
             };
             IMemory mem = new Memory(data);
-            IChunk chunk = new DefaultChunk(mem, 1234);
+            IChunk chunk = new Chunk(mem, 1234);
 
             // act
 
             // assert
-            Assert.AreEqual(1234, chunk.getAddress());
-            Assert.AreEqual("FORM", chunk.getId());
-            Assert.AreSame(mem, chunk.getMemory());
-            Assert.AreEqual(3, chunk.getSize());
+            Assert.AreEqual(1234, chunk.Address);
+            Assert.AreEqual("FORM", chunk.Id);
+            Assert.AreSame(mem, chunk.Memory);
+            Assert.AreEqual(3, chunk.Size);
         }
     }
 }

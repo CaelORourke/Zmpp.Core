@@ -281,7 +281,7 @@ namespace Zmpp.Core.Vm
         public bool readSaveGame(IFormChunk formChunk)
         {
             stackFrames.Clear();
-            if (formChunk != null && "IFZS".Equals(formChunk.getSubId()))
+            if (formChunk != null && "IFZS".Equals(formChunk.SubId))
             {
                 readIfhdChunk(formChunk);
                 readStacksChunk(formChunk);
@@ -297,9 +297,9 @@ namespace Zmpp.Core.Vm
         /// <param name="formChunk">the FORM chunk</param>
         private void readIfhdChunk(IFormChunk formChunk)
         {
-            IChunk ifhdChunk = formChunk.getSubChunk("IFhd");
-            IMemory chunkMem = ifhdChunk.getMemory();
-            int offset = ChunkBase.CHUNK_HEADER_LENGTH;
+            IChunk ifhdChunk = formChunk.GetSubChunk("IFhd");
+            IMemory chunkMem = ifhdChunk.Memory;
+            int offset = ChunkBase.ChunkHeaderLength;
 
             // read release number
             release = chunkMem.ReadUnsigned16(offset);
@@ -325,10 +325,10 @@ namespace Zmpp.Core.Vm
         /// <param name="formChunk">the FORM chunk</param>
         private void readStacksChunk(IFormChunk formChunk)
         {
-            IChunk stksChunk = formChunk.getSubChunk("Stks");
-            IMemory chunkMem = stksChunk.getMemory();
-            int offset = ChunkBase.CHUNK_HEADER_LENGTH;
-            int chunksize = stksChunk.getSize() + ChunkBase.CHUNK_HEADER_LENGTH;
+            IChunk stksChunk = formChunk.GetSubChunk("Stks");
+            IMemory chunkMem = stksChunk.Memory;
+            int offset = ChunkBase.ChunkHeaderLength;
+            int chunksize = stksChunk.Size + ChunkBase.ChunkHeaderLength;
 
             while (offset < chunksize)
             {
@@ -391,8 +391,8 @@ namespace Zmpp.Core.Vm
         /// <param name="formChunk">the FORM chunk</param>
         private void readMemoryChunk(IFormChunk formChunk)
         {
-            IChunk cmemChunk = formChunk.getSubChunk("CMem");
-            IChunk umemChunk = formChunk.getSubChunk("UMem");
+            IChunk cmemChunk = formChunk.GetSubChunk("CMem");
+            IChunk umemChunk = formChunk.GetSubChunk("UMem");
             if (cmemChunk != null) { readCMemChunk(cmemChunk); }
             if (umemChunk != null) { readUMemChunk(umemChunk); }
         }
@@ -403,9 +403,9 @@ namespace Zmpp.Core.Vm
         /// <param name="cmemChunk">the CMem chunk</param>
         private void readCMemChunk(IChunk cmemChunk)
         {
-            IMemory chunkMem = cmemChunk.getMemory();
-            int offset = ChunkBase.CHUNK_HEADER_LENGTH;
-            int chunksize = cmemChunk.getSize() + ChunkBase.CHUNK_HEADER_LENGTH;
+            IMemory chunkMem = cmemChunk.Memory;
+            int offset = ChunkBase.ChunkHeaderLength;
+            int chunksize = cmemChunk.Size + ChunkBase.ChunkHeaderLength;
             List<Byte> byteBuffer = new List<Byte>();
             char b;
 
@@ -440,10 +440,10 @@ namespace Zmpp.Core.Vm
         /// <param name="umemChunk">the UMem chunk</param>
         private void readUMemChunk(IChunk umemChunk)
         {
-            IMemory chunkMem = umemChunk.getMemory();
-            int datasize = umemChunk.getSize();
+            IMemory chunkMem = umemChunk.Memory;
+            int datasize = umemChunk.Size;
             dynamicMem = new byte[datasize];
-            chunkMem.CopyBytesToArray(dynamicMem, 0, ChunkBase.CHUNK_HEADER_LENGTH, datasize);
+            chunkMem.CopyBytesToArray(dynamicMem, 0, ChunkBase.ChunkHeaderLength, datasize);
         }
 
         #endregion
@@ -573,9 +573,9 @@ namespace Zmpp.Core.Vm
             byte[] id = new byte[Encoding.UTF8.GetByteCount("IFZS")];
             Encoding.UTF8.GetBytes("IFZS", 0, "IFZS".Length, (byte[])(object)id, 0);
             WritableFormChunk formChunk = new WritableFormChunk(id);
-            formChunk.addChunk(createIfhdChunk());
-            formChunk.addChunk(createUMemChunk());
-            formChunk.addChunk(createStksChunk());
+            formChunk.AddChunk(createIfhdChunk());
+            formChunk.AddChunk(createUMemChunk());
+            formChunk.AddChunk(createStksChunk());
 
             return formChunk;
         }
@@ -590,8 +590,8 @@ namespace Zmpp.Core.Vm
             byte[] id = new byte[Encoding.UTF8.GetByteCount("IFhd")];
             Encoding.UTF8.GetBytes("IFhd", 0, "IFhd".Length, (byte[])(object)id, 0);
             byte[] data = new byte[13];
-            IChunk chunk = new DefaultChunk(id, data);
-            IMemory chunkmem = chunk.getMemory();
+            IChunk chunk = new Chunk(id, data);
+            IMemory chunkmem = chunk.Memory;
 
             // Write release number
             chunkmem.WriteUnsigned16(8, ToUnsigned16(release));
@@ -616,7 +616,7 @@ namespace Zmpp.Core.Vm
             byte[] id = new byte[Encoding.UTF8.GetByteCount("UMem")];
             Encoding.UTF8.GetBytes("UMem", 0, "UMem".Length, (byte[])(object)id, 0);
 
-            return new DefaultChunk(id, dynamicMem);
+            return new Chunk(id, dynamicMem);
         }
 
         /// <summary>
@@ -639,7 +639,7 @@ namespace Zmpp.Core.Vm
             {
                 data[i] = byteBuffer[i];
             }
-            return new DefaultChunk(id, data);
+            return new Chunk(id, data);
         }
 
         /// <summary>

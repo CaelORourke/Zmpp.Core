@@ -18,12 +18,12 @@
         {
             byte[] data = File.ReadAllBytes(fileName);
             IMemory memory = new Memory(data);
-            return new DefaultFormChunk(memory);
+            return new FormChunk(memory);
         }
 
         public bool saveFormChunk(WritableFormChunk formchunk)
         {
-            File.WriteAllBytes(fileName, formchunk.getBytes());
+            File.WriteAllBytes(fileName, formchunk.Bytes);
             return true;
         }
     }

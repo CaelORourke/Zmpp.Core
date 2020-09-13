@@ -55,7 +55,7 @@ namespace Zmpp.Core.Iff.Tests
             };
             try
             {
-                new DefaultFormChunk(new Memory(illegalData));
+                new FormChunk(new Memory(illegalData));
                 Assert.Fail("IOException should be thrown on an illegal IFF file");
             }
             catch (IOException expected)
@@ -70,15 +70,15 @@ namespace Zmpp.Core.Iff.Tests
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
             IMemory mem = new Memory(data);
-            IFormChunk formChunk = new DefaultFormChunk(mem);
+            IFormChunk formChunk = new FormChunk(mem);
 
             // act
 
             // assert
-            Assert.IsTrue(formChunk.isValid());
-            Assert.AreEqual("FORM", formChunk.getId());
-            Assert.AreEqual(512, formChunk.getSize());
-            Assert.AreEqual("IFZS", formChunk.getSubId());
+            Assert.IsTrue(formChunk.IsValid);
+            Assert.AreEqual("FORM", formChunk.Id);
+            Assert.AreEqual(512, formChunk.Size);
+            Assert.AreEqual("IFZS", formChunk.SubId);
         }
 
         [TestMethod]
@@ -87,30 +87,30 @@ namespace Zmpp.Core.Iff.Tests
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
             IMemory mem = new Memory(data);
-            IFormChunk formChunk = new DefaultFormChunk(mem);
+            IFormChunk formChunk = new FormChunk(mem);
 
             // act
             List<IChunk> result = new List<IChunk>();
-            using (IEnumerator<IChunk> iter = formChunk.getSubChunks())
+            using (IEnumerator<IChunk> iter = formChunk.SubChunks)
             {
                 while (iter.MoveNext())
                 {
                     IChunk chunk = iter.Current;
-                    Assert.IsTrue(chunk.isValid());
+                    Assert.IsTrue(chunk.IsValid);
                     result.Add(chunk);
                 }
             }
 
             // assert
-            Assert.AreEqual("IFhd", result[(0)].getId());
-            Assert.AreEqual(13, result[(0)].getSize());
-            Assert.AreEqual(0x000c, result[(0)].getAddress());
-            Assert.AreEqual("CMem", result[(1)].getId());
-            Assert.AreEqual(351, result[(1)].getSize());
-            Assert.AreEqual(0x0022, result[(1)].getAddress());
-            Assert.AreEqual("Stks", result[(2)].getId());
-            Assert.AreEqual(118, result[(2)].getSize());
-            Assert.AreEqual(0x018a, result[(2)].getAddress());
+            Assert.AreEqual("IFhd", result[(0)].Id);
+            Assert.AreEqual(13, result[(0)].Size);
+            Assert.AreEqual(0x000c, result[(0)].Address);
+            Assert.AreEqual("CMem", result[(1)].Id);
+            Assert.AreEqual(351, result[(1)].Size);
+            Assert.AreEqual(0x0022, result[(1)].Address);
+            Assert.AreEqual("Stks", result[(2)].Id);
+            Assert.AreEqual(118, result[(2)].Size);
+            Assert.AreEqual(0x018a, result[(2)].Address);
             Assert.AreEqual(3, result.Count);
         }
 
@@ -120,15 +120,15 @@ namespace Zmpp.Core.Iff.Tests
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
             IMemory mem = new Memory(data);
-            IFormChunk formChunk = new DefaultFormChunk(mem);
+            IFormChunk formChunk = new FormChunk(mem);
 
             // act
 
             // assert
-            Assert.IsNotNull(formChunk.getSubChunk("IFhd"));
-            Assert.IsNotNull(formChunk.getSubChunk("CMem"));
-            Assert.IsNotNull(formChunk.getSubChunk("Stks"));
-            Assert.IsNull(formChunk.getSubChunk("Test"));
+            Assert.IsNotNull(formChunk.GetSubChunk("IFhd"));
+            Assert.IsNotNull(formChunk.GetSubChunk("CMem"));
+            Assert.IsNotNull(formChunk.GetSubChunk("Stks"));
+            Assert.IsNull(formChunk.GetSubChunk("Test"));
         }
 
         [TestMethod]
@@ -137,15 +137,15 @@ namespace Zmpp.Core.Iff.Tests
             // arrange
             byte[] data = File.ReadAllBytes("testfiles/leathersave.ifzs");
             IMemory mem = new Memory(data);
-            IFormChunk formChunk = new DefaultFormChunk(mem);
+            IFormChunk formChunk = new FormChunk(mem);
 
             // act
 
             // assert
-            Assert.AreEqual("IFhd", formChunk.getSubChunk(0x000c).getId());
-            Assert.AreEqual("CMem", formChunk.getSubChunk(0x0022).getId());
-            Assert.AreEqual("Stks", formChunk.getSubChunk(0x018a).getId());
-            Assert.IsNull(formChunk.getSubChunk(0x1234));
+            Assert.AreEqual("IFhd", formChunk.GetSubChunk(0x000c).Id);
+            Assert.AreEqual("CMem", formChunk.GetSubChunk(0x0022).Id);
+            Assert.AreEqual("Stks", formChunk.GetSubChunk(0x018a).Id);
+            Assert.IsNull(formChunk.GetSubChunk(0x1234));
         }
     }
 }

@@ -29,7 +29,6 @@
 
 namespace Zmpp.Core.Iff
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
@@ -37,9 +36,9 @@ namespace Zmpp.Core.Iff
     using MemorySection = Zmpp.Core.MemorySection;
 
     /// <summary>
-    /// This class implements the FormChunk interface.
+    /// Represents a form chunk.
     /// </summary>
-    public class DefaultFormChunk : DefaultChunk, IFormChunk
+    public class FormChunk : Chunk, IFormChunk
     {
         /// <summary>
         /// The sub type id.
@@ -52,69 +51,65 @@ namespace Zmpp.Core.Iff
         private List<IChunk> subChunks;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Iff.FormChunk"/>
+        /// class for the specified memory.
         /// </summary>
-        /// <param name="memory">a MemoryAccess object</param>
-        public DefaultFormChunk(IMemory memory) : base(memory, 0)
+        /// <param name="memory">The Memory object.</param>
+        public FormChunk(IMemory memory) : base(memory, 0)
         {
-            initBaseInfo();
-            readSubChunks();
+            InitBaseInfo();
+            ReadSubChunks();
         }
 
         /// <summary>
         /// Initialize the id field.
         /// </summary>
-        private void initBaseInfo()
+        private void InitBaseInfo()
         {
-            if (!"FORM".Equals(getId())) {
+            if (!"FORM".Equals(Id)) {
                 throw new IOException("not a valid IFF format");
             }
 
             // Determine the sub id
-            subId = new byte[CHUNK_ID_LENGTH];
-            memory.CopyBytesToArray(subId, 0, CHUNK_HEADER_LENGTH, CHUNK_ID_LENGTH);
+            subId = new byte[ChunkIdLength];
+            memory.CopyBytesToArray(subId, 0, ChunkHeaderLength, ChunkIdLength);
         }
 
         /// <summary>
-        /// Read this form chunk's sub chunks.
+        /// Read the sub chunks of this form chunk.
         /// </summary>
-        private void readSubChunks()
+        private void ReadSubChunks()
         {
             subChunks = new List<IChunk>();
 
             // skip the identifying information
-            int length = getSize();
-            int offset = CHUNK_HEADER_LENGTH + CHUNK_ID_LENGTH;
+            int length = Size;
+            int offset = ChunkHeaderLength + ChunkIdLength;
             int chunkTotalSize = 0;
 
             while (offset < length)
             {
-                IMemory memarray = new MemorySection(memory, offset,
-                                                                length - offset);
-                IChunk subchunk = new DefaultChunk(memarray, offset);
+                IMemory memarray = new MemorySection(memory, offset, length - offset);
+                IChunk subchunk = new Chunk(memarray, offset);
                 subChunks.Add(subchunk);
-                chunkTotalSize = subchunk.getSize() + CHUNK_HEADER_LENGTH;
+                chunkTotalSize = subchunk.Size + ChunkHeaderLength;
 
                 // Determine if padding is necessary
-                chunkTotalSize = (chunkTotalSize % 2) == 0 ? chunkTotalSize :
-                                                             chunkTotalSize + 1;
+                chunkTotalSize = (chunkTotalSize % 2) == 0 ? chunkTotalSize : chunkTotalSize + 1;
                 offset += chunkTotalSize;
             }
         }
 
-        public override bool isValid() { return "FORM".Equals(getId()); }
+        public override bool IsValid => "FORM".Equals(Id);
 
-        public String getSubId() { return Encoding.UTF8.GetString((byte[])(object)subId, 0, subId.Length); }
+        public string SubId => Encoding.UTF8.GetString((byte[])(object)subId, 0, subId.Length);
 
-        public IEnumerator<IChunk> getSubChunks()
-        {
-            return subChunks.GetEnumerator();
-        }
+        public IEnumerator<IChunk> SubChunks => subChunks.GetEnumerator();
 
-        public IChunk getSubChunk(String id)
+        public IChunk GetSubChunk(string id)
         {
             foreach (IChunk chunk in subChunks) {
-                if (chunk.getId().Equals(id))
+                if (chunk.Id.Equals(id))
                 {
                     return chunk;
                 }
@@ -122,10 +117,10 @@ namespace Zmpp.Core.Iff
             return null;
         }
 
-        public IChunk getSubChunk(int address)
+        public IChunk GetSubChunk(int address)
         {
             foreach (IChunk chunk in subChunks) {
-                if (chunk.getAddress() == address)
+                if (chunk.Address == address)
                 {
                     return chunk;
                 }

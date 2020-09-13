@@ -29,42 +29,40 @@
 
 namespace Zmpp.Core.Iff
 {
-    using Zmpp.Core;
     using System;
+    using Zmpp.Core;
 
     /// <summary>
-    /// The basic data structure for an IFF file, a chunk.
+    /// Represents the basic data structure for an IFF file.
     /// </summary>
     public interface IChunk
     {
         /// <summary>
-        /// Returns this IFF chunk's id. An id is a 4 byte array.
+        /// Gets the id of this chunk.
         /// </summary>
-        /// <returns>the id</returns>
-        String getId();
+        /// <remarks>An id is a 4 byte array.</remarks>
+        String Id { get; }
 
         /// <summary>
-        /// The chunk data size, excluding id and size word.
+        /// Gets the size of the data for this chunk.
         /// </summary>
-        /// <returns>the size</returns>
-        int getSize();
+        /// <remarks>Size does not include the id and the size word.</remarks>
+        int Size { get; }
 
         /// <summary>
-        /// Returns true if this is a valid chunk.
+        /// Gets a value indicating whether this chunk is valid.
         /// </summary>
-        /// <returns>true if valid, false otherwise</returns>
-        bool isValid();
+        /// <returns>true if the chunk is valid; otherwise false.</returns>
+        bool IsValid { get; }
 
         /// <summary>
-        /// Returns a memory object to access the chunk.
+        /// Gets the memory object for this chunk.
         /// </summary>
-        /// <returns>the Memory object</returns>
-        IMemory getMemory();
+        IMemory Memory { get; }
 
         /// <summary>
-        /// Returns the address of the chunk within the global FORM chunk.
+        /// Gets the address of this chunk within the global FORM chunk.
         /// </summary>
-        /// <returns>the address within the form chunk</returns>
-        int getAddress();
+        int Address { get; }
     }
 }

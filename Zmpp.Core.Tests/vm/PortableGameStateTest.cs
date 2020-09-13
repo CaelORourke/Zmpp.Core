@@ -66,7 +66,7 @@ namespace Zmpp.Core.Vm.Tests
 
             savedata = File.ReadAllBytes("testfiles/leathersave.ifzs");
             IMemory memaccess = new Memory(savedata);
-            formChunk = new DefaultFormChunk(memaccess);
+            formChunk = new FormChunk(memaccess);
             gameState = new PortableGameState();
         }
 
