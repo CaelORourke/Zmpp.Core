@@ -114,11 +114,11 @@ namespace Zmpp.Core.Vm.Tests
         {
             // arrange
             List<RoutineContext> emptyContexts = new List<RoutineContext>();
-            machine.Setup(m => m.getFileHeader()).Returns(fileheader.Object);
+            machine.Setup(m => m.FileHeader).Returns(fileheader.Object);
             machine.Setup(m => m.getRoutineContexts()).Returns(emptyContexts);
-            machine.Setup(m => m.getSP()).Returns((char)4);
-            machine.Setup(m => m.getStackElement(It.IsAny<int>())).Returns((char)42);
-            machine.Setup(m => m.getRelease()).Returns(42);
+            machine.Setup(m => m.SP).Returns((char)4);
+            machine.Setup(m => m.GetStackElement(It.IsAny<int>())).Returns((char)42);
+            machine.Setup(m => m.Release).Returns(42);
             machine.Setup(m => m.ReadUnsigned16(StoryFileHeaderAddress.Checksum)).Returns((char)4712);
             machine.Setup(m => m.ReadUnsigned16(StoryFileHeaderAddress.StaticMem)).Returns((char)12345);
             fileheader.Setup(fh => fh.SerialNumber).Returns("850101");
@@ -136,11 +136,11 @@ namespace Zmpp.Core.Vm.Tests
             var result7 = stackFrame.getEvalStack().Length;
 
             // assert
-            machine.Verify(m => m.getFileHeader(), Times.AtLeastOnce());
+            machine.Verify(m => m.FileHeader, Times.AtLeastOnce());
             machine.Verify(m => m.getRoutineContexts(), Times.Once());
-            machine.Verify(m => m.getSP(), Times.Once());
+            machine.Verify(m => m.SP, Times.Once());
             //machine.Verify(m => m.getStackElement(It.IsAny<int>()));//allowing
-            machine.Verify(m => m.getRelease(), Times.Once());
+            machine.Verify(m => m.Release, Times.Once());
             machine.Verify(m => m.ReadUnsigned16(StoryFileHeaderAddress.Checksum), Times.Once());
             machine.Verify(m => m.ReadUnsigned16(StoryFileHeaderAddress.StaticMem), Times.Once());
             //fileheader.Verify(fh => fh.getSerialNumber(), Times.Once());

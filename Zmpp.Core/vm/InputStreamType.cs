@@ -29,16 +29,16 @@
 
 namespace Zmpp.Core.Vm
 {
-    public abstract class InputBase
+    public static class InputStreamType
     {
         /// <summary>
         /// The input stream number for the keyboard.
         /// </summary>
-        public const int INPUTSTREAM_KEYBOARD = 0;
+        public const int Keyboard = 0;
 
         /// <summary>
         /// The input stream number for file input.
         /// </summary>
-        public const int INPUTSTREAM_FILE = 1;
+        public const int File = 1;
     }
 }

@@ -35,7 +35,7 @@ namespace Zmpp.Core.Vm
     /// <summary>
     /// This class implements the object tree for story file version <= 3.
     /// </summary>
-    public class ClassicObjectTree : AbstractObjectTree
+    public class ClassicObjectTree : ObjectTree
     {
         private const int OFFSET_PARENT = 4;
         private const int OFFSET_SIBLING = 5;
@@ -61,69 +61,67 @@ namespace Zmpp.Core.Vm
         {
         }
 
-        protected override int getObjectAddress(int objectNum)
+        protected override int GetObjectAddress(int objectNum)
         {
-            return getObjectTreeStart() + (objectNum - 1) * getObjectEntrySize();
+            return ObjectTreeStart + (objectNum - 1) * ObjectEntrySize;
         }
 
-        protected override int getPropertyDefaultsSize() { return PROPERTYDEFAULTS_SIZE; }
-
-        protected override int getObjectEntrySize() { return OBJECTENTRY_SIZE; }
-
-        public override int getPropertyLength(int propertyAddress)
+        protected override int PropertyDefaultsSize => PROPERTYDEFAULTS_SIZE;
+        protected override int ObjectEntrySize => OBJECTENTRY_SIZE;
+        public override int GetPropertyLength(int propertyAddress)
         {
-            return getPropertyLengthAtData(getMemory(), propertyAddress);
+            return getPropertyLengthAtData(Memory, propertyAddress);
         }
 
-        public override int getChild(int objectNum)
+        public override int GetChild(int objectNum)
         {
-            return getMemory().ReadUnsigned8(getObjectAddress(objectNum) + OFFSET_CHILD);
+            return Memory.ReadUnsigned8(GetObjectAddress(objectNum) + OFFSET_CHILD);
         }
 
-        public override void setChild(int objectNum, int child)
+        public override void SetChild(int objectNum, int child)
         {
-            getMemory().WriteUnsigned8(getObjectAddress(objectNum) + OFFSET_CHILD, (char)(child & 0xff));
+            Memory.WriteUnsigned8(GetObjectAddress(objectNum) + OFFSET_CHILD, (char)(child & 0xff));
         }
 
-        public override int getParent(int objectNum)
+        public override int GetParent(int objectNum)
         {
-            return getMemory().ReadUnsigned8(getObjectAddress(objectNum) + OFFSET_PARENT);
+            return Memory.ReadUnsigned8(GetObjectAddress(objectNum) + OFFSET_PARENT);
         }
 
-        public override void setParent(int objectNum, int parent)
+        public override void SetParent(int objectNum, int parent)
         {
-            getMemory().WriteUnsigned8(getObjectAddress(objectNum) + OFFSET_PARENT, (char)(parent & 0xff));
+            Memory.WriteUnsigned8(GetObjectAddress(objectNum) + OFFSET_PARENT, (char)(parent & 0xff));
         }
 
-        public override int getSibling(int objectNum)
+        public override int GetSibling(int objectNum)
         {
-            return getMemory().ReadUnsigned8(getObjectAddress(objectNum) + OFFSET_SIBLING);
+            return Memory.ReadUnsigned8(GetObjectAddress(objectNum) + OFFSET_SIBLING);
         }
 
-        public override void setSibling(int objectNum, int sibling)
+        public override void SetSibling(int objectNum, int sibling)
         {
-            getMemory().WriteUnsigned8(getObjectAddress(objectNum) + OFFSET_SIBLING, (char)(sibling & 0xff));
+            Memory.WriteUnsigned8(GetObjectAddress(objectNum) + OFFSET_SIBLING, (char)(sibling & 0xff));
         }
 
-        protected override int getPropertyTableAddress(int objectNum)
+        protected override int GetPropertyTableAddress(int objectNum)
         {
-            return getMemory().ReadUnsigned16(getObjectAddress(objectNum) + OFFSET_PROPERTYTABLE);
+            return Memory.ReadUnsigned16(GetObjectAddress(objectNum) + OFFSET_PROPERTYTABLE);
         }
 
-        protected override int getNumPropertySizeBytes(int propertyDataAddress)
+        protected override int GetNumPropertySizeBytes(int propertyDataAddress)
         {
             return 1;
         }
 
-        protected override int getNumPropSizeBytesAtData(int propertyDataAddress)
+        protected override int GetNumPropSizeBytesAtData(int propertyDataAddress)
         {
             return 1;
         }
 
-        protected override int getPropertyNum(int propertyAddress)
+        protected override int GetPropertyNum(int propertyAddress)
         {
-            int sizeByte = getMemory().ReadUnsigned8(propertyAddress);
-            return sizeByte - 32 * (getPropertyLength(propertyAddress + 1) - 1);
+            int sizeByte = Memory.ReadUnsigned8(propertyAddress);
+            return sizeByte - 32 * (GetPropertyLength(propertyAddress + 1) - 1);
         }
 
         /// <summary>

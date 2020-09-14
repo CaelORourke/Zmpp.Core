@@ -58,7 +58,7 @@ namespace Zmpp.Core.Instructions
 
         protected override OperandCount getOperandCount() { return OperandCount.C0OP; }
 
-        public override void execute()
+        public override void Execute()
         {
             switch (getOpcodeNum())
             {
@@ -69,34 +69,34 @@ namespace Zmpp.Core.Instructions
                     returnFromRoutine(FALSE);
                     break;
                 case C0OP_PRINT:
-                    getMachine().print(str);
+                    getMachine().Print(str);
                     nextInstruction();
                     break;
                 case C0OP_PRINT_RET:
-                    getMachine().print(str);
-                    getMachine().newline();
+                    getMachine().Print(str);
+                    getMachine().NewLine();
                     returnFromRoutine(TRUE);
                     break;
                 case C0OP_NOP:
                     nextInstruction();
                     break;
                 case C0OP_SAVE:
-                    saveToStorage(getMachine().getPC() + 1);
+                    saveToStorage(getMachine().PC + 1);
                     break;
                 case C0OP_RESTORE:
                     restoreFromStorage();
                     break;
                 case C0OP_RESTART:
-                    getMachine().restart();
+                    getMachine().Restart();
                     break;
                 case C0OP_QUIT:
-                    getMachine().quit();
+                    getMachine().Quit();
                     break;
                 case C0OP_RET_POPPED:
-                    returnFromRoutine(getMachine().getVariable((char)0));
+                    returnFromRoutine(getMachine().GetVariable((char)0));
                     break;
                 case C0OP_POP:
-                    if (getMachine().getVersion() < 5)
+                    if (getMachine().Version < 5)
                     {
                         pop();
                     }
@@ -106,15 +106,15 @@ namespace Zmpp.Core.Instructions
                     }
                     break;
                 case C0OP_NEW_LINE:
-                    getMachine().newline();
+                    getMachine().NewLine();
                     nextInstruction();
                     break;
                 case C0OP_SHOW_STATUS:
-                    getMachine().updateStatusLine();
+                    getMachine().UpdateStatusLine();
                     nextInstruction();
                     break;
                 case C0OP_VERIFY:
-                    branchOnTest(getMachine().hasValidChecksum());
+                    branchOnTest(getMachine().HasValidChecksum);
                     break;
                 case C0OP_PIRACY:
                     branchOnTest(true);
@@ -153,7 +153,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void pop()
         {
-            getMachine().getVariable((char)0);
+            getMachine().GetVariable((char)0);
             nextInstruction();
         }
 

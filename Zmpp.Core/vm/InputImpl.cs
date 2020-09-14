@@ -70,15 +70,11 @@ namespace Zmpp.Core.Vm
             inputStream[streamnumber] = stream;
         }
 
-        public void selectInputStream(int streamnumber)
+        public void SelectInputStream(int streamnumber)
         {
             selectedInputStreamIndex = streamnumber;
         }
 
-        public IInputStream getSelectedInputStream()
-        {
-
-            return inputStream[selectedInputStreamIndex];
-        }
+        public IInputStream SelectedInputStream => inputStream[selectedInputStreamIndex];
     }
 }

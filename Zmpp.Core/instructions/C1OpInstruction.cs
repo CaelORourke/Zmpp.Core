@@ -52,7 +52,7 @@ namespace Zmpp.Core.Instructions
 
         protected override OperandCount getOperandCount() { return OperandCount.C1OP; }
 
-        public override void execute()
+        public override void Execute()
         {
             switch (getOpcodeNum())
             {
@@ -154,7 +154,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void Jump()
         {
-            getMachine().incrementPC(getSignedValue(0) + 1);
+            getMachine().IncrementPC(getSignedValue(0) + 1);
         }
 
         /// <summary>
@@ -163,8 +163,8 @@ namespace Zmpp.Core.Instructions
         private void Load()
         {
             char varnum = getUnsignedValue(0);
-            char value = varnum == 0 ? getMachine().getStackTop() :
-              getMachine().getVariable(varnum);
+            char value = varnum == 0 ? getMachine().StackTop :
+              getMachine().GetVariable(varnum);
             storeUnsignedResult(value);
             nextInstruction();
         }
@@ -186,11 +186,11 @@ namespace Zmpp.Core.Instructions
             int parent = 0;
             if (obj > 0)
             {
-                parent = getMachine().getParent(obj);
+                parent = getMachine().GetParent(obj);
             }
             else
             {
-                getMachine().warn("@get_parent illegal access to object " + obj);
+                getMachine().Warn("@get_parent illegal access to object " + obj);
             }
             storeUnsignedResult((char)(parent & 0xffff));
             nextInstruction();
@@ -205,11 +205,11 @@ namespace Zmpp.Core.Instructions
             int sibling = 0;
             if (obj > 0)
             {
-                sibling = getMachine().getSibling(obj);
+                sibling = getMachine().GetSibling(obj);
             }
             else
             {
-                getMachine().warn("@get_sibling illegal access to object " + obj);
+                getMachine().Warn("@get_sibling illegal access to object " + obj);
             }
             storeUnsignedResult((char)(sibling & 0xffff));
             branchOnTest(sibling > 0);
@@ -224,11 +224,11 @@ namespace Zmpp.Core.Instructions
             int child = 0;
             if (obj > 0)
             {
-                child = getMachine().getChild(obj);
+                child = getMachine().GetChild(obj);
             }
             else
             {
-                getMachine().warn("@get_child illegal access to object " + obj);
+                getMachine().Warn("@get_child illegal access to object " + obj);
             }
             storeUnsignedResult((char)(child & 0xffff));
             branchOnTest(child > 0);
@@ -239,7 +239,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void print_addr()
         {
-            getMachine().printZString(getUnsignedValue(0));
+            getMachine().PrintZString(getUnsignedValue(0));
             nextInstruction();
         }
 
@@ -248,8 +248,8 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void print_paddr()
         {
-            getMachine().printZString(
-                getMachine().unpackStringAddress(getUnsignedValue(0)));
+            getMachine().PrintZString(
+                getMachine().UnpackStringAddress(getUnsignedValue(0)));
             nextInstruction();
         }
 
@@ -269,12 +269,12 @@ namespace Zmpp.Core.Instructions
             int obj = getUnsignedValue(0);
             if (obj > 0)
             {
-                getMachine().printZString(
-                  getMachine().getPropertiesDescriptionAddress(obj));
+                getMachine().PrintZString(
+                  getMachine().GetPropertiesDescriptionAddress(obj));
             }
             else
             {
-                getMachine().warn("@print_obj illegal access to object " + obj);
+                getMachine().Warn("@print_obj illegal access to object " + obj);
             }
             nextInstruction();
         }
@@ -287,7 +287,7 @@ namespace Zmpp.Core.Instructions
             int obj = getUnsignedValue(0);
             if (obj > 0)
             {
-                getMachine().removeObject(obj);
+                getMachine().RemoveObject(obj);
             }
             nextInstruction();
         }
@@ -299,7 +299,7 @@ namespace Zmpp.Core.Instructions
         {
             int propertyAddress = getUnsignedValue(0);
             char proplen = (char)
-              getMachine().getPropertyLength(propertyAddress);
+              getMachine().GetPropertyLength(propertyAddress);
             storeUnsignedResult(proplen);
             nextInstruction();
         }

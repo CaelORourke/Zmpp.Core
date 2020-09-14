@@ -30,15 +30,14 @@
 namespace Zmpp.Core.Vm.Utility
 {
     /// <summary>
-    /// This interface defines the functions of a random number generator within
-    /// the Z machine.
+    /// Represents a random number generator.
     /// </summary>
     public interface IRandomGenerator
     {
         /// <summary>
-        /// Returns the next random value between 1 and MAX_VALUE.
+        /// Gets the next random value between 1 and MaxValue.
         /// </summary>
-        /// <returns>a random int value</returns>
-        int next();
+        /// <returns>The random int value.</returns>
+        int Next();
     }
 }

@@ -29,68 +29,68 @@
 
 namespace Zmpp.Core.Vm
 {
-    using System;
-
     /// <summary>
-    /// The Output interface.
+    /// Provides methods for managing and writing to output streams.
     /// </summary>
     public interface IOutput
     {
         /// <summary>
-        /// Selects/unselects the specified output stream. If the streamnumber
-        /// is negative, |streamnumber| is deselected, if positive, it is selected.
-        /// Stream 3 (the memory stream) can not be selected by this function,
-        /// but can be deselected here.
+        /// Selects or deselects the specified output stream.
         /// </summary>
-        /// <param name="streamnumber">the output stream number</param>
-        /// <param name="flag">true to enable, false to disable</param>
-        void selectOutputStream(int streamnumber, bool flag);
+        /// <param name="streamnumber">The output stream number.</param>
+        /// <param name="flag">The flag. true to enable the output stream; otherwise false to disable the output stream.</param>
+        /// <remarks>
+        /// If the streamnumber is negative |streamnumber| is deselected.
+        /// if the stream number is positive it is selected. Stream 3 (the memory stream) can
+        /// not be selected by this function but can be deselected here.
+        /// </remarks>
+        void SelectOutputStream(int streamnumber, bool flag);
 
         /// <summary>
         /// Selects the output stream 3 which writes to memory.
         /// </summary>
-        /// <param name="tableAddress">the table address to write to</param>
-        /// <param name="tableWidth">the table width</param>
-        void selectOutputStream3(int tableAddress, int tableWidth);
+        /// <param name="tableAddress">The table address to write to.</param>
+        /// <param name="tableWidth">The table width.</param>
+        void SelectOutputStream3(int tableAddress, int tableWidth);
 
         /// <summary>
         /// Prints the ZSCII string at the specified address to the active
         /// output streams.
         /// </summary>
-        /// <param name="stringAddress">the address of an ZSCII string</param>
-        void printZString(int stringAddress);
+        /// <param name="stringAddress">The address of the ZSCII string.</param>
+        void PrintZString(int stringAddress);
 
         /// <summary>
         /// Prints the specified string to the active output streams.
         /// </summary>
-        /// <param name="str">the string to print, encoding is ZSCII</param>
-        void print(String str);
+        /// <param name="str">The string to print. Encoding is ZSCII.</param>
+        void Print(string str);
 
         /// <summary>
         /// Prints a newline to the active output streams.
         /// </summary>
-        void newline();
+        void NewLine();
 
         /// <summary>
-        /// Prints the specified ZSCII character.
+        /// Prints the specified ZSCII character to the active output streams.
         /// </summary>
-        /// <param name="zchar">the ZSCII character to print</param>
-        void printZsciiChar(char zchar);
+        /// <param name="zchar">The ZSCII character to print.</param>
+        void PrintZsciiChar(char zchar);
 
         /// <summary>
-        /// Prints the specified signed number.
+        /// Prints the specified signed number to the active output streams.
         /// </summary>
-        /// <param name="num">the number to print?</param>
-        void printNumber(short num);
+        /// <param name="num">The number to print.</param>
+        void PrintNumber(short num);
 
         /// <summary>
         /// Flushes the active output streams.
         /// </summary>
-        void flushOutput();
+        void FlushOutput();
 
         /// <summary>
         /// Resets the output streams.
         /// </summary>
-        void reset();
+        void Reset();
     }
 }

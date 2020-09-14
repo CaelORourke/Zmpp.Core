@@ -29,8 +29,6 @@
 
 namespace Zmpp.Core.Encoding
 {
-    using System;
-
     /// <summary>
     /// Represents the default alphabet table.
     /// </summary>
@@ -81,7 +79,7 @@ namespace Zmpp.Core.Encoding
         /// <param name="chars">The search string.</param>
         /// <param name="zsciiChar">The ZSCII character.</param>
         /// <returns>The index of the ZSCII character in the search string or -1 if not found.</returns>
-        protected static int getCharCodeFor(String chars, char zsciiChar)
+        protected static int getCharCodeFor(string chars, char zsciiChar)
         {
             int index = chars.IndexOf(zsciiChar);
             if (index >= 0) index += AlphabetStart;

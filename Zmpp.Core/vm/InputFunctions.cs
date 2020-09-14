@@ -70,7 +70,7 @@ namespace Zmpp.Core.Vm
         /// <returns>terminator character</returns>
         public char readLine(int textbuffer)
         {
-            String inputLine = machine.getSelectedInputStream().readLine();
+            String inputLine = machine.SelectedInputStream.readLine();
             processInput(textbuffer, inputLine);
             return inputLine[inputLine.Length - 1];
         }
@@ -85,7 +85,7 @@ namespace Zmpp.Core.Vm
         /// <param name="textpointer">points at the position behind the last input char</param>
         public void checkTermination(char terminateChar, int textbuffer, int textpointer)
         {
-            int version = machine.getVersion();
+            int version = machine.Version;
             if (version >= 5)
             {
                 // Check if was cancelled
@@ -115,7 +115,7 @@ namespace Zmpp.Core.Vm
         /// <param name="inputString">input string</param>
         private void processInput(int textbuffer, String inputString)
         {
-            int storeOffset = machine.getVersion() <= 4 ? 1 : 2;
+            int storeOffset = machine.Version <= 4 ? 1 : 2;
             for (int i = 0; i < inputString.Length; i++)
             {
                 machine.WriteUnsigned8(textbuffer + i + storeOffset,
@@ -173,7 +173,7 @@ namespace Zmpp.Core.Vm
                 // Echo a newline into the streams
                 // must be called with isInput == false since we are not
                 // in input mode anymore when we receive NEWLINE
-                machine.printZsciiChar(ZsciiEncoding.Newline);
+                machine.PrintZsciiChar(ZsciiEncoding.Newline);
             }
             return terminateChar;
         }
@@ -184,13 +184,13 @@ namespace Zmpp.Core.Vm
 
         public char readChar()
         {
-            String inputLine = machine.getSelectedInputStream().readLine();
+            String inputLine = machine.SelectedInputStream.readLine();
             return inputLine[0];
         }
 
         public void tokenize(int textbuffer, int parsebuffer, int dictionaryAddress, bool flag)
         {
-            int version = machine.getVersion();
+            int version = machine.Version;
             int bufferlen = machine.ReadUnsigned8(textbuffer);
             int textbufferstart = determineTextBufferStart(version);
             int charsTyped =
@@ -211,7 +211,7 @@ namespace Zmpp.Core.Vm
             for (int i = 0; i < numTokens; i++)
             {
                 String token = tokens[i];
-                int entryAddress = machine.lookupToken(dictionaryAddress, token);
+                int entryAddress = machine.LookupToken(dictionaryAddress, token);
                 int startIndex = 0;
                 if (parsedTokens.ContainsKey(token))
                 {
@@ -289,7 +289,7 @@ namespace Zmpp.Core.Vm
         {
             List<String> result = new List<String>();
             // The tokenizer will also return the delimiters
-            char[] delim = machine.getDictionaryDelimiters();
+            char[] delim = machine.DictionaryDelimiters;
             // include dictionary delimiters as tokens
             //StringTokenizer tok = new StringTokenizer(input, delim, true);
             var tok = input.Split(delim, StringSplitOptions.RemoveEmptyEntries);

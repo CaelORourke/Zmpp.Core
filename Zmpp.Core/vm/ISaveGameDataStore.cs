@@ -32,23 +32,25 @@ namespace Zmpp.Core.Vm
     using Zmpp.Core.Iff;
 
     /// <summary>
-    /// This interface should be implemented by user interfaces that implement
-    /// game saving functionality.This keeps the game saving facilities independent
-    /// of implementation details.
+    /// Provides methods for reading and writing save game files.
     /// </summary>
+    /// <remarks>
+    /// This keeps the game saving facilities independent
+    /// of implementation details.
+    /// </remarks>
     public interface ISaveGameDataStore
     {
         /// <summary>
-        /// Save the given form chunk to the storage.
+        /// Write the specified form chunk to storage.
         /// </summary>
-        /// <param name="formchunk">a form chunk in Quetzal format</param>
-        /// <returns>true if successful, false, otherwise</returns>
-        bool saveFormChunk(WritableFormChunk formchunk);
+        /// <param name="formchunk">A form chunk in Quetzal format.</param>
+        /// <returns>true if the save is successful; otherwise false.</returns>
+        bool WriteFormChunk(WritableFormChunk formchunk);
 
         /// <summary>
-        /// Reads a form chunk from storage. Returns null if not successful.
+        /// Reads a form chunk from storage.
         /// </summary>
-        /// <returns>a saved game or null</returns>
-        IFormChunk retrieveFormChunk();
+        /// <returns>The form chunk or null if not successful.</returns>
+        IFormChunk ReadFormChunk();
     }
 }

@@ -39,7 +39,7 @@ namespace Zmpp.Core.Vm
     /// is specified as unordered(negative number of entries) and in case of
     /// ordered a binary search will be performed.
     /// </summary>
-    public class UserDictionary : AbstractDictionary
+    public class UserDictionary : DictionaryBase
     {
         /// <summary>
         /// Constructor.
@@ -52,15 +52,15 @@ namespace Zmpp.Core.Vm
         {
         }
 
-        public override int lookup(String token)
+        public override int Lookup(String token)
         {
             // We only implement linear search for user dictionaries
-            int n = Math.Abs(getNumberOfEntries());
-            byte[] tokenBytes = truncateTokenToBytes(token);
+            int n = Math.Abs(NumberOfEntries);
+            byte[] tokenBytes = TruncateTokenToBytes(token);
             for (int i = 0; i < n; i++)
             {
-                int entryAddress = getEntryAddress(i);
-                if (tokenMatch(tokenBytes, entryAddress) == 0) { return entryAddress; }
+                int entryAddress = GetEntryAddress(i);
+                if (TokenMatch(tokenBytes, entryAddress) == 0) { return entryAddress; }
             }
             return 0;
         }

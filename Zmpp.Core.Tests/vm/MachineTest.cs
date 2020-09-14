@@ -66,8 +66,8 @@ namespace Zmpp.Core.Vm.Tests
             IMemory minizorkmap = new Memory(data);
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
             machine = new MachineImpl(logger.Object);
-            machine.initialize(data, null);
-            fileheader = machine.getFileHeader();
+            machine.Initialize(data, null);
+            fileheader = machine.FileHeader;
 
             statusLine = new Mock<IStatusLine>();
             screen = new Mock<IScreenModel>();
@@ -78,14 +78,14 @@ namespace Zmpp.Core.Vm.Tests
             inputStream0 = new Mock<IInputStream>();
             inputStream1 = new Mock<IInputStream>();
 
-            machine.setScreen(screen.Object);
+            machine.SetScreen(screen.Object);
 
             machine.setOutputStream(OutputBase.OUTPUTSTREAM_SCREEN, outputStream1.Object);
             machine.setOutputStream(OutputBase.OUTPUTSTREAM_TRANSCRIPT, outputStream2.Object);
             machine.setOutputStream(OutputBase.OUTPUTSTREAM_MEMORY, outputStream3.Object);
 
-            machine.setInputStream(InputBase.INPUTSTREAM_KEYBOARD, inputStream0.Object);
-            machine.setInputStream(InputBase.INPUTSTREAM_FILE, inputStream1.Object);
+            machine.setInputStream(InputStreamType.Keyboard, inputStream0.Object);
+            machine.setInputStream(InputStreamType.File, inputStream1.Object);
 
             datastore = new Mock<ISaveGameDataStore>();
         }
@@ -93,8 +93,8 @@ namespace Zmpp.Core.Vm.Tests
         [TestMethod]
         public void testInitialState()
         {
-            Assert.AreEqual(fileheader, machine.getFileHeader());
-            Assert.IsTrue(machine.hasValidChecksum());
+            Assert.AreEqual(fileheader, machine.FileHeader);
+            Assert.IsTrue(machine.HasValidChecksum);
         }
 
         [TestMethod]
@@ -106,8 +106,8 @@ namespace Zmpp.Core.Vm.Tests
             outputStream3.Setup(os => os.isSelected()).Returns(false);
 
             // act
-            machine.selectOutputStream(1, true);
-            machine.print("test");
+            machine.SelectOutputStream(1, true);
+            machine.Print("test");
 
             // assert
             outputStream1.Verify(os => os.select(true), Times.Once());
@@ -126,7 +126,7 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.selectOutputStream(1, true);
+            machine.SelectOutputStream(1, true);
 
             // assert
             outputStream1.Verify(os => os.select(true), Times.Once());
@@ -138,10 +138,10 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.setInputStream(InputBase.INPUTSTREAM_KEYBOARD, inputStream0.Object);
-            machine.setInputStream(InputBase.INPUTSTREAM_FILE, inputStream1.Object);
-            machine.selectInputStream(InputBase.INPUTSTREAM_FILE);
-            var result = machine.getSelectedInputStream();
+            machine.setInputStream(InputStreamType.Keyboard, inputStream0.Object);
+            machine.setInputStream(InputStreamType.File, inputStream1.Object);
+            machine.SelectInputStream(InputStreamType.File);
+            var result = machine.SelectedInputStream;
 
             // assert
             Assert.AreEqual(inputStream1.Object, result);
@@ -153,10 +153,10 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.setInputStream(InputBase.INPUTSTREAM_KEYBOARD, inputStream0.Object);
-            machine.setInputStream(InputBase.INPUTSTREAM_FILE, inputStream1.Object);
-            machine.selectInputStream(InputBase.INPUTSTREAM_KEYBOARD);
-            var result = machine.getSelectedInputStream();
+            machine.setInputStream(InputStreamType.Keyboard, inputStream0.Object);
+            machine.setInputStream(InputStreamType.File, inputStream1.Object);
+            machine.SelectInputStream(InputStreamType.Keyboard);
+            var result = machine.SelectedInputStream;
 
             // assert
             Assert.AreEqual(inputStream0.Object, result);
@@ -169,13 +169,13 @@ namespace Zmpp.Core.Vm.Tests
 
             // act
 
-            char random1 = machine.random((short)23);
-            var result = machine.random((short)0);
+            char random1 = machine.Random((short)23);
+            var result = machine.Random((short)0);
 
-            char random2 = machine.random((short)23);
-            var result2 = machine.random((short)-23);
+            char random2 = machine.Random((short)23);
+            var result2 = machine.Random((short)-23);
 
-            char random3 = machine.random((short)23);
+            char random3 = machine.Random((short)23);
 
             // assert
 
@@ -194,7 +194,7 @@ namespace Zmpp.Core.Vm.Tests
             char value;
             for (int i = 0; i < 10; i++)
             {
-                value = machine.random((short)1);
+                value = machine.Random((short)1);
                 Assert.AreEqual(value, 1);
             }
         }
@@ -208,7 +208,7 @@ namespace Zmpp.Core.Vm.Tests
             for (int i = 0; i < 10; i++)
             {
 
-                value = machine.random((short)2);
+                value = machine.Random((short)2);
                 Assert.IsTrue(0 < value && value <= 2);
                 if (value == 1) contains1 = true;
                 if (value == 2) contains2 = true;
@@ -226,10 +226,10 @@ namespace Zmpp.Core.Vm.Tests
             outputStream3.Setup(os => os.isSelected()).Returns(false);
 
             // act
-            machine.start();
-            var result = machine.getRunState();
-            machine.quit();
-            var result2 = machine.getRunState();
+            machine.Start();
+            var result = machine.RunState;
+            machine.Quit();
+            var result2 = machine.RunState;
 
             // assert
             outputStream2.Verify(os => os.select(false), Times.Once());
@@ -256,9 +256,9 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.setVariable((char)0x10, (char)2);
-            machine.setStatusLine(statusLine.Object);
-            machine.updateStatusLine();
+            machine.SetVariable((char)0x10, (char)2);
+            machine.SetStatusLine(statusLine.Object);
+            machine.UpdateStatusLine();
 
             // assert
             statusLine.Verify(sl => sl.updateStatusScore(It.IsAny<String>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
@@ -270,10 +270,10 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.setVariable((char)0x10, (char)2);
-            machine.setStatusLine(statusLine.Object); // set the "time" flag
+            machine.SetVariable((char)0x10, (char)2);
+            machine.SetStatusLine(statusLine.Object); // set the "time" flag
             machine.WriteUnsigned8(1, (char)2);
-            machine.updateStatusLine();
+            machine.UpdateStatusLine();
 
             // assert
             statusLine.Verify(sl => sl.updateStatusTime(It.IsAny<String>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
@@ -285,8 +285,8 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.setScreen(screen.Object);
-            var result = machine.getScreen();
+            machine.SetScreen(screen.Object);
+            var result = machine.Screen;
 
             // assert
             Assert.IsTrue(screen.Object == result);
@@ -301,10 +301,10 @@ namespace Zmpp.Core.Vm.Tests
             outputStream3.Setup(os => os.isSelected()).Returns(false);
 
             // act
-            machine.start();
-            var result = machine.getRunState();
-            machine.halt("error");
-            var result2 = machine.getRunState();
+            machine.Start();
+            var result = machine.RunState;
+            machine.Halt("error");
+            var result2 = machine.RunState;
 
             // assert
             outputStream2.Verify(os => os.select(false), Times.Once());
@@ -323,7 +323,7 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.restart();
+            machine.Restart();
 
             // assert
             outputStream1.Verify(os => os.flush(), Times.Once());
@@ -336,14 +336,14 @@ namespace Zmpp.Core.Vm.Tests
         public void testSave()
         {
             // arrange
-            datastore.Setup(ds => ds.saveFormChunk(It.IsAny<WritableFormChunk>())).Returns(true);
+            datastore.Setup(ds => ds.WriteFormChunk(It.IsAny<WritableFormChunk>())).Returns(true);
 
             // act
-            machine.setSaveGameDataStore(datastore.Object);
-            var result = machine.save((char)4711);
+            machine.SetSaveGameDataStore(datastore.Object);
+            var result = machine.Save((char)4711);
 
             // assert
-            datastore.Verify(ds => ds.saveFormChunk(It.IsAny<WritableFormChunk>()), Times.Once());
+            datastore.Verify(ds => ds.WriteFormChunk(It.IsAny<WritableFormChunk>()), Times.Once());
             Assert.IsTrue(result);
         }
 
@@ -353,8 +353,8 @@ namespace Zmpp.Core.Vm.Tests
             // arrange
 
             // act
-            machine.selectOutputStream(OutputBase.OUTPUTSTREAM_TRANSCRIPT, true);
-            var result = machine.getFileHeader().IsEnabled(StoryFileHeaderAttribute.Transcripting);
+            machine.SelectOutputStream(OutputBase.OUTPUTSTREAM_TRANSCRIPT, true);
+            var result = machine.FileHeader.IsEnabled(StoryFileHeaderAttribute.Transcripting);
 
             // assert
             outputStream2.Verify(os => os.select(true), Times.Once());
@@ -370,7 +370,7 @@ namespace Zmpp.Core.Vm.Tests
             outputStream3.Setup(os => os.isSelected()).Returns(false);
 
             // act
-            machine.selectOutputStream(OutputBase.OUTPUTSTREAM_MEMORY, true);
+            machine.SelectOutputStream(OutputBase.OUTPUTSTREAM_MEMORY, true);
 
             // assert
             outputStream2.Verify(os => os.select(false), Times.AtLeastOnce());

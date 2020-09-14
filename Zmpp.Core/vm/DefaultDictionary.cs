@@ -37,7 +37,7 @@ namespace Zmpp.Core.Vm
     /// This class implements a view on the dictionary within a memory map.
     /// Since it takes the implementations of getN
     /// </summary>
-    public class DefaultDictionary : AbstractDictionary
+    public class DefaultDictionary : DictionaryBase
     {
         /// <summary>
         /// The maximum entry size.
@@ -56,9 +56,9 @@ namespace Zmpp.Core.Vm
         {
         }
 
-        public override int lookup(String token)
+        public override int Lookup(String token)
         {
-            return lookupBinary(truncateTokenToBytes(token), 0, getNumberOfEntries() - 1);
+            return lookupBinary(TruncateTokenToBytes(token), 0, NumberOfEntries - 1);
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace Zmpp.Core.Vm
         {
             if (left > right) return 0;
             int middle = left + (right - left) / 2;
-            int entryAddress = getEntryAddress(middle);
-            int res = tokenMatch(tokenBytes, entryAddress);
+            int entryAddress = GetEntryAddress(middle);
+            int res = TokenMatch(tokenBytes, entryAddress);
             if (res < 0)
             {
                 return lookupBinary(tokenBytes, left, middle - 1);

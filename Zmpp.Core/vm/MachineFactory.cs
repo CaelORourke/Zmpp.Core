@@ -44,12 +44,15 @@ namespace Zmpp.Core.Vm
     using System.Net.Http;
 
     /// <summary>
+    /// Provides methods for constructing a machine object.
+    /// </summary>
+    /// <remarks>
     /// Constructing a Machine object is a very complex task, the building process
     /// deals with creating the game objects, the UI and the I/O system.
     /// Initialization was changed so it is not necessary to create a subclass
     /// of MachineFactory. Instead, an init struct and a init callback object
     /// should be provided.
-    /// </summary>
+    /// </remarks>
     public class MachineFactory
     {
         /// <summary>
@@ -57,7 +60,7 @@ namespace Zmpp.Core.Vm
         /// </summary>
         public sealed class MachineInitStruct
         {
-            public String storyFile, blorbFile;
+            public string storyFile, blorbFile;
             public Uri storyURL, blorbURL;
             public IInputStream keyboardInputStream;
             public IStatusLine statusLine;
@@ -69,13 +72,13 @@ namespace Zmpp.Core.Vm
         }
 
         private readonly ILogger logger;
-        private MachineInitStruct initStruct;
-        private IFormChunk blorbchunk;
+        private readonly MachineInitStruct initStruct;
+        private readonly IFormChunk blorbchunk;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="initStruct">an initialization structure</param>
+        /// <param name="initStruct">The initialization structure.</param>
         public MachineFactory(ILogger logger, MachineInitStruct initStruct)
         {
             this.logger = logger;
@@ -86,14 +89,14 @@ namespace Zmpp.Core.Vm
         /// This is the main creation function.
         /// </summary>
         /// <returns>the machine</returns>
-        public IMachine buildMachine()
+        public IMachine BuildMachine()
         {
             MachineImpl machine = new MachineImpl(logger);
-            machine.initialize(readStoryData(), readResources());
-            if (isInvalidStory(machine.getVersion())) {
-                throw new InvalidStoryException();
+            machine.Initialize(ReadStoryData(), ReadResources());
+            if (IsInvalidStory(machine.Version)) {
+                throw new InvalidStoryFileException();
             }
-            initIOSystem(machine);
+            InitIOSystem(machine);
             return machine;
         }
 
@@ -103,10 +106,10 @@ namespace Zmpp.Core.Vm
         /// Reads the story data.
         /// </summary>
         /// <returns>the story data</returns>
-        private byte[] readStoryData()
+        private byte[] ReadStoryData()
         {
             if (initStruct.storyFile != null || initStruct.blorbFile != null)
-                return readStoryDataFromFile();
+                return ReadStoryDataFromFile();
             //if (initStruct.storyURL != null || initStruct.blorbURL != null)
             //    return readStoryDataFromUrl();
             return null;
@@ -152,7 +155,7 @@ namespace Zmpp.Core.Vm
         /// Reads story data from file.
         /// </summary>
         /// <returns>byte data</returns>
-        private byte[] readStoryDataFromFile()
+        private byte[] ReadStoryDataFromFile()
         {
             if (initStruct.storyFile != null) {
                 return File.ReadAllBytes(initStruct.storyFile);
@@ -170,7 +173,7 @@ namespace Zmpp.Core.Vm
         /// Reads the resource data.
         /// </summary>
         /// <returns>the resource data</returns>
-        protected IResources readResources()
+        protected IResources ReadResources()
         {
             // TODO: Implement blorb namespace!
             //if (initStruct.blorbFile != null) return readResourcesFromFile();
@@ -252,7 +255,7 @@ namespace Zmpp.Core.Vm
         /// </summary>
         /// <param name="version">the story file version</param>
         /// <returns>true if not supported</returns>
-        private bool isInvalidStory(int version)
+        private bool IsInvalidStory(int version)
         {
 
             return version < 1 || version > 8;
@@ -262,20 +265,20 @@ namespace Zmpp.Core.Vm
         /// Initializes the I/O system.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private void initIOSystem(MachineImpl machine)
+        private void InitIOSystem(MachineImpl machine)
         {
-            initInputStreams(machine);
-            initOutputStreams(machine);
-            machine.setStatusLine(initStruct.statusLine);
-            machine.setScreen(initStruct.screenModel);
-            machine.setSaveGameDataStore(initStruct.saveGameDataStore);
+            InitInputStreams(machine);
+            InitOutputStreams(machine);
+            machine.SetStatusLine(initStruct.statusLine);
+            machine.SetScreen(initStruct.screenModel);
+            machine.SetSaveGameDataStore(initStruct.saveGameDataStore);
         }
 
         /// <summary>
         /// Initializes the input streams.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private void initInputStreams(MachineImpl machine)
+        private void InitInputStreams(MachineImpl machine)
         {
             machine.setInputStream(0, initStruct.keyboardInputStream);
             // TODO: Implement FileInputStream!
@@ -286,15 +289,15 @@ namespace Zmpp.Core.Vm
         /// Initializes the output streams.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private void initOutputStreams(MachineImpl machine)
+        private void InitOutputStreams(MachineImpl machine)
         {
             machine.setOutputStream(1, initStruct.screenModel.getOutputStream());
-            machine.selectOutputStream(1, true);
+            machine.SelectOutputStream(1, true);
             // TODO: Implement TranscriptOutputStream!
             //machine.setOutputStream(2, new TranscriptOutputStream(logger, initStruct.ioSystem, machine));
             //machine.selectOutputStream(2, false);
             machine.setOutputStream(3, new MemoryOutputStream(machine));
-            machine.selectOutputStream(3, false);
+            machine.SelectOutputStream(3, false);
         }
 
         #endregion

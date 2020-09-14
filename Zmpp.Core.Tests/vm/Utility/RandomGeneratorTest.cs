@@ -45,12 +45,12 @@ namespace Zmpp.Core.Vm.Utility.Tests
             IRandomGenerator random1 = new UnpredictableRandomGenerator();
 
             // act
-            int rnd1 = random1.next();
-            int rnd2 = random1.next();
+            int rnd1 = random1.Next();
+            int rnd2 = random1.Next();
 
             // assert
             Assert.AreNotEqual(rnd1, rnd2);
-            Assert.IsTrue(1 <= rnd1 && rnd1 <= RandomGenerator.MAX_VALUE);
+            Assert.IsTrue(1 <= rnd1 && rnd1 <= RandomGenerator.MaxValue);
         }
 
         [TestMethod]
@@ -61,10 +61,10 @@ namespace Zmpp.Core.Vm.Utility.Tests
             IRandomGenerator random2 = new UnpredictableRandomGenerator();
 
             // act
-            int rnd11 = random1.next();
-            int rnd12 = random1.next();
-            int rnd21 = random2.next();
-            int rnd22 = random2.next();
+            int rnd11 = random1.Next();
+            int rnd12 = random1.Next();
+            int rnd21 = random2.Next();
+            int rnd22 = random2.Next();
 
             // assert
             Assert.AreNotEqual(rnd11, rnd12);
@@ -79,12 +79,12 @@ namespace Zmpp.Core.Vm.Utility.Tests
             IRandomGenerator predictable1 = new PredictableRandomGenerator(seed);
 
             // act
-            int rnd1 = predictable1.next();
-            int rnd2 = predictable1.next();
+            int rnd1 = predictable1.Next();
+            int rnd2 = predictable1.Next();
 
             // assert
             Assert.AreNotEqual(rnd1, rnd2);
-            Assert.IsTrue(1 <= rnd1 && rnd1 <= RandomGenerator.MAX_VALUE);
+            Assert.IsTrue(1 <= rnd1 && rnd1 <= RandomGenerator.MaxValue);
         }
 
         [TestMethod]
@@ -96,10 +96,10 @@ namespace Zmpp.Core.Vm.Utility.Tests
             IRandomGenerator predictable2 = new PredictableRandomGenerator(seed);
 
             // act
-            int rnd11 = predictable1.next();
-            int rnd12 = predictable1.next();
-            int rnd21 = predictable2.next();
-            int rnd22 = predictable2.next();
+            int rnd11 = predictable1.Next();
+            int rnd12 = predictable1.Next();
+            int rnd21 = predictable2.Next();
+            int rnd22 = predictable2.Next();
 
             // assert
             Assert.AreEqual(rnd11, rnd21);

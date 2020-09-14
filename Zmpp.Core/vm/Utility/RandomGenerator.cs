@@ -30,14 +30,13 @@
 namespace Zmpp.Core.Vm.Utility
 {
     /// <summary>
-    /// This interface defines the functions of a random number generator within
-    /// the Z machine.
+    /// Represents a random number generator.
     /// </summary>
     public abstract class RandomGenerator
     {
         /// <summary>
         /// The maximum generated value.
         /// </summary>
-        public static int MAX_VALUE = 32767;
+        public static int MaxValue = 32767;
     }
 }

@@ -58,7 +58,7 @@ namespace Zmpp.Core.Instructions
 
         protected override OperandCount getOperandCount() { return OperandCount.VAR; }
 
-        public override void execute()
+        public override void Execute()
         {
             switch (getOpcodeNum())
             {
@@ -207,13 +207,13 @@ namespace Zmpp.Core.Instructions
 
             if (obj > 0)
             {
-                getMachine().setProperty(obj, property, value);
+                getMachine().SetProperty(obj, property, value);
                 nextInstruction();
             }
             else
             {
                 // Issue warning for non-existent object
-                getMachine().warn("@put_prop illegal access to object " + obj);
+                getMachine().Warn("@put_prop illegal access to object " + obj);
                 nextInstruction();
             }
         }
@@ -224,7 +224,7 @@ namespace Zmpp.Core.Instructions
         private void print_char()
         {
             char zchar = (char)getUnsignedValue(0);
-            getMachine().printZsciiChar(zchar);
+            getMachine().PrintZsciiChar(zchar);
             nextInstruction();
         }
 
@@ -234,7 +234,7 @@ namespace Zmpp.Core.Instructions
         private void print_num()
         {
             short number = getSignedValue(0);
-            getMachine().printNumber(number);
+            getMachine().PrintNumber(number);
             nextInstruction();
         }
 
@@ -244,7 +244,7 @@ namespace Zmpp.Core.Instructions
         private void push()
         {
             char value = getUnsignedValue(0);
-            getMachine().setVariable((char)0, value);
+            getMachine().SetVariable((char)0, value);
             nextInstruction();
         }
 
@@ -274,7 +274,7 @@ namespace Zmpp.Core.Instructions
             {
                 stack = getUnsignedValue(0);
             }
-            storeUnsignedResult(getMachine().popStack(stack));
+            storeUnsignedResult(getMachine().PopStack(stack));
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace Zmpp.Core.Instructions
         private void pull_std()
         {
             char varnum = getUnsignedValue(0);
-            char value = getMachine().getVariable((char)0);
+            char value = getMachine().GetVariable((char)0);
 
             // standard 1.1
             if (varnum == 0)
@@ -292,7 +292,7 @@ namespace Zmpp.Core.Instructions
             }
             else
             {
-                getMachine().setVariable(varnum, value);
+                getMachine().SetVariable(varnum, value);
             }
         }
 
@@ -306,7 +306,7 @@ namespace Zmpp.Core.Instructions
 
             if (streamnumber < 0 && streamnumber >= -3)
             {
-                getMachine().selectOutputStream(-streamnumber, false);
+                getMachine().SelectOutputStream(-streamnumber, false);
             }
             else if (streamnumber > 0 && streamnumber <= 3)
             {
@@ -319,11 +319,11 @@ namespace Zmpp.Core.Instructions
                         tablewidth = getUnsignedValue(2);
                         LOG.LogInformation(string.Format("@output_stream 3 {0:x} {1:D}\n", tableAddress, tablewidth));
                     }
-                    getMachine().selectOutputStream3(tableAddress, tablewidth);
+                    getMachine().SelectOutputStream3(tableAddress, tablewidth);
                 }
                 else
                 {
-                    getMachine().selectOutputStream(streamnumber, true);
+                    getMachine().SelectOutputStream(streamnumber, true);
                 }
             }
             nextInstruction();
@@ -334,7 +334,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void input_stream()
         {
-            getMachine().selectInputStream(getUnsignedValue(0));
+            getMachine().SelectInputStream(getUnsignedValue(0));
             nextInstruction();
         }
 
@@ -344,7 +344,7 @@ namespace Zmpp.Core.Instructions
         private void random()
         {
             short range = getSignedValue(0);
-            storeUnsignedResult(getMachine().random(range));
+            storeUnsignedResult(getMachine().Random(range));
             nextInstruction();
         }
 
@@ -353,7 +353,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void sread()
         {
-            if (getMachine().getRunState() == MachineRunState.RUNNING)
+            if (getMachine().RunState == MachineRunState.RUNNING)
             {
                 sreadStage1();
             }
@@ -369,9 +369,10 @@ namespace Zmpp.Core.Instructions
         private void sreadStage1()
         {
             char textbuffer = getUnsignedValue(0);
-            getMachine().setRunState(MachineRunState.createReadLine(
-                    getReadInterruptTime(), getReadInterruptRoutine(),
-                    getNumLeftOverChars(textbuffer), textbuffer));
+            getMachine().RunState = MachineRunState.CreateReadLine(
+                getReadInterruptTime(),
+                getReadInterruptRoutine(),
+                getNumLeftOverChars(textbuffer), textbuffer);
         }
 
         /// <summary>
@@ -409,7 +410,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void sreadStage2()
         {
-            getMachine().setRunState(MachineRunState.RUNNING);
+            getMachine().RunState = MachineRunState.RUNNING;
 
             int version = getStoryVersion();
             char textbuffer = getUnsignedValue(0);
@@ -420,12 +421,12 @@ namespace Zmpp.Core.Instructions
             }
             // Here the Z-machine needs to be paused and the user interface
             // handles the whole input
-            char terminal = getMachine().readLine(textbuffer);
+            char terminal = getMachine().ReadLine(textbuffer);
 
             if (version < 5 || (version >= 5 && parsebuffer > 0))
             {
                 // Do not tokenise if parsebuffer is 0 (See specification of read)
-                getMachine().tokenize(textbuffer, parsebuffer, 0, false);
+                getMachine().Tokenize(textbuffer, parsebuffer, 0, false);
             }
 
             if (storesResult())
@@ -484,7 +485,7 @@ namespace Zmpp.Core.Instructions
                 repeats = 1;
             }
 
-            ISoundSystem soundSystem = getMachine().getSoundSystem();
+            ISoundSystem soundSystem = getMachine().SoundSystem;
             soundSystem.play(soundnum, effect, volume, repeats, routine);
             nextInstruction();
         }
@@ -494,7 +495,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void split_window()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 screenModel.splitWindow(getUnsignedValue(0));
@@ -507,7 +508,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void set_window()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 screenModel.setWindow(getUnsignedValue(0));
@@ -520,7 +521,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void set_text_style()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 screenModel.setTextStyle(getUnsignedValue(0));
@@ -533,7 +534,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void buffer_mode()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 screenModel.setBufferMode(getUnsignedValue(0) > 0);
@@ -546,7 +547,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void erase_window()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 screenModel.eraseWindow(getSignedValue(0));
@@ -559,7 +560,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void erase_line()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 screenModel.eraseLine(getUnsignedValue(0));
@@ -572,7 +573,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void set_cursor()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 short line = getSignedValue(0);
@@ -600,7 +601,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void get_cursor()
         {
-            IScreenModel screenModel = getMachine().getScreen();
+            IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
                 ITextCursor cursor = screenModel.getTextCursor();
@@ -663,7 +664,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void read_char()
         {
-            if (getMachine().getRunState() == MachineRunState.RUNNING)
+            if (getMachine().RunState == MachineRunState.RUNNING)
             {
                 readCharStage1();
             }
@@ -678,8 +679,9 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void readCharStage1()
         {
-            getMachine().setRunState(MachineRunState.createReadChar(
-              getReadCharInterruptTime(), getReadCharInterruptRoutine()));
+            getMachine().RunState = MachineRunState.CreateReadChar(
+                getReadCharInterruptTime(),
+                getReadCharInterruptRoutine());
         }
 
         /// <summary>
@@ -705,8 +707,8 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void readCharStage2()
         {
-            getMachine().setRunState(MachineRunState.RUNNING);
-            storeUnsignedResult(getMachine().readChar());
+            getMachine().RunState = MachineRunState.RUNNING;
+            storeUnsignedResult(getMachine().ReadChar());
             nextInstruction();
         }
 
@@ -738,7 +740,7 @@ namespace Zmpp.Core.Instructions
             {
                 flag = getUnsignedValue(3);
             }
-            getMachine().tokenize(textbuffer, parsebuffer, dictionary, (flag != 0));
+            getMachine().Tokenize(textbuffer, parsebuffer, dictionary, (flag != 0));
             nextInstruction();
         }
 
@@ -800,7 +802,7 @@ namespace Zmpp.Core.Instructions
             }
 
             char zchar = (char)0;
-            ITextCursor cursor = getMachine().getScreen().getTextCursor();
+            ITextCursor cursor = getMachine().Screen.getTextCursor();
             int column = cursor.getColumn();
             int row = cursor.getLine();
 
@@ -810,10 +812,10 @@ namespace Zmpp.Core.Instructions
                 {
                     int offset = (width * i) + j;
                     zchar = (char)getMachine().ReadUnsigned8(zsciiText + offset);
-                    getMachine().printZsciiChar(zchar);
+                    getMachine().PrintZsciiChar(zchar);
                 }
                 row += skip + 1;
-                getMachine().getScreen().setTextCursor(row, column,
+                getMachine().Screen.setTextCursor(row, column,
                     ScreenModel.CURRENT_WINDOW);
             }
             nextInstruction();
@@ -828,7 +830,7 @@ namespace Zmpp.Core.Instructions
             int length = getUnsignedValue(1);
             int from = getUnsignedValue(2);
             int codedText = getUnsignedValue(3);
-            getMachine().encode(zsciiText + from, length, codedText);
+            getMachine().Encode(zsciiText + from, length, codedText);
             nextInstruction();
         }
     }

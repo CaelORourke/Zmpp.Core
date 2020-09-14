@@ -45,8 +45,8 @@ namespace Zmpp.Core.Vm.Utility.Tests
             FastShortStack stack = new FastShortStack(123);
 
             // act
-            var result = stack.getStackPointer();
-            var result2 = stack.size();
+            var result = stack.StackPointer;
+            var result2 = stack.Size;
 
             // assert
             Assert.AreEqual(0, result);
@@ -60,12 +60,12 @@ namespace Zmpp.Core.Vm.Utility.Tests
             FastShortStack stack = new FastShortStack(123);
 
             // act
-            stack.push((char)1);
-            var result = stack.size();
-            stack.push((char)3);
-            var result2 = stack.size();
-            stack.pop();
-            var result3 = stack.size();
+            stack.Push((char)1);
+            var result = stack.Size;
+            stack.Push((char)3);
+            var result2 = stack.Size;
+            stack.Pop();
+            var result3 = stack.Size;
 
             // assert
             Assert.AreEqual(1, result);
@@ -80,10 +80,10 @@ namespace Zmpp.Core.Vm.Utility.Tests
             FastShortStack stack = new FastShortStack(123);
 
             // act
-            stack.push((char)3);
-            var result = stack.getStackPointer();
-            var result2 = stack.top();
-            var result3 = stack.getStackPointer();
+            stack.Push((char)3);
+            var result = stack.StackPointer;
+            var result2 = stack.Top;
+            var result3 = stack.StackPointer;
 
             // assert
             Assert.AreEqual(1, result, "stack pointer should have been increased");
@@ -98,9 +98,9 @@ namespace Zmpp.Core.Vm.Utility.Tests
             FastShortStack stack = new FastShortStack(123);
 
             // act
-            stack.push((char)3);
-            var result = stack.pop();
-            var result2 = stack.getStackPointer();
+            stack.Push((char)3);
+            var result = stack.Pop();
+            var result2 = stack.StackPointer;
 
             // assert
             Assert.AreEqual(3, result, "the value 3 should be on top of the stack");
@@ -114,13 +114,13 @@ namespace Zmpp.Core.Vm.Utility.Tests
             FastShortStack stack = new FastShortStack(123);
 
             // act
-            stack.push((char)3);
-            stack.push((char)5);
-            stack.push((char)7);
-            var result = stack.getValueAt(0);
-            var result2 = stack.getValueAt(1);
-            var result3 = stack.getValueAt(2);
-            var result4 = stack.getStackPointer();
+            stack.Push((char)3);
+            stack.Push((char)5);
+            stack.Push((char)7);
+            var result = stack.GetValueAt(0);
+            var result2 = stack.GetValueAt(1);
+            var result3 = stack.GetValueAt(2);
+            var result4 = stack.StackPointer;
 
             // assert
             Assert.AreEqual(3, result);
@@ -136,12 +136,12 @@ namespace Zmpp.Core.Vm.Utility.Tests
             FastShortStack stack = new FastShortStack(123);
 
             // act
-            stack.push((char)3);
-            stack.push((char)5);
-            stack.push((char)7);
-            stack.replaceTopElement((char)11);
-            var result = stack.top();
-            var result2 = stack.size();
+            stack.Push((char)3);
+            stack.Push((char)5);
+            stack.Push((char)7);
+            stack.ReplaceTopElement((char)11);
+            var result = stack.Top;
+            var result2 = stack.Size;
 
             // assert
             Assert.AreEqual(11, result, "top element should be 11 now");

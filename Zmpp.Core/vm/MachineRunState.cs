@@ -42,9 +42,10 @@ namespace Zmpp.Core.Vm
         /// </summary>
         private enum ReadMode { NONE, READ_CHAR, READ_LINE };
 
-        private int time, numLeftOverChars;
-        private char routine, textbuffer;
-        private ReadMode readMode = ReadMode.NONE;
+        private readonly int time;
+        private readonly int numLeftOverChars;
+        private readonly char routine, textbuffer;
+        private readonly ReadMode readMode = ReadMode.NONE;
 
         /// <summary>
         /// Default constructor.
@@ -69,46 +70,44 @@ namespace Zmpp.Core.Vm
         }
 
         /// <summary>
-        /// Returns the interrupt interval.
+        /// Gets the interrupt interval.
         /// </summary>
-        /// <returns>the interrupt interval</returns>
-        public int getTime() { return time; }
+        public int Time => time;
 
         /// <summary>
-        /// Returns the packed address of the interrupt address.
+        /// Gets the packed address of the interrupt address.
         /// </summary>
-        /// <returns>packed interrupt routine address</returns>
-        public char getRoutine() { return routine; }
+        public char Routine => routine;
 
         /// <summary>
         /// Returns true if machine is waiting for input.
         /// </summary>
         /// <returns>true if waiting for input, false otherwise</returns>
-        public bool isWaitingForInput() { return readMode != ReadMode.NONE; }
+        public bool IsWaitingForInput => readMode != ReadMode.NONE;
 
         /// <summary>
         /// Returns true if machine is in read character mode.
         /// </summary>
         /// <returns>true if read character mode, false otherwise</returns>
-        public bool isReadChar() { return readMode == ReadMode.READ_CHAR; }
+        public bool IsReadChar => readMode == ReadMode.READ_CHAR;
 
         /// <summary>
         /// Returns true if machine is in read line mode.
         /// </summary>
         /// <returns>true if read line mode, false otherwise</returns>
-        public bool isReadLine() { return readMode == ReadMode.READ_LINE; }
+        public bool IsReadLine => readMode == ReadMode.READ_LINE;
 
         /// <summary>
         /// Returns the number of characters left over from previous input.
         /// </summary>
         /// <returns>the number of left over characters</returns>
-        public int getNumLeftOverChars() { return numLeftOverChars; }
+        public int NumLeftOverChars => numLeftOverChars;
 
         /// <summary>
         /// Returns the address of the text buffer.
         /// </summary>
         /// <returns>the text buffer</returns>
-        public char getTextBuffer() { return textbuffer; }
+        public char TextBuffer => textbuffer;
 
         /// <summary>
         /// Running state.
@@ -121,14 +120,14 @@ namespace Zmpp.Core.Vm
         public static MachineRunState STOPPED = new MachineRunState();
 
         /// <summary>
-        /// Creates a read line mode object with the specified interrup data.
+        /// Creates a read line mode object with the specified interrupt data.
         /// </summary>
         /// <param name="time">interrupt interval</param>
         /// <param name="routine">interrupt routine</param>
         /// <param name="numLeftOverChars">the number of characters left over</param>
         /// <param name="textbuffer">the address of the text buffer</param>
         /// <returns>machine run state object</returns>
-        public static MachineRunState createReadLine(int time, char routine, int numLeftOverChars, char textbuffer)
+        public static MachineRunState CreateReadLine(int time, char routine, int numLeftOverChars, char textbuffer)
         {
             return new MachineRunState(ReadMode.READ_LINE, time, routine, numLeftOverChars, textbuffer);
         }
@@ -139,7 +138,7 @@ namespace Zmpp.Core.Vm
         /// <param name="time">interrupt interval</param>
         /// <param name="routine">interrupt routine</param>
         /// <returns>machine state</returns>
-        public static MachineRunState createReadChar(int time, char routine)
+        public static MachineRunState CreateReadChar(int time, char routine)
         {
             return new MachineRunState(ReadMode.READ_CHAR, time, routine, 0, (char)0);
         }

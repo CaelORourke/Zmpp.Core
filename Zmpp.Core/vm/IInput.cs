@@ -32,27 +32,26 @@ namespace Zmpp.Core.Vm
     using Zmpp.Core.IO;
 
     /// <summary>
-    /// Input interace.
+    /// Provides methods for managing input streams.
     /// </summary>
     public interface IInput
     {
         ///// <summary>
         ///// Sets an input stream to the specified number.
         ///// </summary>
-        ///// <param name="streamnumber">the input stream number</param>
-        ///// <param name="stream">the input stream to set</param>
-        //void setInputStream(int streamnumber, IInputStream stream);
+        ///// <param name="streamnumber">The stream number.</param>
+        ///// <param name="stream">The input stream.</param>
+        //void SetInputStream(int streamnumber, IInputStream stream);
 
         /// <summary>
         /// Selects an input stream.
         /// </summary>
-        /// <param name="streamnumber">the input stream number to select</param>
-        void selectInputStream(int streamnumber);
+        /// <param name="streamnumber">The stream number.</param>
+        void SelectInputStream(int streamnumber);
 
         /// <summary>
-        /// Returns the selected input stream.
+        /// Gets the selected input stream.
         /// </summary>
-        /// <returns>the selected input stream</returns>
-        IInputStream getSelectedInputStream();
+        IInputStream SelectedInputStream { get; }
     }
 }

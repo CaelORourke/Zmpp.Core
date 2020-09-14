@@ -30,139 +30,144 @@
 namespace Zmpp.Core.Vm
 {
     /// <summary>
-    /// This is the interface definition of the object tree.
+    /// Represents an object tree.
     /// </summary>
     public interface IObjectTree
     {
         /// <summary>
         /// Removes an object from its parent.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        void removeObject(int objectNum);
+        /// <param name="objectNum">The object number.</param>
+        void RemoveObject(int objectNum);
 
         /// <summary>
         /// Inserts an object to a new parent.
         /// </summary>
-        /// <param name="parentNum">the parent number</param>
-        /// <param name="objectNum">the object number</param>
-        void insertObject(int parentNum, int objectNum);
+        /// <param name="parentNum">The object number of the parent.</param>
+        /// <param name="objectNum">The object number.</param>
+        void InsertObject(int parentNum, int objectNum);
 
         /// <summary>
-        /// Determines the length of the property at the specified address.
-        /// The address is an address returned by ZObject.getPropertyAddress,
-        /// i.e.it is starting after the length byte.
+        /// Gets the length of the property at the specified address.
         /// </summary>
-        /// <param name="propertyAddress">the property address</param>
-        /// <returns>the length</returns>
-        int getPropertyLength(int propertyAddress);
+        /// <param name="propertyAddress">The property address.</param>
+        /// <returns>The length.</returns>
+        /// <remarks>
+        /// The address is an address returned by GetPropertyAddress
+        /// so it is starting after the length byte.
+        /// </remarks>
+        int GetPropertyLength(int propertyAddress);
 
         #region Methods on objects
 
         /// <summary>
-        /// Tests if the specified attribute is set.
+        /// Indicates whether the specified attribute is set
+        /// on the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="attributeNum">the attribute number, starting with 0</param>
-        /// <returns>true if the attribute is set</returns>
-        bool isAttributeSet(int objectNum, int attributeNum);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="attributeNum">The zero-based attribute number.</param>
+        /// <returns>true if the attribute is set; otherwise false.</returns>
+        bool IsAttributeSet(int objectNum, int attributeNum);
 
         /// <summary>
-        /// Sets the specified attribute.
+        /// Sets the specified attribute on the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="attributeNum">the attribute number, starting with 0</param>
-        void setAttribute(int objectNum, int attributeNum);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="attributeNum">The zero-based attribute number.</param>
+        void SetAttribute(int objectNum, int attributeNum);
 
         /// <summary>
-        /// Clears the specified attribute.
+        /// Clears the specified attribute on the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="attributeNum">the attribute number, starting with 0</param>
-        void clearAttribute(int objectNum, int attributeNum);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="attributeNum">The zero-based attribute number.</param>
+        void ClearAttribute(int objectNum, int attributeNum);
 
         /// <summary>
-        /// Returns the number of this object's parent object.
+        /// Gets the object number for the parent of the specified object.
         /// </summary>
-        /// <param name="objectNum">object number</param>
-        /// <returns>the parent object's number</returns>
-        int getParent(int objectNum);
+        /// <param name="objectNum">The object number.</param>
+        /// <returns>The object number of the parent object.</returns>
+        int GetParent(int objectNum);
 
         /// <summary>
-        /// Assigns a new parent object.
+        /// Assigns a new parent object for the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="parent">the new parent object</param>
-        void setParent(int objectNum, int parent);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="parent">The new parent object.</param>
+        void SetParent(int objectNum, int parent);
 
         /// <summary>
-        /// Returns the object number of this object's sibling object.
+        /// Gets the object number for the sibling of the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <returns>the sibling object's object number</returns>
-        int getSibling(int objectNum);
+        /// <param name="objectNum">The object number.</param>
+        /// <returns>The object number of the sibling object.</returns>
+        int GetSibling(int objectNum);
 
         /// <summary>
-        /// Assigns a new sibling to this object.
+        /// Assigns a new sibling to the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="sibling">the new sibling's object number</param>
-        void setSibling(int objectNum, int sibling);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="sibling">The object number of the new sibling.</param>
+        void SetSibling(int objectNum, int sibling);
 
         /// <summary>
-        /// Returns the object number of this object's child object.
+        /// Gets the object number for the child of the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <returns>the child object's object number</returns>
-        int getChild(int objectNum);
+        /// <param name="objectNum">The object number.</param>
+        /// <returns>The object number of the child object.</returns>
+        int GetChild(int objectNum);
 
         /// <summary>
-        /// Assigns a new child to this object.
+        /// Assigns a new child to the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="child">the new child</param>
-        void setChild(int objectNum, int child);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="child">The object number of the child object.</param>
+        void SetChild(int objectNum, int child);
 
         /// <summary>
-        /// Returns the properties description address.
+        /// Gets the properties description address for the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <returns>the description address</returns>
-        int getPropertiesDescriptionAddress(int objectNum);
+        /// <param name="objectNum">The object number.</param>
+        /// <returns>The properties description address.</returns>
+        int GetPropertiesDescriptionAddress(int objectNum);
 
         /// <summary>
-        /// Returns the address of the specified property. Note that this will not
-        /// include the length byte.
+        /// Gets the the address of the specified property for the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="property">the property</param>
-        /// <returns>the specified property's address</returns>
-        int getPropertyAddress(int objectNum, int property);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="property">The property.</param>
+        /// <returns>The address of specified property.</returns>
+        /// <remarks>This will not include the length byte.</remarks>
+        int GetPropertyAddress(int objectNum, int property);
 
         /// <summary>
-        /// Returns the next property in the list. If property is 0, this
-        /// will return the first property number, if property is the last
-        /// element in the list, it will return 0.
+        /// Gets the next property in the list.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="property">the property number</param>
-        /// <returns>the next property in the list or 0</returns>
-        int getNextProperty(int objectNum, int property);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="property">The property number.</param>
+        /// <returns>The next property in the list or 0.</returns>
+        /// <remarks>
+        /// If property is 0 this will return the first property number.
+        /// If property is the last element in the list this will return 0.
+        /// </remarks>
+        int GetNextProperty(int objectNum, int property);
 
         /// <summary>
-        /// Returns the the specified property.
+        /// Gets the value of the specified property for the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="property">the property number</param>
-        /// <returns>the value of the specified property</returns>
-        char getProperty(int objectNum, int property);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="property">The property number.</param>
+        /// <returns>The value of the specified property.</returns>
+        char GetProperty(int objectNum, int property);
 
         /// <summary>
-        /// Sets the specified property byte to the given value.
+        /// Sets the value of the specified property for the specified object.
         /// </summary>
-        /// <param name="objectNum">the object number</param>
-        /// <param name="property">the property</param>
-        /// <param name="value">the value</param>
-        void setProperty(int objectNum, int property, char value);
+        /// <param name="objectNum">The object number.</param>
+        /// <param name="property">The property.</param>
+        /// <param name="value">The value.</param>
+        void SetProperty(int objectNum, int property, char value);
 
         #endregion
     }

@@ -53,12 +53,12 @@ namespace Zmpp.Core.Vm.Tests
 			IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
 			// act
-			objectTree.setParent(OBJECT1, 38);
-			var result = objectTree.getParent(OBJECT1);
-			objectTree.setChild(OBJECT1, 39);
-			var result2 = objectTree.getChild(OBJECT1);
-			objectTree.setSibling(OBJECT1, 42);
-			var result3 = objectTree.getSibling(OBJECT1);
+			objectTree.SetParent(OBJECT1, 38);
+			var result = objectTree.GetParent(OBJECT1);
+			objectTree.SetChild(OBJECT1, 39);
+			var result2 = objectTree.GetChild(OBJECT1);
+			objectTree.SetSibling(OBJECT1, 42);
+			var result3 = objectTree.GetSibling(OBJECT1);
 
 			// assert
 			Assert.AreEqual(38, result);
@@ -75,15 +75,15 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.isAttributeSet(OBJECT1, 5);
-            var result2 = objectTree.isAttributeSet(OBJECT1, 6);
-            var result3 = objectTree.isAttributeSet(OBJECT1, 7);
+            var result = objectTree.IsAttributeSet(OBJECT1, 5);
+            var result2 = objectTree.IsAttributeSet(OBJECT1, 6);
+            var result3 = objectTree.IsAttributeSet(OBJECT1, 7);
 
-            var result4 = objectTree.isAttributeSet(OBJECT2, 5);
-            var result5 = objectTree.isAttributeSet(OBJECT2, 7);
-            var result6 = objectTree.isAttributeSet(OBJECT2, 19);
-            objectTree.clearAttribute(OBJECT2, 19);
-            var result7 = objectTree.isAttributeSet(OBJECT2, 19);
+            var result4 = objectTree.IsAttributeSet(OBJECT2, 5);
+            var result5 = objectTree.IsAttributeSet(OBJECT2, 7);
+            var result6 = objectTree.IsAttributeSet(OBJECT2, 19);
+            objectTree.ClearAttribute(OBJECT2, 19);
+            var result7 = objectTree.IsAttributeSet(OBJECT2, 19);
 
             // assert
             Assert.IsFalse(result);
@@ -106,9 +106,9 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.isAttributeSet(OBJECT1, 5);
-            objectTree.setAttribute(OBJECT1, 5);
-            var result2 = objectTree.isAttributeSet(OBJECT1, 5);
+            var result = objectTree.IsAttributeSet(OBJECT1, 5);
+            objectTree.SetAttribute(OBJECT1, 5);
+            var result2 = objectTree.IsAttributeSet(OBJECT1, 5);
 
             // act
             Assert.IsFalse(result);
@@ -126,18 +126,18 @@ namespace Zmpp.Core.Vm.Tests
             // act
 
             // Set several bits in a row to make sure there will be no arithmetical shift errors
-            objectTree.setAttribute(OBJECT1, 0);
-            objectTree.setAttribute(OBJECT1, 1);
-            objectTree.setAttribute(OBJECT1, 2);
-            objectTree.setAttribute(OBJECT1, 3);
+            objectTree.SetAttribute(OBJECT1, 0);
+            objectTree.SetAttribute(OBJECT1, 1);
+            objectTree.SetAttribute(OBJECT1, 2);
+            objectTree.SetAttribute(OBJECT1, 3);
 
-            var result = objectTree.isAttributeSet(OBJECT1, 2);
-            objectTree.clearAttribute(OBJECT1, 2);
+            var result = objectTree.IsAttributeSet(OBJECT1, 2);
+            objectTree.ClearAttribute(OBJECT1, 2);
 
-            var result2 = objectTree.isAttributeSet(OBJECT1, 0);
-            var result3 = objectTree.isAttributeSet(OBJECT1, 1);
-            var result4 = objectTree.isAttributeSet(OBJECT1, 2);
-            var result5 = objectTree.isAttributeSet(OBJECT1, 3);
+            var result2 = objectTree.IsAttributeSet(OBJECT1, 0);
+            var result3 = objectTree.IsAttributeSet(OBJECT1, 1);
+            var result4 = objectTree.IsAttributeSet(OBJECT1, 2);
+            var result5 = objectTree.IsAttributeSet(OBJECT1, 3);
 
             // assert
             Assert.IsTrue(result);
@@ -163,7 +163,7 @@ namespace Zmpp.Core.Vm.Tests
             IZCharDecoder decoder = new ZCharDecoder(encoding, translator, abbreviations);
 
             // act
-            int propaddress = objectTree.getPropertiesDescriptionAddress(OBJECT1);
+            int propaddress = objectTree.GetPropertiesDescriptionAddress(OBJECT1);
             var result = decoder.Decode2Zscii(minizorkmap, propaddress, 0);
 
             // assert
@@ -179,9 +179,9 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.getPropertyAddress(OBJECT1, 18);
-            var result2 = objectTree.getPropertyAddress(OBJECT1, 17);
-            var result3 = objectTree.getPropertyAddress(OBJECT1, 15);
+            var result = objectTree.GetPropertyAddress(OBJECT1, 18);
+            var result2 = objectTree.GetPropertyAddress(OBJECT1, 17);
+            var result3 = objectTree.GetPropertyAddress(OBJECT1, 15);
 
             // assert
             Assert.AreEqual(2645, result);
@@ -198,9 +198,9 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.getProperty(OBJECT2, 22);
-            var result2 = objectTree.getProperty(8, 16);
-            var result3 = objectTree.getProperty(OBJECT1, 20); // not defined, get default
+            var result = objectTree.GetProperty(OBJECT2, 22);
+            var result2 = objectTree.GetProperty(8, 16);
+            var result3 = objectTree.GetProperty(OBJECT1, 20); // not defined, get default
 
             // assert
             Assert.AreEqual(0x77, result);
@@ -217,10 +217,10 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            objectTree.setProperty(OBJECT2, 22, (char)0xc5);
-            objectTree.setProperty(8, 16, (char)0xcafe);
-            var result = objectTree.getProperty(OBJECT2, 22);
-            var result2 = objectTree.getProperty(8, 16);
+            objectTree.SetProperty(OBJECT2, 22, (char)0xc5);
+            objectTree.SetProperty(8, 16, (char)0xcafe);
+            var result = objectTree.GetProperty(OBJECT2, 22);
+            var result2 = objectTree.GetProperty(8, 16);
 
             // assert
             Assert.AreEqual(0xc5, result);
@@ -236,9 +236,9 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.getNextProperty(OBJECT1, 0);
-            var result2 = objectTree.getNextProperty(OBJECT1, 18);
-            var result3 = objectTree.getNextProperty(OBJECT1, 17);
+            var result = objectTree.GetNextProperty(OBJECT1, 0);
+            var result2 = objectTree.GetNextProperty(OBJECT1, 18);
+            var result3 = objectTree.GetNextProperty(OBJECT1, 17);
 
             // assert
             Assert.AreEqual(18, result);
@@ -255,9 +255,9 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.getParent(1);
-            var result2 = objectTree.getSibling(1);
-            var result3 = objectTree.getChild(1);
+            var result = objectTree.GetParent(1);
+            var result2 = objectTree.GetSibling(1);
+            var result3 = objectTree.GetChild(1);
 
             // assert
             Assert.AreEqual(36, result);
@@ -277,17 +277,17 @@ namespace Zmpp.Core.Vm.Tests
 
             // remove a thief's lair - object 170
             int thiefslair = 170;
-            var result = objectTree.getParent(thiefslair);
-            var result2 = objectTree.getChild(thiefslair);
-            var result3 = objectTree.getSibling(thiefslair);
+            var result = objectTree.GetParent(thiefslair);
+            var result2 = objectTree.GetChild(thiefslair);
+            var result3 = objectTree.GetSibling(thiefslair);
 
-            objectTree.removeObject(thiefslair);
+            objectTree.RemoveObject(thiefslair);
 
             // parent needs to be 0
-            var result4 = objectTree.getParent(thiefslair);
+            var result4 = objectTree.GetParent(thiefslair);
 
             // the old parent needs to point to the next child
-            var result5 = objectTree.getChild(27);
+            var result5 = objectTree.GetChild(27);
 
             // assert
 
@@ -315,20 +315,20 @@ namespace Zmpp.Core.Vm.Tests
 
             // remove a cyclops room - object 56
             int cyclopsroom = 56;
-            var result = objectTree.getParent(cyclopsroom);
-            var result2 = objectTree.getChild(cyclopsroom);
-            var result3 = objectTree.getSibling(cyclopsroom);
+            var result = objectTree.GetParent(cyclopsroom);
+            var result2 = objectTree.GetChild(cyclopsroom);
+            var result3 = objectTree.GetSibling(cyclopsroom);
 
-            objectTree.removeObject(cyclopsroom);
+            objectTree.RemoveObject(cyclopsroom);
 
             // parent needs to be 0
-            var result4 = objectTree.getParent(cyclopsroom);
+            var result4 = objectTree.GetParent(cyclopsroom);
 
             // the old parent does not need to change its child, but the
             // sibling chain needs to be corrected, so after 170 there will
             // follow 154 instead of 56
-            var result5 = objectTree.getChild(27);
-            var result6 = objectTree.getSibling(170);
+            var result5 = objectTree.GetChild(27);
+            var result6 = objectTree.GetSibling(170);
 
             // assert
 
@@ -359,19 +359,19 @@ namespace Zmpp.Core.Vm.Tests
 
             // remove a burnt out lantern - object 62
             int lantern = 62;
-            var result = objectTree.getParent(lantern);
-            var result2 = objectTree.getChild(lantern);
-            var result3 = objectTree.getSibling(lantern);
+            var result = objectTree.GetParent(lantern);
+            var result2 = objectTree.GetChild(lantern);
+            var result3 = objectTree.GetSibling(lantern);
 
-            objectTree.removeObject(lantern);
+            objectTree.RemoveObject(lantern);
 
             // parent needs to be 0
-            var result4 = objectTree.getParent(lantern);
+            var result4 = objectTree.GetParent(lantern);
 
             // the old parent does not need to change its child, but object 66
             // will have 0 as its sibling
-            var result5 = objectTree.getChild(27);
-            var result6 = objectTree.getSibling(66);
+            var result5 = objectTree.GetChild(27);
+            var result6 = objectTree.GetSibling(66);
 
             // assert
 
@@ -399,9 +399,9 @@ namespace Zmpp.Core.Vm.Tests
 
             // act
             int lantern = 62;
-            objectTree.setParent(lantern, 0);
-            objectTree.removeObject(lantern);
-            var result = objectTree.getParent(lantern);
+            objectTree.SetParent(lantern, 0);
+            objectTree.RemoveObject(lantern);
+            var result = objectTree.GetParent(lantern);
 
             // assert
             Assert.AreEqual(0, result);
@@ -423,14 +423,14 @@ namespace Zmpp.Core.Vm.Tests
             int you = 30;
             int westofhouse = 46;
 
-            objectTree.insertObject(westofhouse, you);
+            objectTree.InsertObject(westofhouse, you);
 
             // object becomes direct child of the parent
-            var result = objectTree.getParent(you);
-            var result2 = objectTree.getChild(westofhouse);
+            var result = objectTree.GetParent(you);
+            var result2 = objectTree.GetChild(westofhouse);
 
             // and the former direct child becomes the first sibling
-            var result3 = objectTree.getSibling(you);
+            var result3 = objectTree.GetSibling(you);
 
             // assert
 
@@ -458,14 +458,14 @@ namespace Zmpp.Core.Vm.Tests
             // move obj 158 ("studio") to obj 46 ("west of house")
             int studio = 158;
             int westofhouse = 46;
-            objectTree.insertObject(westofhouse, studio);
-            var result = objectTree.getParent(studio);
-            var result2 = objectTree.getChild(westofhouse);
-            var result3 = objectTree.getChild(studio);
-            var result4 = objectTree.getSibling(studio);
+            objectTree.InsertObject(westofhouse, studio);
+            var result = objectTree.GetParent(studio);
+            var result2 = objectTree.GetChild(westofhouse);
+            var result3 = objectTree.GetChild(studio);
+            var result4 = objectTree.GetSibling(studio);
 
             // The old siblings line up correctly, i.e. 87 -> 22 instead of 158
-            var result5 = objectTree.getSibling(87);
+            var result5 = objectTree.GetSibling(87);
 
             // assert
 
@@ -487,7 +487,7 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.getPropertyLength(0x1889);
+            var result = objectTree.GetPropertyLength(0x1889);
 
             // assert
             Assert.AreEqual(4, result);
@@ -502,7 +502,7 @@ namespace Zmpp.Core.Vm.Tests
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
             // act
-            var result = objectTree.getPropertyLength(0);
+            var result = objectTree.GetPropertyLength(0);
 
             // assert
             Assert.AreEqual(0, result);

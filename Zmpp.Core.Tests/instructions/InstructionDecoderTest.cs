@@ -66,7 +66,7 @@ namespace Zmpp.Core.Instructions.Tests
 
         byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
         machine = new MachineImpl(logger.Object);
-        machine.initialize(data, null);
+        machine.Initialize(data, null);
 
         screen = new Mock<IScreenModel>();
         outputStream1 = new Mock<IOutputStream>();
@@ -76,14 +76,14 @@ namespace Zmpp.Core.Instructions.Tests
         inputStream0 = new Mock<IInputStream>();
         inputStream1 = new Mock<IInputStream>();
 
-        machine.setScreen(screen.Object);
+        machine.SetScreen(screen.Object);
 
         machine.setOutputStream(OutputBase.OUTPUTSTREAM_SCREEN, outputStream1.Object);
         machine.setOutputStream(OutputBase.OUTPUTSTREAM_TRANSCRIPT, outputStream2.Object);
         machine.setOutputStream(OutputBase.OUTPUTSTREAM_MEMORY, outputStream3.Object);
 
-        machine.setInputStream(InputBase.INPUTSTREAM_KEYBOARD, inputStream0.Object);
-        machine.setInputStream(InputBase.INPUTSTREAM_FILE, inputStream1.Object);
+        machine.setInputStream(InputStreamType.Keyboard, inputStream0.Object);
+        machine.setInputStream(InputStreamType.File, inputStream1.Object);
 
         decoder = new InstructionDecoder();
         decoder.initialize(machine);
@@ -96,7 +96,7 @@ namespace Zmpp.Core.Instructions.Tests
         [TestMethod]
         public void testMinizorkVarInstruction()
         {
-            machine.pushStack((char)0, (char)1);
+            machine.PushStack((char)0, (char)1);
             // VARIABLE: Instruction at 0x37d9 is call 0x3b36, #3e88, #ffff
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x37d9);
             Assert.AreEqual("CALL $1d9b, $3e88, $ffff -> (SP)", info.toString());
@@ -119,8 +119,8 @@ namespace Zmpp.Core.Instructions.Tests
         public void testMinizorkRet()
         {
             // call the method this RET is in
-            machine.call((char)0x1bc5, 0x3e88, new char[] { (char)0xffff }, (char)0);
-            machine.setVariable((char)5, (char)7);
+            machine.Call((char)0x1bc5, 0x3e88, new char[] { (char)0xffff }, (char)0);
+            machine.SetVariable((char)5, (char)7);
             // SHORT 1OP: Instruction at 0x37d5 is ret L04
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x37d5);
             Assert.AreEqual("RET L04[$0007]", info.toString());
@@ -132,7 +132,7 @@ namespace Zmpp.Core.Instructions.Tests
         {
             // SHORT 1OP: Instruction at 0x379f is dec L01
             // call the method this RET is in
-            machine.call((char)0x1bc5, 0x3e88, new char[] { (char)0xffff }, (char)0);
+            machine.Call((char)0x1bc5, 0x3e88, new char[] { (char)0xffff }, (char)0);
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x379f);
             Assert.AreEqual("DEC $02", info.toString());
             Assert.AreEqual(2, info.getLength());
@@ -159,7 +159,7 @@ namespace Zmpp.Core.Instructions.Tests
         public void testMinizorkLong()
         {
             // call the method this instruction is in
-            machine.call((char)0x1bc5, 0x3e88, new char[] { (char)0xffff }, (char)0);
+            machine.Call((char)0x1bc5, 0x3e88, new char[] { (char)0xffff }, (char)0);
             // LONG: Instruction at 0x37c9 is je L02, L01
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x37c9);
             Assert.AreEqual("JE L02[$0000], L01[$0000]", info.toString());
@@ -170,13 +170,13 @@ namespace Zmpp.Core.Instructions.Tests
         public void testMinizorkPrint()
         {
             // call the method this instruction is in
-            machine.call((char)0x1c13, 0x3e88, new char[] { (char)0xffff }, (char)0);
+            machine.Call((char)0x1c13, 0x3e88, new char[] { (char)0xffff }, (char)0);
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x393f);
             Assert.AreEqual("PRINT \"object\"", info.toString());
             Assert.AreEqual(5, info.getLength());
 
             // call the method this instruction is in
-            machine.call((char)0x2baf, 0x3e88, new char[] { (char)0xffff }, (char)0);
+            machine.Call((char)0x2baf, 0x3e88, new char[] { (char)0xffff }, (char)0);
             AbstractInstruction info2 = (AbstractInstruction)decoder.decodeInstruction(0x5761);
             Assert.AreEqual("PRINT_RET \"Ok.\"", info2.toString());
             Assert.AreEqual(5, info2.getLength());
@@ -185,7 +185,7 @@ namespace Zmpp.Core.Instructions.Tests
         [TestMethod]
         public void testMinizorkLongVar()
         {
-            machine.setVariable((char)0, (char)0x4711);
+            machine.SetVariable((char)0, (char)0x4711);
             // AH !!! This is really a long instruction, but encoded as a
             // variable instruction, this is odd !!!!
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x58d4);
@@ -205,7 +205,7 @@ namespace Zmpp.Core.Instructions.Tests
         public void testMinizorkGetSibling()
         {
             // call the method this instruction is in
-            machine.call((char)0x368b, 0x3e88, new char[] { (char)0xffff }, (char)0);
+            machine.Call((char)0x368b, 0x3e88, new char[] { (char)0xffff }, (char)0);
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x6dbd);
             Assert.AreEqual("GET_SIBLING L03[$0000] -> L03", info.toString());
             Assert.AreEqual(5, info.getLength());
@@ -215,7 +215,7 @@ namespace Zmpp.Core.Instructions.Tests
         public void testJe3Operands()
         {
             // call the method this instruction is in
-            machine.call((char)0x368b, 0x3e88, new char[] { (char)0xffff }, (char)0);
+            machine.Call((char)0x368b, 0x3e88, new char[] { (char)0xffff }, (char)0);
             AbstractInstruction info = (AbstractInstruction)decoder.decodeInstruction(0x6dc5);
             Assert.AreEqual("JE L03[$0000], L06[$0000], $1e", info.toString());
             Assert.AreEqual(7, info.getLength());
@@ -229,12 +229,12 @@ namespace Zmpp.Core.Instructions.Tests
             // Setup for machine 4
             IMemory call_vs2Mem = new Memory(call_vs2);
             var machine4 = new Mock<IMachine>();
-            machine4.Setup(m => m.getVersion()).Returns(4);
+            machine4.Setup(m => m.Version).Returns(4);
             machine4.Setup(m => m.ReadUnsigned8(It.IsInRange(0, 2, Moq.Range.Inclusive))).Returns<int>(address => call_vs2Mem.ReadUnsigned8(address));
             machine4.Setup(m => m.ReadUnsigned16(3)).Returns(call_vs2Mem.ReadUnsigned16(3));
             machine4.Setup(m => m.ReadUnsigned8(It.IsInRange(5, 9, Moq.Range.Inclusive))).Returns<int>(address => call_vs2Mem.ReadUnsigned8(address));
-            machine4.Setup(m => m.getVariable((char)160)).Returns((char)0x4711);
-            machine4.Setup(m => m.getVariable((char)1)).Returns((char)0x4712);
+            machine4.Setup(m => m.GetVariable((char)160)).Returns((char)0x4711);
+            machine4.Setup(m => m.GetVariable((char)1)).Returns((char)0x4712);
             InstructionDecoder decoder4 = new InstructionDecoder();
             decoder4.initialize(machine4.Object);
 
@@ -244,12 +244,12 @@ namespace Zmpp.Core.Instructions.Tests
             var result2 = info.getLength();
 
             // assert
-            machine4.Verify(m => m.getVersion(), Times.AtLeastOnce());
+            machine4.Verify(m => m.Version, Times.AtLeastOnce());
             machine4.Verify(m => m.ReadUnsigned8(It.IsInRange(0, 2, Moq.Range.Inclusive)), Times.AtLeastOnce());
             machine4.Verify(m => m.ReadUnsigned16(3), Times.AtLeastOnce());
             machine4.Verify(m => m.ReadUnsigned8(It.IsInRange(5, 9, Moq.Range.Inclusive)), Times.AtLeastOnce());
-            machine4.Verify(m => m.getVariable((char)160), Times.Once());
-            machine4.Verify(m => m.getVariable((char)1), Times.Once());
+            machine4.Verify(m => m.GetVariable((char)160), Times.Once());
+            machine4.Verify(m => m.GetVariable((char)1), Times.Once());
 
             // Expected:
             Assert.AreEqual("CALL_VS2 $3bf7, G90[$4711], $10, $20, L00[$4712] -> (SP)", result);
@@ -264,7 +264,7 @@ namespace Zmpp.Core.Instructions.Tests
             // Setup for machine 5
             IMemory save_undoMem = new Memory(save_undo);
             var machine5 = new Mock<IMachine>();
-            machine5.Setup(m => m.getVersion()).Returns(5);
+            machine5.Setup(m => m.Version).Returns(5);
             machine5.Setup(m => m.ReadUnsigned8(It.IsInRange(0, 3, Moq.Range.Inclusive))).Returns<int>(address => save_undoMem.ReadUnsigned8(address));
             InstructionDecoder decoder5 = new InstructionDecoder();
             decoder5.initialize(machine5.Object);
@@ -275,7 +275,7 @@ namespace Zmpp.Core.Instructions.Tests
             var result2 = info.getLength();
 
             // assert
-            machine5.Verify(m => m.getVersion(), Times.AtLeastOnce());
+            machine5.Verify(m => m.Version, Times.AtLeastOnce());
             machine5.Verify(m => m.ReadUnsigned8(It.IsInRange(0, 3, Moq.Range.Inclusive)), Times.AtLeastOnce());
 
             // Expected:

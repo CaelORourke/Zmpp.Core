@@ -29,41 +29,41 @@
 
 namespace Zmpp.Core.Vm
 {
+    using System.Text;
     using Zmpp.Core;
     using Zmpp.Core.Encoding;
-    using System;
-    using System.Text;
     using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// Abstract super class of dictionaries.
     /// </summary>
-    public abstract class AbstractDictionary : IDictionary
+    public abstract class DictionaryBase : IDictionary
     {
-        private IMemory memory;
+        private readonly IMemory memory;
 
         /// <summary>
         /// The dictionary start address.
         /// </summary>
-        private int address;
+        private readonly int address;
 
-        private IZCharDecoder decoder;
-        private ZCharEncoder encoder;
+        private readonly IZCharDecoder decoder;
+        private readonly ZCharEncoder encoder;
 
         /// <summary>
         /// A sizes object.
         /// </summary>
-        private IDictionarySizes sizes;
+        private readonly IDictionarySizes sizes;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Vm.DictionaryBase"/>
+        /// class for the specified memory, address, decoder, encoder, and dictionary sizes.
         /// </summary>
-        /// <param name="memory">the memory object</param>
-        /// <param name="address">the start address of the dictionary</param>
-        /// <param name="decoder">a ZCharDecoder object</param>
-        /// <param name="encoder">a ZCharEncoder object</param>
-        /// <param name="sizes">an object specifying the sizes of the dictionary entries</param>
-        public AbstractDictionary(IMemory memory, int address, IZCharDecoder decoder, ZCharEncoder encoder, IDictionarySizes sizes)
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The start address of the dictionary.</param>
+        /// <param name="decoder">The IZCharDecoder object.</param>
+        /// <param name="encoder">The IZCharEncoder object.</param>
+        /// <param name="sizes">The IDictionarySizes object.</param>
+        public DictionaryBase(IMemory memory, int address, IZCharDecoder decoder, ZCharEncoder encoder, IDictionarySizes sizes)
         {
             this.memory = memory;
             this.address = address;
@@ -72,62 +72,58 @@ namespace Zmpp.Core.Vm
             this.sizes = sizes;
         }
 
-        public int getNumberOfSeparators()
-        {
-            return memory.ReadUnsigned8(address);
-        }
+        public int NumberOfSeparators => memory.ReadUnsigned8(address);
 
-        public byte getSeparator(int i)
+        public byte GetSeparator(int i)
         {
             return (byte)memory.ReadUnsigned8(address + i + 1);
         }
 
-        public int getEntryLength()
+        public int EntryLength => memory.ReadUnsigned8(address + NumberOfSeparators + 1);
+
+        public short NumberOfEntries
         {
-            return memory.ReadUnsigned8(address + getNumberOfSeparators() + 1);
+            get
+            {
+                // The number of entries is a signed value so that we can recognize a negative number
+                return UnsignedToSigned16(memory.ReadUnsigned16(address + NumberOfSeparators + 2));
+            }
         }
 
-        public short getNumberOfEntries()
+        public int GetEntryAddress(int entryNum)
         {
-            // The number of entries is a signed value so that we can recognize
-            // a negative number
-            return UnsignedToSigned16(memory.ReadUnsigned16(address + getNumberOfSeparators() + 2));
-        }
-
-        public int getEntryAddress(int entryNum)
-        {
-            int headerSize = getNumberOfSeparators() + 4;
-            return address + headerSize + entryNum * getEntryLength();
+            int headerSize = NumberOfSeparators + 4;
+            return address + headerSize + entryNum * EntryLength;
         }
 
         /// <summary>
-        /// Access to the decoder object.
+        /// Gets the decoder.
         /// </summary>
-        /// <returns>the decoder object</returns>
-        protected IZCharDecoder getDecoder() { return decoder; }
+        protected IZCharDecoder Decoder => decoder;
 
         /// <summary>
-        /// Access to the Memory object.
+        /// Gets the memory map.
         /// </summary>
-        /// <returns>the Memory object</returns>
-        protected IMemory getMemory() { return memory; }
+        protected IMemory Memory => memory;
 
         /// <summary>
-        /// Returns the DictionarySizes object for the current story file version.
+        /// Gets the dictionary sizes for the current story file version.
         /// </summary>
-        /// <returns>the DictionarySizes object</returns>
-        protected IDictionarySizes getSizes() { return sizes; }
+        protected IDictionarySizes Sizes => sizes;
 
         /// <summary>
+        /// Truncate the specified token.
+        /// </summary>
+        /// <param name="token">The token to truncate.</param>
+        /// <returns>The truncated token.</returns>
+        /// <remarks>
         /// Unfortunately it seems that the maximum size of an entry is not equal
         /// to the size declared in the dictionary header, therefore we take
         /// the maximum length of a token defined in the Z-machine specification.
         /// The lookup token can only be 6 characters long in version 3
-        /// and 9 in versions >= 4
-        /// </summary>
-        /// <param name="token">the token to truncate</param>
-        /// <returns>the truncated token</returns>
-        protected String truncateToken(String token)
+        /// and 9 in versions >= 4.
+        /// </remarks>
+        protected string TruncateToken(string token)
         {
             return token.Length > sizes.MaxEntryChars ?
                 token.Substring(0, sizes.MaxEntryChars) : token;
@@ -136,9 +132,9 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Truncates the specified token and returns a dictionary encoded byte array.
         /// </summary>
-        /// <param name="token">the token</param>
-        /// <returns>the truncated token as a byte array</returns>
-        protected byte[] truncateTokenToBytes(String token)
+        /// <param name="token">The token.</param>
+        /// <returns>The truncated token as a byte array.</returns>
+        protected byte[] TruncateTokenToBytes(string token)
         {
             byte[] result = new byte[sizes.NumEntryBytes];
             IMemory buffer = new Memory(result);
@@ -150,15 +146,15 @@ namespace Zmpp.Core.Vm
         /// Lexicographical comparison of the input word and the dictionary entry
         /// at the specified address.
         /// </summary>
-        /// <param name="tokenBytes">input word bytes</param>
-        /// <param name="entryAddress">dictionary entry address</param>
+        /// <param name="tokenBytes">The input word bytes.</param>
+        /// <param name="entryAddress">The dictionary entry address.</param>
         /// <returns>comparison value, 0 if match, &lt; 0 if lexicographical smaller, &lt; 0 if lexicographical greater</returns>
-        protected int tokenMatch(byte[] tokenBytes, int entryAddress)
+        protected int TokenMatch(byte[] tokenBytes, int entryAddress)
         {
             for (int i = 0; i < tokenBytes.Length; i++)
             {
                 int tokenByte = tokenBytes[i] & 0xff;
-                int c = (getMemory().ReadUnsigned8(entryAddress + i) & 0xff);
+                int c = (Memory.ReadUnsigned8(entryAddress + i) & 0xff);
                 if (tokenByte != c)
                 {
                     return tokenByte - c;
@@ -167,22 +163,17 @@ namespace Zmpp.Core.Vm
             return 0;
         }
 
-        /// <summary>
-        /// Creates a string presentation of this dictionary.
-        /// </summary>
-        /// <returns>the string presentation</returns>
-        public String toString()
+        public override string ToString()
         {
             StringBuilder buffer = new StringBuilder();
             int entryAddress;
             int i = 0;
-            int n = getNumberOfEntries();
+            int n = NumberOfEntries;
             while (true)
             {
-                entryAddress = getEntryAddress(i);
-                String str = getDecoder().Decode2Zscii(getMemory(),
-                    entryAddress, sizes.NumEntryBytes);
-                buffer.Append(String.Format("[%4d] '%-9s' ", (i + 1), str));
+                entryAddress = GetEntryAddress(i);
+                string str = Decoder.Decode2Zscii(Memory, entryAddress, sizes.NumEntryBytes);
+                buffer.Append(string.Format("[{0,4:D}] '{1,-9}' ", (i + 1), str));
                 i++;
                 if ((i % 4) == 0) { buffer.Append("\n"); }
                 if (i == n) { break; }
@@ -190,6 +181,6 @@ namespace Zmpp.Core.Vm
             return buffer.ToString();
         }
 
-        public abstract int lookup(String token);
+        public abstract int Lookup(string token);
     }
 }

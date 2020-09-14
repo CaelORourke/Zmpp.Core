@@ -29,7 +29,6 @@
 
 namespace Zmpp.Core
 {
-    using System;
     using System.Text;
     using static Zmpp.Core.MemoryUtil;
 
@@ -47,7 +46,7 @@ namespace Zmpp.Core
         /// Initializes a new instance of the <see cref="Zmpp.Core.StoryFileHeader"/>
         /// class for the specified memory.
         /// </summary>
-        /// <param name="Memory">The Memory object.</param>
+        /// <param name="memory">The Memory object.</param>
         public StoryFileHeader(IMemory memory)
         {
             this.memory = memory;
@@ -55,7 +54,7 @@ namespace Zmpp.Core
 
         public int Version => memory.ReadUnsigned8(0x00);
 
-        public String SerialNumber => GetAsciiString(0x12, 6);
+        public string SerialNumber => GetAsciiString(0x12, 6);
 
         public int FileLength
         {
@@ -215,7 +214,7 @@ namespace Zmpp.Core
 
         #endregion
 
-        public override String ToString()
+        public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < 55; i++)
@@ -234,7 +233,7 @@ namespace Zmpp.Core
         /// <param name="address">The start address.</param>
         /// <param name="length">The length of the ASCII string.</param>
         /// <returns>The ASCII string.</returns>
-        private String GetAsciiString(int address, int length)
+        private string GetAsciiString(int address, int length)
         {
             StringBuilder builder = new StringBuilder();
             for (int i = address; i < address + length; i++)

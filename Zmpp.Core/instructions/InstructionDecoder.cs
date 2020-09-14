@@ -29,8 +29,8 @@
 
 namespace Zmpp.Core.Instructions
 {
-    using Zmpp.Core.Vm;
     using System;
+    using Zmpp.Core.Vm;
     using static Zmpp.Core.Instructions.AbstractInstruction;
     using static Zmpp.Core.Instructions.InstructionInfoDb;
     using static Zmpp.Core.Vm.Instruction;
@@ -113,13 +113,13 @@ namespace Zmpp.Core.Instructions
             OperandCount opCount = (byte1 & BITS_4_5) == BITS_4_5 ? OperandCount.C0OP : OperandCount.C1OP;
             char opcodeNum = (char)(byte1 & LOWER_4_BITS);
             InstructionInfo info = INFO_DB.getInfo(opCount, opcodeNum,
-                                                  machine.getVersion());
+                                                  machine.Version);
             if (info == null)
             {
                 Console.Out.WriteLine("ILLEGAL SHORT operation, instrAddr: $%04x, OC: %s, " +
                                   "opcode: #$%02x, Version: %d\n",
                                   instrAddress, opCount.ToString(), (int)opcodeNum,
-                                  machine.getVersion());
+                                  machine.Version);
                 //infoDb.printKeys();
                 throw new InvalidOperationException("Exit !!");
             }
@@ -133,8 +133,8 @@ namespace Zmpp.Core.Instructions
             int operandType = getOperandType(byte1, 1);
             if (info.isPrint())
             {
-                str = machine.decode2Zscii(instrAddress + 1, 0);
-                zsciiLength = machine.getNumZEncodedBytes(instrAddress + 1);
+                str = machine.Decode2Zscii(instrAddress + 1, 0);
+                zsciiLength = machine.GetNumZEncodedBytes(instrAddress + 1);
             }
             else
             {
@@ -306,13 +306,13 @@ namespace Zmpp.Core.Instructions
             char storeVar = (char)0;
             Operand[] instrOperands = createOperands(operandTypes, operands);
             InstructionInfo info = INFO_DB.getInfo(opCount, opcodeNum,
-                                                  machine.getVersion());
+                                                  machine.Version);
             if (info == null)
             {
                 Console.Out.WriteLine("ILLEGAL operation, instrAddr: $%04x OC: %s, " +
                                   "opcode: #$%02x, Version: %d\n",
                                   instrAddress, opCount.ToString(), (int)opcodeNum,
-                                  machine.getVersion());
+                                  machine.Version);
                 throw new InvalidOperationException("Exit !!");
             }
             if (info.isStore())

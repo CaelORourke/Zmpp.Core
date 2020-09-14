@@ -54,7 +54,7 @@ namespace Zmpp.Core.Instructions
 
         protected override OperandCount getOperandCount() { return OperandCount.C2OP; }
 
-        public override void execute()
+        public override void Execute()
         {
             switch (getOpcodeNum())
             {
@@ -157,7 +157,7 @@ namespace Zmpp.Core.Instructions
             char op1 = getUnsignedValue(0);
             if (getNumOperands() <= 1)
             {
-                getMachine().halt("je expects at least two operands, only " + "one provided");
+                getMachine().Halt("je expects at least two operands, only " + "one provided");
             }
             else
             {
@@ -206,11 +206,11 @@ namespace Zmpp.Core.Instructions
 
             if (obj1 > 0)
             {
-                parentOfObj1 = getMachine().getParent(obj1);
+                parentOfObj1 = getMachine().GetParent(obj1);
             }
             else
             {
-                getMachine().warn("@jin illegal access to object " + obj1);
+                getMachine().Warn("@jin illegal access to object " + obj1);
             }
             branchOnTest(parentOfObj1 == obj2);
         }
@@ -313,7 +313,7 @@ namespace Zmpp.Core.Instructions
             short op2 = getSignedValue(1);
             if (op2 == 0)
             {
-                getMachine().halt("@div division by zero");
+                getMachine().Halt("@div division by zero");
             }
             else
             {
@@ -331,7 +331,7 @@ namespace Zmpp.Core.Instructions
             short op2 = getSignedValue(1);
             if (op2 == 0)
             {
-                getMachine().halt("@mod division by zero");
+                getMachine().Halt("@mod division by zero");
             }
             else
             {
@@ -349,11 +349,11 @@ namespace Zmpp.Core.Instructions
             int attr = getUnsignedValue(1);
             if (obj > 0 && isValidAttribute(attr))
             {
-                branchOnTest(getMachine().isAttributeSet(obj, attr));
+                branchOnTest(getMachine().IsAttributeSet(obj, attr));
             }
             else
             {
-                getMachine().warn("@test_attr illegal access to object " + obj);
+                getMachine().Warn("@test_attr illegal access to object " + obj);
                 branchOnTest(false);
             }
         }
@@ -367,11 +367,11 @@ namespace Zmpp.Core.Instructions
             int attr = getUnsignedValue(1);
             if (obj > 0 && isValidAttribute(attr))
             {
-                getMachine().setAttribute(obj, attr);
+                getMachine().SetAttribute(obj, attr);
             }
             else
             {
-                getMachine().warn("@set_attr illegal access to object " + obj +
+                getMachine().Warn("@set_attr illegal access to object " + obj +
                                   " attr: " + attr);
             }
             nextInstruction();
@@ -386,11 +386,11 @@ namespace Zmpp.Core.Instructions
             int attr = getUnsignedValue(1);
             if (obj > 0 && isValidAttribute(attr))
             {
-                getMachine().clearAttribute(obj, attr);
+                getMachine().ClearAttribute(obj, attr);
             }
             else
             {
-                getMachine().warn("@clear_attr illegal access to object " + obj + " attr: " + attr);
+                getMachine().Warn("@clear_attr illegal access to object " + obj + " attr: " + attr);
             }
             nextInstruction();
         }
@@ -409,7 +409,7 @@ namespace Zmpp.Core.Instructions
             }
             else
             {
-                getMachine().setVariable(varnum, value);
+                getMachine().SetVariable(varnum, value);
             }
             nextInstruction();
         }
@@ -423,11 +423,11 @@ namespace Zmpp.Core.Instructions
             int dest = getUnsignedValue(1);
             if (obj > 0 && dest > 0)
             {
-                getMachine().insertObject(dest, obj);
+                getMachine().InsertObject(dest, obj);
             }
             else
             {
-                getMachine().warn("@insert_obj with object 0 called, obj: " + obj + ", dest: " + dest);
+                getMachine().Warn("@insert_obj with object 0 called, obj: " + obj + ", dest: " + dest);
             }
             nextInstruction();
         }
@@ -466,12 +466,12 @@ namespace Zmpp.Core.Instructions
 
             if (obj > 0)
             {
-                char value = (char)getMachine().getProperty(obj, property);
+                char value = (char)getMachine().GetProperty(obj, property);
                 storeUnsignedResult(value);
             }
             else
             {
-                getMachine().warn("@get_prop illegal access to object " + obj);
+                getMachine().Warn("@get_prop illegal access to object " + obj);
             }
             nextInstruction();
         }
@@ -486,12 +486,12 @@ namespace Zmpp.Core.Instructions
             if (obj > 0)
             {
                 char value = (char)
-                  (getMachine().getPropertyAddress(obj, property) & 0xffff);
+                  (getMachine().GetPropertyAddress(obj, property) & 0xffff);
                 storeUnsignedResult(value);
             }
             else
             {
-                getMachine().warn("@get_prop_addr illegal access to object " + obj);
+                getMachine().Warn("@get_prop_addr illegal access to object " + obj);
             }
             nextInstruction();
         }
@@ -506,14 +506,14 @@ namespace Zmpp.Core.Instructions
             char value = (char)0;
             if (obj > 0)
             {
-                value = (char)(getMachine().getNextProperty(obj, property) & 0xffff);
+                value = (char)(getMachine().GetNextProperty(obj, property) & 0xffff);
                 storeUnsignedResult(value);
                 nextInstruction();
             }
             else
             {
                 // issue warning and continue
-                getMachine().warn("@get_next_prop illegal access to object " + obj);
+                getMachine().Warn("@get_next_prop illegal access to object " + obj);
                 nextInstruction();
             }
         }
@@ -528,8 +528,8 @@ namespace Zmpp.Core.Instructions
             {
                 window = getSignedValue(2);
             }
-            getMachine().getScreen().setForeground(getSignedValue(0), window);
-            getMachine().getScreen().setBackground(getSignedValue(1), window);
+            getMachine().Screen.setForeground(getSignedValue(0), window);
+            getMachine().Screen.setBackground(getSignedValue(1), window);
             nextInstruction();
         }
 
@@ -545,7 +545,7 @@ namespace Zmpp.Core.Instructions
             int currentStackFrame = getMachine().getRoutineContexts().Count - 1;
             if (currentStackFrame < stackFrame)
             {
-                getMachine().halt("@throw from an invalid stack frame state");
+                getMachine().Halt("@throw from an invalid stack frame state");
             }
             else
             {
@@ -554,7 +554,7 @@ namespace Zmpp.Core.Instructions
                 int diff = currentStackFrame - stackFrame;
                 for (int i = 0; i < diff; i++)
                 {
-                    getMachine().returnWith((char)0);
+                    getMachine().ReturnWith((char)0);
                 }
 
                 // and return with the return value

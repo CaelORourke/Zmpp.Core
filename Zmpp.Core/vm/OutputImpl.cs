@@ -66,16 +66,16 @@ namespace Zmpp.Core.Vm
             outputStream[streamnumber - 1] = stream;
         }
 
-        public void printZString(int address)
+        public void PrintZString(int address)
         {
-            print(machine.decode2Zscii(address, 0));
+            Print(machine.Decode2Zscii(address, 0));
         }
 
-        public void print(String str) { printZsciiChars(str); }
+        public void Print(String str) { printZsciiChars(str); }
 
-        public void newline() { printZsciiChar(ZsciiEncoding.Newline); }
+        public void NewLine() { PrintZsciiChar(ZsciiEncoding.Newline); }
 
-        public void printZsciiChar(char zchar)
+        public void PrintZsciiChar(char zchar)
         {
             printZsciiChars(zchar.ToString());
         }
@@ -110,15 +110,15 @@ namespace Zmpp.Core.Vm
             }
         }
 
-        public void printNumber(short number)
+        public void PrintNumber(short number)
         {
-            print(number.ToString());
+            Print(number.ToString());
         }
 
         /// <summary>
         /// Flushes the output.
         /// </summary>
-        public void flushOutput()
+        public void FlushOutput()
         {
             // At the moment flushing only makes sense for screen
             if (!outputStream[OUTPUTSTREAM_MEMORY - 1].isSelected())
@@ -143,26 +143,26 @@ namespace Zmpp.Core.Vm
             if (outputStream[OUTPUTSTREAM_TRANSCRIPT - 1] != null)
             {
                 outputStream[OUTPUTSTREAM_TRANSCRIPT - 1].select(
-                    machine.getFileHeader().IsEnabled(StoryFileHeaderAttribute.Transcripting));
+                    machine.FileHeader.IsEnabled(StoryFileHeaderAttribute.Transcripting));
             }
         }
 
-        public void selectOutputStream(int streamnumber, bool flag)
+        public void SelectOutputStream(int streamnumber, bool flag)
         {
             outputStream[streamnumber - 1].select(flag);
 
             // Sets the tranxdQscript flag if the transcipt is specified
             if (streamnumber == OUTPUTSTREAM_TRANSCRIPT)
             {
-                machine.getFileHeader().SetEnabled(StoryFileHeaderAttribute.Transcripting, flag);
+                machine.FileHeader.SetEnabled(StoryFileHeaderAttribute.Transcripting, flag);
             }
             else if (streamnumber == OUTPUTSTREAM_MEMORY && flag)
             {
-                machine.halt("invalid selection of memory stream");
+                machine.Halt("invalid selection of memory stream");
             }
         }
 
-        public void selectOutputStream3(int tableAddress, int tableWidth)
+        public void SelectOutputStream3(int tableAddress, int tableWidth)
         {
             ((MemoryOutputStream)outputStream[OUTPUTSTREAM_MEMORY - 1]).select(tableAddress, tableWidth);
         }
@@ -182,7 +182,7 @@ namespace Zmpp.Core.Vm
             }
         }
 
-        public void reset()
+        public void Reset()
         {
             for (int i = 0; i < outputStream.Length; i++)
             {

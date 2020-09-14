@@ -83,38 +83,38 @@ namespace ZMachineConsole
             instructionDecoder = new InstructionDecoder();
 
             MachineFactory factory = new MachineFactory(_logger, initStruct);
-            machine = factory.buildMachine();
-            machine.start();
+            machine = factory.BuildMachine();
+            machine.Start();
             instructionDecoder.initialize(machine);
-            int version = machine.getVersion();
+            int version = machine.Version;
             // ZMPP should support everything by default
             if (version <= 3)
             {
-                enableHeaderFlag(StoryFileHeaderAttribute.DefaultFontIsVariable);
-                enableHeaderFlag(StoryFileHeaderAttribute.SupportsStatusLine);
-                enableHeaderFlag(StoryFileHeaderAttribute.SupportsScreenSplitting);
+                EnableHeaderFlag(StoryFileHeaderAttribute.DefaultFontIsVariable);
+                EnableHeaderFlag(StoryFileHeaderAttribute.SupportsStatusLine);
+                EnableHeaderFlag(StoryFileHeaderAttribute.SupportsScreenSplitting);
             }
             if (version >= 4)
             {
-                enableHeaderFlag(StoryFileHeaderAttribute.SupportsBold);
-                enableHeaderFlag(StoryFileHeaderAttribute.SupportsFixedFont);
-                enableHeaderFlag(StoryFileHeaderAttribute.SupportsItalic);
-                enableHeaderFlag(StoryFileHeaderAttribute.SupportsTimedInput);
+                EnableHeaderFlag(StoryFileHeaderAttribute.SupportsBold);
+                EnableHeaderFlag(StoryFileHeaderAttribute.SupportsFixedFont);
+                EnableHeaderFlag(StoryFileHeaderAttribute.SupportsItalic);
+                EnableHeaderFlag(StoryFileHeaderAttribute.SupportsTimedInput);
             }
             if (version >= 5)
             {
-                enableHeaderFlag(StoryFileHeaderAttribute.SupportsColours);
+                EnableHeaderFlag(StoryFileHeaderAttribute.SupportsColours);
             }
-            int defaultForeground = getDefaultForeground();
-            int defaultBackground = getDefaultBackground();
+            int defaultForeground = DefaultForeground;
+            int defaultBackground = DefaultBackground;
             _logger.LogInformation("GAME DEFAULT FOREGROUND: " + defaultForeground);
             _logger.LogInformation("GAME DEFAULT BACKGROUND: " + defaultBackground);
-            machine.getScreen().setBackground(defaultBackground, -1);
-            machine.getScreen().setForeground(defaultForeground, -1);
+            machine.Screen.setBackground(defaultBackground, -1);
+            machine.Screen.setForeground(defaultForeground, -1);
 
             consoleInput.Init(machine);// TODO: consoleInput & IMachine have a weird circular dependency!
             var runstate = Start();
-            while (runstate != null && runstate.isReadLine())
+            while (runstate != null && runstate.IsReadLine)
             {
                 runstate = Start();
             }
@@ -125,42 +125,31 @@ namespace ZMachineConsole
         /// <summary>
         /// Enables the specified header flag.
         /// </summary>
-        /// <param name="attr">the header attribute to enable</param>
-        private void enableHeaderFlag(StoryFileHeaderAttribute attr)
+        /// <param name="attr">The header attribute to enable.</param>
+        private void EnableHeaderFlag(StoryFileHeaderAttribute attr)
         {
-            getFileHeader().SetEnabled(attr, true);
+            FileHeader.SetEnabled(attr, true);
         }
 
         /// <summary>
-        /// Returns the file header.
+        /// Gets the file header.
         /// </summary>
-        /// <returns>the file header</returns>
-        public IStoryFileHeader getFileHeader() { return machine.getFileHeader(); }
+        public IStoryFileHeader FileHeader => machine.FileHeader;
 
         /// <summary>
-        /// Returns the default background color.
+        /// Gets the default background color.
         /// </summary>
-        /// <returns>default background color</returns>
-        public int getDefaultBackground()
-        {
-            return machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultBackground);
-        }
+        public int DefaultBackground => machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultBackground);
 
         /// <summary>
-        /// Returns the default foreground color.
+        /// Gets the default foreground color.
         /// </summary>
-        /// <returns>default foreground color</returns>
-        public int getDefaultForeground()
-        {
-            return machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultForeground);
-        }
-
+        public int DefaultForeground => machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultForeground);
 
         /// <summary>
-        /// Returns the current step number.
+        /// Gets the current step number.
         /// </summary>
-        /// <returns>current step number</returns>
-        public int getStep() { return step; }
+        public int Step => step;
 
         /// <summary>
         /// The execution loop. It runs until either an input state is reached
@@ -169,19 +158,19 @@ namespace ZMachineConsole
         /// <returns>the new MachineRunState</returns>
         internal MachineRunState Start()//public MachineRunState run()
         {
-            while (machine.getRunState() != MachineRunState.STOPPED)
+            while (machine.RunState != MachineRunState.STOPPED)
             {
-                int pc = machine.getPC();
+                int pc = machine.PC;
                 IInstruction instr = instructionDecoder.decodeInstruction(pc);
                 // if the print is executed after execute(), the result is different !!
-                if (DEBUG && machine.getRunState() == MachineRunState.RUNNING)
+                if (DEBUG && machine.RunState == MachineRunState.RUNNING)
                 {
                     Console.Out.WriteLine(String.Format("{0:D4}: ${1:x5} {2}", step, (int)pc, instr.ToString()));
                 }
-                instr.execute();
+                instr.Execute();
 
                 // handle input situations here
-                if (machine.getRunState().isWaitingForInput())
+                if (machine.RunState.IsWaitingForInput)
                 {
                     break;
                 }
@@ -190,7 +179,7 @@ namespace ZMachineConsole
                     step++;
                 }
             }
-            return machine.getRunState();
+            return machine.RunState;
         }
 
         ///**

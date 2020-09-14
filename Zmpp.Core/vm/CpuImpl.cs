@@ -30,11 +30,11 @@
 namespace Zmpp.Core.Vm
 {
     using Microsoft.Extensions.Logging;
-    using Zmpp.Core;
-    using Zmpp.Core.Vm.Utility;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Zmpp.Core;
+    using Zmpp.Core.Vm.Utility;
     using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
@@ -85,16 +85,16 @@ namespace Zmpp.Core.Vm
             this.machine = machine;
         }
 
-        public void reset()
+        public void Reset()
         {
             stack = new FastShortStack(STACKSIZE);
             routineContextStack = new List<RoutineContext>();
             globalsAddress = machine.ReadUnsigned16(StoryFileHeaderAddress.Globals);
 
-            if (machine.getVersion() == 6)
+            if (machine.Version == 6)
             {
                 // Call main function in version 6
-                call(getProgramStart(), (char)0,
+                Call(getProgramStart(), (char)0,
                      new char[0], (char)0);
             }
             else
@@ -112,19 +112,28 @@ namespace Zmpp.Core.Vm
             return machine.ReadUnsigned16(StoryFileHeaderAddress.ProgramStart);
         }
 
-        public int getPC() { return programCounter; }
+        public int PC
+        {
+            get
+            {
+                return programCounter;
+            }
 
-        public void setPC(int address) { programCounter = address; }
+            set
+            {
+                programCounter = value;
+            }
+        }
 
         /// <summary>
         /// Increments the program counter.
         /// </summary>
         /// <param name="offset">the increment value.</param>
-        public void incrementPC(int offset) { programCounter += offset; }
+        public void IncrementPC(int offset) { programCounter += offset; }
 
-        public int unpackStringAddress(char packedAddress)
+        public int UnpackStringAddress(char packedAddress)
         {
-            int version = machine.getVersion();
+            int version = machine.Version;
             return version == 6 || version == 7 ?
               packedAddress * 4 + 8 * getStaticStringOffset()
               : unpackAddress(packedAddress);
@@ -137,7 +146,7 @@ namespace Zmpp.Core.Vm
         /// <returns>the unpacked address</returns>
         public int unpackRoutineAddress(char packedAddress)
         {
-            int version = machine.getVersion();
+            int version = machine.Version;
             return version == 6 || version == 7 ?
               packedAddress * 4 + 8 * getRoutineOffset()
               : unpackAddress(packedAddress);
@@ -168,7 +177,7 @@ namespace Zmpp.Core.Vm
         /// <returns>the unpacked address</returns>
         private int unpackAddress(char packedAddress)
         {
-            switch (machine.getVersion())
+            switch (machine.Version)
             {
                 case 1:
                 case 2:
@@ -183,17 +192,17 @@ namespace Zmpp.Core.Vm
             }
         }
 
-        public void doBranch(short branchOffset, int instructionLength)
+        public void DoBranch(short branchOffset, int instructionLength)
         {
             if (branchOffset >= 2 || branchOffset < 0)
             {
-                setPC(computeBranchTarget(branchOffset, instructionLength));
+                PC = computeBranchTarget(branchOffset, instructionLength);
             }
             else
             {
                 // FALSE is defined as 0, TRUE as 1, so simply return the offset
                 // since we do not have negative offsets
-                returnWith((char)branchOffset);
+                ReturnWith((char)branchOffset);
             }
         }
 
@@ -205,13 +214,12 @@ namespace Zmpp.Core.Vm
         /// <returns>branch target value</returns>
         private int computeBranchTarget(short offset, int instructionLength)
         {
-            return getPC() + instructionLength + offset - 2;
+            return PC + instructionLength + offset - 2;
         }
 
         #region Stack operations
 
-        public char getSP() { return stack.getStackPointer(); }
-
+        public char SP => stack.StackPointer;
         /// <summary>
         /// Sets the global stack pointer to the specified value. This might pop off
         /// several values from the stack.
@@ -220,29 +228,32 @@ namespace Zmpp.Core.Vm
         private void setSP(char stackpointer)
         {
             // remove the last diff elements
-            int diff = stack.getStackPointer() - stackpointer;
-            for (int i = 0; i < diff; i++) { stack.pop(); }
+            int diff = stack.StackPointer - stackpointer;
+            for (int i = 0; i < diff; i++) { stack.Pop(); }
         }
 
-        public char getStackTop()
+        public char StackTop
         {
-            if (stack.size() > 0) { return stack.top(); }
-            throw new IndexOutOfRangeException("Stack underflow error");
+            get
+            {
+                if (stack.Size> 0) { return stack.Top; }
+                throw new IndexOutOfRangeException("Stack underflow error");
+            }
         }
 
         public void setStackTop(char value)
         {
-            stack.replaceTopElement(value);
+            stack.ReplaceTopElement(value);
         }
 
-        public char getStackElement(int index)
+        public char GetStackElement(int index)
         {
-            return stack.getValueAt(index);
+            return stack.GetValueAt(index);
         }
 
-        public char popStack(char userstackAddress)
+        public char PopStack(char userstackAddress)
         {
-            return userstackAddress == 0 ? getVariable((char)0) :
+            return userstackAddress == 0 ? GetVariable((char)0) :
               popUserStack(userstackAddress);
         }
 
@@ -259,11 +270,11 @@ namespace Zmpp.Core.Vm
             return machine.ReadUnsigned16(userstackAddress + (numFreeSlots * 2));
         }
 
-        public bool pushStack(char userstackAddress, char value)
+        public bool PushStack(char userstackAddress, char value)
         {
             if (userstackAddress == 0)
             {
-                setVariable((char)0, value);
+                SetVariable((char)0, value);
                 return true;
             }
             else
@@ -290,12 +301,12 @@ namespace Zmpp.Core.Vm
             return false;
         }
 
-        public char getVariable(char variableNumber)
+        public char GetVariable(char variableNumber)
         {
             ICpu.VariableType varType = getVariableType(variableNumber);
             if (varType == ICpu.VariableType.STACK)
             {
-                if (stack.size() == getInvocationStackPointer())
+                if (stack.Size== getInvocationStackPointer())
                 {
                     //throw new IllegalStateException("stack underflow error");
                     LOG.LogCritical("stack underflow error");
@@ -303,7 +314,7 @@ namespace Zmpp.Core.Vm
                 }
                 else
                 {
-                    return stack.pop();
+                    return stack.Pop();
                 }
             }
             else if (varType == ICpu.VariableType.LOCAL)
@@ -329,12 +340,12 @@ namespace Zmpp.Core.Vm
               getCurrentRoutineContext().getInvocationStackPointer());
         }
 
-        public void setVariable(char variableNumber, char value)
+        public void SetVariable(char variableNumber, char value)
         {
             ICpu.VariableType varType = getVariableType(variableNumber);
             if (varType == ICpu.VariableType.STACK)
             {
-                stack.push(value);
+                stack.Push(value);
             }
             else if (varType == ICpu.VariableType.LOCAL)
             {
@@ -372,11 +383,11 @@ namespace Zmpp.Core.Vm
 
         public void pushRoutineContext(RoutineContext routineContext)
         {
-            routineContext.setInvocationStackPointer(getSP());
+            routineContext.setInvocationStackPointer(SP);
             routineContextStack.Add(routineContext);
         }
 
-        public void returnWith(char returnValue)
+        public void ReturnWith(char returnValue)
         {
             if (routineContextStack.Count > 0)
             {
@@ -387,11 +398,11 @@ namespace Zmpp.Core.Vm
 
                 // Restore stack pointer and pc
                 setSP(popped.getInvocationStackPointer());
-                setPC(popped.getReturnAddress());
+                PC = popped.getReturnAddress();
                 char returnVariable = popped.getReturnVariable();
                 if (returnVariable != RoutineContext.DISCARD_RESULT)
                 {
-                    setVariable(returnVariable, returnValue);
+                    SetVariable(returnVariable, returnValue);
                 }
             }
             else
@@ -432,7 +443,7 @@ namespace Zmpp.Core.Vm
             return (char)routineContextStack.Count;
         }
 
-        public RoutineContext call(char packedRoutineAddress, int returnAddress, char[] args, char returnVariable)
+        public RoutineContext Call(char packedRoutineAddress, int returnAddress, char[] args, char returnVariable)
         {
             int routineAddress = unpackRoutineAddress(packedRoutineAddress);
             int numArgs = args == null ? 0 : args.Length;
@@ -465,14 +476,14 @@ namespace Zmpp.Core.Vm
             }
 
             // save invocation stack pointer
-            routineContext.setInvocationStackPointer(getSP());
+            routineContext.setInvocationStackPointer(SP);
 
             // Pushes the routine context onto the routine stack
             pushRoutineContext(routineContext);
 
             // Jump to the address
-            setPC(machine.getVersion() >= 5 ? routineAddress + 1 :
-              routineAddress + 1 + 2 * routineContext.getNumLocalVariables());
+            PC = machine.Version >= 5 ? routineAddress + 1 :
+              routineAddress + 1 + 2 * routineContext.getNumLocalVariables();
             return routineContext;
         }
 
@@ -490,7 +501,7 @@ namespace Zmpp.Core.Vm
             int numLocals = machine.ReadUnsigned8(routineAddress);
             char[] locals = new char[numLocals];
 
-            if (machine.getVersion() <= 4)
+            if (machine.Version <= 4)
             {
                 // Only story files <= 4 actually store default values here,
                 // after V5 they are assumed as being 0 (standard document 1.0, S.5.2.1)

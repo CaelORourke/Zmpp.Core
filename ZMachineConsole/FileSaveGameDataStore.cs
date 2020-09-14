@@ -14,14 +14,14 @@
             this.fileName = fileName;
         }
 
-        public IFormChunk retrieveFormChunk()
+        public IFormChunk ReadFormChunk()
         {
             byte[] data = File.ReadAllBytes(fileName);
             IMemory memory = new Memory(data);
             return new FormChunk(memory);
         }
 
-        public bool saveFormChunk(WritableFormChunk formchunk)
+        public bool WriteFormChunk(WritableFormChunk formchunk)
         {
             File.WriteAllBytes(fileName, formchunk.Bytes);
             return true;

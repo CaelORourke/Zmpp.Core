@@ -458,8 +458,8 @@ namespace Zmpp.Core.Vm
         /// <param name="savePc">the program counter restore value</param>
         public void captureMachineState(IMachine machine, int savePc)
         {
-            IStoryFileHeader fileheader = machine.getFileHeader();
-            release = machine.getRelease();
+            IStoryFileHeader fileheader = machine.FileHeader;
+            release = machine.Release;
             checksum = machine.ReadUnsigned16(StoryFileHeaderAddress.Checksum);
             //serialBytes = fileheader.getSerialNumber().getBytes();
             serialBytes = new byte[Encoding.UTF8.GetByteCount(fileheader.SerialNumber)];
@@ -492,7 +492,7 @@ namespace Zmpp.Core.Vm
             dummyFrame.evalStack = new char[numElements];
             for (int i = 0; i < numElements; i++)
             {
-                dummyFrame.evalStack[i] = machine.getStackElement(i);
+                dummyFrame.evalStack[i] = machine.GetStackElement(i);
             }
             stackFrames.Add(dummyFrame);
 
@@ -526,7 +526,7 @@ namespace Zmpp.Core.Vm
                 stackFrame.evalStack = new char[numElements];
                 for (int i = 0; i < numElements; i++)
                 {
-                    stackFrame.evalStack[i] = machine.getStackElement(localStackStart + i);
+                    stackFrame.evalStack[i] = machine.GetStackElement(localStackStart + i);
                 }
                 stackFrames.Add(stackFrame);
             }
@@ -555,7 +555,7 @@ namespace Zmpp.Core.Vm
             }
             else
             {
-                return machine.getSP() - localStackStart;
+                return machine.SP - localStackStart;
             }
         }
 
@@ -731,7 +731,7 @@ namespace Zmpp.Core.Vm
                 // Stack
                 for (int s = 0; s < dummyFrame.getEvalStack().Length; s++)
                 {
-                    machine.setVariable((char)0, dummyFrame.getEvalStack()[s]);
+                    machine.SetVariable((char)0, dummyFrame.getEvalStack()[s]);
                 }
             }
 
@@ -757,7 +757,7 @@ namespace Zmpp.Core.Vm
                 // Stack
                 for (int s = 0; s < stackFrame.evalStack.Length; s++)
                 {
-                    machine.setVariable((char)0, stackFrame.evalStack[s]);
+                    machine.SetVariable((char)0, stackFrame.evalStack[s]);
                 }
                 contexts.Add(context);
             }
@@ -765,18 +765,18 @@ namespace Zmpp.Core.Vm
 
             // Prepare the machine continue
             int resumePc = getProgramCounter();
-            if (machine.getVersion() <= 3)
+            if (machine.Version <= 3)
             {
                 // In version 3 this is a branch target that needs to be read
                 // Execution is continued at the first instruction after the branch offset
                 resumePc += getBranchOffsetLength(machine, resumePc);
             }
-            else if (machine.getVersion() >= 4)
+            else if (machine.Version >= 4)
             {
                 // in version 4 and later, this is always 1
                 resumePc++;
             }
-            machine.setPC(resumePc);
+            machine.PC = resumePc;
         }
 
         /// <summary>

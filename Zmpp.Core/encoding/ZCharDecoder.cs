@@ -79,7 +79,7 @@ namespace Zmpp.Core.Encoding
         /// otherwise.If the provided length is 0, the semantics are
         /// equal to the method without the length parameter.
         /// </remarks>
-        public String Decode2Zscii(IMemory memory, int address, int length)
+        public string Decode2Zscii(IMemory memory, int address, int length)
         {
             StringBuilder builder = new StringBuilder();
             translator.Reset();

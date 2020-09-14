@@ -32,23 +32,26 @@ namespace Zmpp.Core.Vm.Utility
     using System;
 
     /// <summary>
-    /// This class implements the predictable random number generator mentioned
-    /// in the Z machine standards document.It takes a seed and generates the
-    /// same sequence of numbers for equal seeds.
+    /// Represents the predictable random number generator mentioned
+    /// in the Z machine standards document.
     /// </summary>
+    /// <remarks>
+    /// It takes a seed and generates the same sequence of numbers
+    /// for equal seeds.
+    /// </remarks>
     public class PredictableRandomGenerator : IRandomGenerator
     {
-        private Random rand;
+        private readonly Random rand;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Vm.Utility.PredictableRandomGenerator"/>class.
         /// </summary>
-        /// <param name="seed">the start seed.</param>
+        /// <param name="seed">The start seed.</param>
         public PredictableRandomGenerator(int seed)
         {
             rand = new Random(seed);
         }
 
-        public int next() { return rand.Next(RandomGenerator.MAX_VALUE - 1) + 1; }
+        public int Next() { return rand.Next(RandomGenerator.MaxValue - 1) + 1; }
     }
 }

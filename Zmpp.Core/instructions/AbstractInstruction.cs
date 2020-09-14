@@ -103,7 +103,7 @@ namespace Zmpp.Core.Instructions
         /// Returns the story version.
         /// </summary>
         /// <returns>story version</returns>
-        protected int getStoryVersion() { return machine.getVersion(); }
+        protected int getStoryVersion() { return machine.Version; }
 
         /// <summary>
         /// Returns the operand count.
@@ -130,7 +130,7 @@ namespace Zmpp.Core.Instructions
         /// <returns>true if stores result, false otherwise</returns>
         protected bool storesResult()
         {
-            return InstructionInfoDb.getInstance().getInfo(getOperandCount(), opcodeNum, machine.getVersion()).isStore();
+            return InstructionInfoDb.getInstance().getInfo(getOperandCount(), opcodeNum, machine.Version).isStore();
         }
 
         #region Variable access
@@ -166,7 +166,7 @@ namespace Zmpp.Core.Instructions
         /// <returns>the signed value</returns>
         protected short getSignedVarValue(char varnum)
         {
-            return MemoryUtil.UnsignedToSigned16(getMachine().getVariable(varnum));
+            return MemoryUtil.UnsignedToSigned16(getMachine().GetVariable(varnum));
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Zmpp.Core.Instructions
         /// <param name="value">the signed value</param>
         protected void setSignedVarValue(char varnum, short value)
         {
-            getMachine().setVariable(varnum, MemoryUtil.SignedToUnsigned16(value));
+            getMachine().SetVariable(varnum, MemoryUtil.SignedToUnsigned16(value));
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Zmpp.Core.Instructions
             switch (operand.getType())
             {
                 case Operand.OperandType.VARIABLE:
-                    return getMachine().getVariable(operand.getValue());
+                    return getMachine().GetVariable(operand.getValue());
                 case Operand.OperandType.SMALL_CONSTANT:
                 case Operand.OperandType.LARGE_CONSTANT:
                 default:
@@ -205,7 +205,7 @@ namespace Zmpp.Core.Instructions
         /// <param name="value">the value to store</param>
         protected void storeUnsignedResult(char value)
         {
-            getMachine().setVariable(storeVariable, value);
+            getMachine().SetVariable(storeVariable, value);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Zmpp.Core.Instructions
         /// <summary>
         /// Advances the program counter to the next instruction.
         /// </summary>
-        protected void nextInstruction() { machine.incrementPC(opcodeLength); }
+        protected void nextInstruction() { machine.IncrementPC(opcodeLength); }
 
         /// <summary>
         /// Performs a branch, depending on the state of the condition flag.
@@ -256,7 +256,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void applyBranch()
         {
-            machine.doBranch(branchInfo.branchOffset, opcodeLength);
+            machine.DoBranch(branchInfo.branchOffset, opcodeLength);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace Zmpp.Core.Instructions
         /// <param name="returnValue">the return value</param>
         protected void returnFromRoutine(char returnValue)
         {
-            machine.returnWith(returnValue);
+            machine.ReturnWith(returnValue);
         }
 
         /// <summary>
@@ -303,9 +303,9 @@ namespace Zmpp.Core.Instructions
             }
             else
             {
-                int returnAddress = getMachine().getPC() + opcodeLength;
+                int returnAddress = getMachine().PC + opcodeLength;
                 char returnVariable = storesResult() ? storeVariable : RoutineContext.DISCARD_RESULT;
-                machine.call(packedRoutineAddress, returnAddress, args, returnVariable);
+                machine.Call(packedRoutineAddress, returnAddress, args, returnVariable);
             }
         }
 
@@ -314,7 +314,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         protected void throwInvalidOpcode()
         {
-            machine.halt("illegal instruction, operand count: " + getOperandCount() + " opcode: " + opcodeNum);
+            machine.Halt("illegal instruction, operand count: " + getOperandCount() + " opcode: " + opcodeNum);
         }
 
         /// <summary>
@@ -327,9 +327,9 @@ namespace Zmpp.Core.Instructions
             // point to the branch offset, and not to an instruction position
             // In version 4, this points to the store variable. In both cases this
             // address is the instruction address + 1
-            bool success = getMachine().save(pc);
+            bool success = getMachine().Save(pc);
 
-            if (machine.getVersion() <= 3)
+            if (machine.Version <= 3)
             {
                 //int target = getMachine().getProgramCounter() + getLength();
                 //target--; // point to the previous branch offset
@@ -349,8 +349,8 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         protected void restoreFromStorage()
         {
-            PortableGameState gamestate = getMachine().restore();
-            if (machine.getVersion() <= 3)
+            PortableGameState gamestate = getMachine().Restore();
+            if (machine.Version <= 3)
             {
                 if (gamestate == null)
                 {
@@ -370,7 +370,7 @@ namespace Zmpp.Core.Instructions
                 else
                 {
                     char storevar = gamestate.getStoreVariable(getMachine());
-                    getMachine().setVariable(storevar, Instruction.RESTORE_TRUE);
+                    getMachine().SetVariable(storevar, Instruction.RESTORE_TRUE);
                 }
             }
         }
@@ -383,18 +383,15 @@ namespace Zmpp.Core.Instructions
         protected IWindow6 getWindow(int windownum)
         {
             return (windownum == ScreenModel.CURRENT_WINDOW) ?
-                    getMachine().getScreen6().getSelectedWindow() :
-                    getMachine().getScreen6().getWindow(windownum);
+                    getMachine().Screen6.getSelectedWindow() :
+                    getMachine().Screen6.getWindow(windownum);
         }
 
         /// <summary>
         /// Helper function
         /// </summary>
         /// <returns>true if output, false otherwise</returns>
-        public bool isOutput()
-        {
-            return InstructionInfoDb.getInstance().getInfo(getOperandCount(), opcodeNum, getStoryVersion()).isOutput();
-        }
+        public bool IsOutput => InstructionInfoDb.getInstance().getInfo(getOperandCount(), opcodeNum, getStoryVersion()).isOutput();
 
         public String toString()
         {
@@ -442,11 +439,11 @@ namespace Zmpp.Core.Instructions
             char value = (char)0;
             if (varnum == 0)
             {
-                value = machine.getStackTop();
+                value = machine.StackTop;
             }
             else
             {
-                value = machine.getVariable(varnum);
+                value = machine.GetVariable(varnum);
             }
             return string.Format("${0:x4}", (int)value);
         }
@@ -488,6 +485,6 @@ namespace Zmpp.Core.Instructions
 
         #endregion
 
-        public abstract void execute();
+        public abstract void Execute();
     }
 }

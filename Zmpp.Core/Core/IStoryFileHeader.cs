@@ -29,8 +29,6 @@
 
 namespace Zmpp.Core
 {
-    using System;
-
     /// <summary>
     /// Manages read and write access to the story file header.
     /// </summary>
@@ -44,7 +42,7 @@ namespace Zmpp.Core
         /// <summary>
         /// Gets the story file serial number.
         /// </summary>
-        String SerialNumber { get; }
+        string SerialNumber { get; }
 
         /// <summary>
         /// Gets the story file length.

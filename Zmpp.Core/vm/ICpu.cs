@@ -44,53 +44,45 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Resets this object to initial state.
         /// </summary>
-        void reset();
+        void Reset();
 
         /// <summary>
         /// Translates a packed string address into a byte address.
         /// </summary>
-        /// <param name="packedAddress">the packed address</param>
-        /// <returns>the translated byte address</returns>
-        int unpackStringAddress(char packedAddress);
+        /// <param name="packedAddress">The packed address.</param>
+        /// <returns>The translated byte address.</returns>
+        int UnpackStringAddress(char packedAddress);
 
         /// <summary>
         /// Computes a branch target from an offset.
         /// </summary>
-        /// <param name="offset">the offset</param>
-        /// <param name="instructionLength">the instruction length</param>
-        void doBranch(short offset, int instructionLength);
+        /// <param name="offset">The offset.</param>
+        /// <param name="instructionLength">The instruction length.</param>
+        void DoBranch(short offset, int instructionLength);
 
         /// <summary>
-        /// Returns the current program counter.
+        /// Gets or sets the current program counter.
         /// </summary>
-        /// <returns>the current program counter</returns>
-        int getPC();
-
-        /// <summary>
-        /// Sets the program counter to a new address.
-        /// </summary>
-        /// <param name="address">the new address</param>
-        void setPC(int address);
+        int PC { get; set; }
 
         /// <summary>
         /// Increments the program counter by the specified offset.
         /// </summary>
-        /// <param name="offset">the offset</param>
-        void incrementPC(int offset);
+        /// <param name="offset">The offset.</param>
+        void IncrementPC(int offset);
 
         #region Stack operations
 
         /// <summary>
-        /// Returns the global stack pointer. Equals the stack size.
+        /// Gets the global stack pointer.
         /// </summary>
-        /// <returns>the stack pointer</returns>
-        char getSP();
+        /// <remarks>Equals the stack size.</remarks>
+        char SP { get; }
 
         /// <summary>
-        /// Returns the value at the top of the stack without removing it.
+        /// Gets the value at the top of the stack without removing it.
         /// </summary>
-        /// <returns>the stack top element</returns>
-        char getStackTop();
+        char StackTop { get; }
 
         /// <summary>
         /// Sets the value of the element at the top of the stack without
@@ -104,7 +96,7 @@ namespace Zmpp.Core.Vm
         /// </summary>
         /// <param name="index">an index</param>
         /// <returns>the stack value at the specified index</returns>
-        char getStackElement(int index);
+        char GetStackElement(int index);
 
         /// <summary>
         /// Pushes the specified value on the user stack.
@@ -112,14 +104,14 @@ namespace Zmpp.Core.Vm
         /// <param name="userstackAddress">the address of the user stack</param>
         /// <param name="value">the value to push</param>
         /// <returns>true if operation was ok, false if overflow</returns>
-        bool pushStack(char userstackAddress, char value);
+        bool PushStack(char userstackAddress, char value);
 
         /// <summary>
         /// Pops the specified value from the user stack.
         /// </summary>
         /// <param name="userstackAddress">the address of the user stack</param>
         /// <returns>the popped value</returns>
-        char popStack(char userstackAddress);
+        char PopStack(char userstackAddress);
 
         #endregion
 
@@ -136,7 +128,7 @@ namespace Zmpp.Core.Vm
         /// throws IllegalStateException if a local variable is accessed without
         /// a subroutine context or if a non-existent local variable is accessed
         /// </remarks>
-        char getVariable(char variableNumber);
+        char GetVariable(char variableNumber);
 
         /// <summary>
         /// Sets the value of the specified variable. If the stack pointer is written
@@ -148,7 +140,7 @@ namespace Zmpp.Core.Vm
         /// throws IllegalStateException if a local variable is accessed without
         /// a subroutine context or if a non-existent local variable is accessed
         /// </remarks>
-        void setVariable(char variableNumber, char value);
+        void SetVariable(char variableNumber, char value);
 
         #endregion
 
@@ -164,21 +156,23 @@ namespace Zmpp.Core.Vm
         /// <remarks>
         /// throws IllegalStateException if no RoutineContext exists
         /// </remarks>
-        void returnWith(char returnValue);
+        void ReturnWith(char returnValue);
 
         /// <summary>
         /// Returns the state of the current routine context stack as a non-
-        /// modifiable List.This is exposed to PortableGameState to take a
-        /// machine state snapshot.
+        /// modifiable List.
         /// </summary>
         /// <returns>the list of routine contexts</returns>
+        /// <remarks>This is exposed to PortableGameState to take a
+        /// machine state snapshot.</remarks>
         List<RoutineContext> getRoutineContexts();
 
         /// <summary>
         /// Copies the list of routine contexts into this machine's routine context
-        /// stack.This is a consequence of a restore operation.
+        /// stack.
         /// </summary>
         /// <param name="contexts">a list of routine contexts</param>
+        /// <remarks>This is a consequence of a restore operation.</remarks>
         void setRoutineContexts(List<RoutineContext> contexts);
 
         /// <summary>
@@ -196,7 +190,7 @@ namespace Zmpp.Core.Vm
         /// <param name="args">the argument list</param>
         /// <param name="returnVariable">the return variable or DISCARD_RESULT</param>
         /// <returns>the routine context created</returns>
-        RoutineContext call(char routineAddress, int returnAddress, char[] args, char returnVariable);
+        RoutineContext Call(char routineAddress, int returnAddress, char[] args, char returnVariable);
 
         #endregion
     }

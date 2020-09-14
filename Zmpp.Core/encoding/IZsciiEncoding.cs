@@ -29,8 +29,6 @@
 
 namespace Zmpp.Core.Encoding
 {
-    using System;
-
     /// <summary>
     /// ZsciiEncoding interface.
     /// </summary>
@@ -41,7 +39,7 @@ namespace Zmpp.Core.Encoding
         /// </summary>
         /// <param name="str">The Unicode string.</param>
         /// <returns>The ZSCII string.</returns>
-        String ToZsciiString(String str);
+        string ToZsciiString(string str);
 
         /// <summary>
         /// Converts a ZSCII character to a Unicode character.

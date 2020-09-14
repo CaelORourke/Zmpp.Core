@@ -109,7 +109,7 @@ namespace Zmpp.Core.Vm
                 machine.WriteUnsigned16(tablePos.tableAddress,
                                         ToUnsigned16(tablePos.bytesWritten));
 
-                if (machine.getVersion() == 6)
+                if (machine.Version == 6)
                 {
                     writeTextWidthInUnits(tablePos);
                 }
@@ -129,7 +129,7 @@ namespace Zmpp.Core.Vm
             {
                 data[i] = (char)machine.ReadUnsigned8(tablepos.tableAddress + i + 2);
             }
-            machine.getScreen6().setTextWidthInUnits(data);
+            machine.Screen6.setTextWidthInUnits(data);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Zmpp.Core.Vm
             }
             else
             {
-                machine.halt("maximum nesting depth (16) for stream 3 exceeded");
+                machine.Halt("maximum nesting depth (16) for stream 3 exceeded");
             }
         }
 

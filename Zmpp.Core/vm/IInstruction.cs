@@ -30,19 +30,19 @@
 namespace Zmpp.Core.Vm
 {
     /// <summary>
-    /// This interface defines an instruction's public methods.
+    /// Represents an instruction.
     /// </summary>
     public interface IInstruction
     {
         /// <summary>
         /// Execute the instruction.
         /// </summary>
-        void execute();
+        void Execute();
 
         /// <summary>
-        /// Returns true if this instruction prints output.
+        /// Indicates whether this instruction prints output.
         /// </summary>
-        /// <returns>true if prints output, false otherwise</returns>
-        bool isOutput();
+        /// <returns>true if this instruction prints output; otherwise false.</returns>
+        bool IsOutput { get; }
     }
 }

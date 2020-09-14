@@ -29,11 +29,11 @@
 
 namespace Zmpp.Core.Vm
 {
+    using System;
     using Zmpp.Core;
     using Zmpp.Core.Encoding;
     using Zmpp.Core.Media;
     using Zmpp.Core.UI;
-    using System;
 
     /// <summary>
     /// This interface acts as a central access point to the Z-Machine's components.
@@ -47,39 +47,35 @@ namespace Zmpp.Core.Vm
         /// </summary>
         /// <param name="data">the story data</param>
         /// <param name="resources">Blorb resources</param>
-        void initialize(byte[] data, IResources resources);
+        void Initialize(byte[] data, IResources resources);
 
         /// <summary>
-        /// Returns the story file version.
+        /// Gets the story file version.
         /// </summary>
-        /// <returns>the story file version</returns>
-        int getVersion();
+        int Version { get; }
 
         /// <summary>
-        /// Returns the release.
+        /// Gets the release.
         /// </summary>
-        /// <returns>the release</returns>
-        int getRelease();
+        int Release { get; }
 
         /// <summary>
-        /// Checks the check sum.
+        /// Gets a value indicating whether the checksum is valid.
         /// </summary>
-        /// <returns>true if valid, false, otherwise</returns>
-        bool hasValidChecksum();
+        /// <returns>true if the checksum is valid; otherwise false.</returns>
+        bool HasValidChecksum { get; }
 
         #region Main machine objects
 
         /// <summary>
-        /// Returns the story file header.
+        /// Gets the story file header.
         /// </summary>
-        /// <returns>file header</returns>
-        IStoryFileHeader getFileHeader();
+        IStoryFileHeader FileHeader { get; }
 
         /// <summary>
-        /// Returns story resources.
+        /// Gets the story resources.
         /// </summary>
-        /// <returns>story resources</returns>
-        IResources getResources();
+        IResources Resources { get; }
 
         #endregion
 
@@ -91,18 +87,17 @@ namespace Zmpp.Core.Vm
         // **********************************************************
 
         /// <summary>
-        /// Looks up token in dictionary.
+        /// Gets the index for the specified token in the specified dictionary.
         /// </summary>
-        /// <param name="dictionaryAddress">address of dictionary</param>
-        /// <param name="token">token to look up</param>
-        /// <returns>index in dictionary</returns>
-        int lookupToken(int dictionaryAddress, String token);
+        /// <param name="dictionaryAddress">The address of the dictionary.</param>
+        /// <param name="token">The token to look up.</param>
+        /// <returns>The index in the dictionary.</returns>
+        int LookupToken(int dictionaryAddress, String token);
 
         /// <summary>
-        /// Returns the dictionary delimiters.
+        /// Gets the dictionary delimiters.
         /// </summary>
-        /// <returns>dictionary delimiters</returns>
-        char[] getDictionaryDelimiters();
+        char[] DictionaryDelimiters { get; }
 
         #endregion
 
@@ -111,68 +106,61 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Encode memory location to ZSCII.
         /// </summary>
-        /// <param name="source">source position</param>
-        /// <param name="length">memory length in byte</param>
-        /// <param name="destination">destination position</param>
-        void encode(int source, int length, int destination);
+        /// <param name="source">The source position.</param>
+        /// <param name="length">The memory length in bytes.</param>
+        /// <param name="destination">The destination position.</param>
+        void Encode(int source, int length, int destination);
 
         /// <summary>
         /// Decode memory address to ZSCII.
         /// </summary>
-        /// <param name="address">memory address</param>
-        /// <param name="length">length in bytes</param>
+        /// <param name="address">The memory address.</param>
+        /// <param name="length">The length in bytes.</param>
         /// <returns>ZSCII string</returns>
-        String decode2Zscii(int address, int length);
+        string Decode2Zscii(int address, int length);
 
         /// <summary>
-        /// Returns the number of Z-encoded bytes at the specified address.
+        /// Gets the number of Z-encoded bytes at the specified address.
         /// </summary>
-        /// <param name="address">the string address</param>
-        /// <returns>number of z-encoded bytes</returns>
-        int getNumZEncodedBytes(int address);
+        /// <param name="address">The string address.</param>
+        /// <returns>The number of Z-encoded bytes.</returns>
+        int GetNumZEncodedBytes(int address);
 
         #endregion
 
         #region Control functions
 
         /// <summary>
-        /// Returns the current run state of the machine
+        /// Gets or sets the current run state of the machine.
         /// </summary>
-        /// <returns>the run state</returns>
-        MachineRunState getRunState();
-
-        /// <summary>
-        /// Sets the current run state of the machine
-        /// </summary>
-        /// <param name="runstate">the run state</param>
-        void setRunState(MachineRunState runstate);
+        MachineRunState RunState { get; set;  }
 
         /// <summary>
         /// Halts the machine with the specified error message.
         /// </summary>
-        /// <param name="errormsg">the error message</param>
-        void halt(String errormsg);
+        /// <param name="errormsg">The error message.</param>
+        void Halt(string errormsg);
 
         /// <summary>
         /// Restarts the virtual machine.
         /// </summary>
-        void restart();
+        void Restart();
 
         /// <summary>
         /// Starts the virtual machine.
         /// </summary>
-        void start();
+        void Start();
 
         /// <summary>
         /// Exits the virtual machine.
         /// </summary>
-        void quit();
+        void Quit();
 
         /// <summary>
         /// Outputs a warning message.
         /// </summary>
-        /// <param name="msg">the message</param>
-        void warn(String msg);
+        /// <param name="msg">The message.</param>
+        void Warn(string msg);
 
         #endregion
 
@@ -181,107 +169,106 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Tokenizes the text in the text buffer using the specified parse buffer.
         /// </summary>
-        /// <param name="textbuffer">the text buffer</param>
-        /// <param name="parsebuffer">the parse buffer</param>
-        /// <param name="dictionaryAddress">the dictionary address or 0 for the default dictionary</param>
-        /// <param name="flag">if set, unrecognized words are not written into the parse buffer and their slots are left unchanged</param>
-        void tokenize(int textbuffer, int parsebuffer, int dictionaryAddress, bool flag);
+        /// <param name="textbuffer">The text buffer.</param>
+        /// <param name="parsebuffer">The parse buffer.</param>
+        /// <param name="dictionaryAddress">The dictionary address or 0 for the default dictionary.</param>
+        /// <param name="flag">If set, unrecognized words are not written into the parse buffer and their slots are left unchanged.</param>
+        void Tokenize(int textbuffer, int parsebuffer, int dictionaryAddress, bool flag);
 
         /// <summary>
         /// Reads a string from the currently selected input stream into the text buffer address.
         /// </summary>
-        /// <param name="textbuffer">the text buffer address</param>
-        /// <returns>the terminator character</returns>
-        char readLine(int textbuffer);
+        /// <param name="textbuffer">The text buffer address.</param>
+        /// <returns>The terminator character.</returns>
+        char ReadLine(int textbuffer);
 
         /// <summary>
         /// Reads a ZSCII char from the selected input stream.
         /// </summary>
-        /// <returns>the selected ZSCII char</returns>
-        char readChar();
+        /// <returns>The selected ZSCII char.</returns>
+        char ReadChar();
 
         /// <summary>
-        /// Returns the sound system.
+        /// Gets the sound system.
         /// </summary>
-        /// <returns>the sound system</returns>
-        ISoundSystem getSoundSystem();
+        ISoundSystem SoundSystem { get; }
 
         /// <summary>
-        /// Returns the picture manager.
+        /// Gets the picture manager.
         /// </summary>
-        /// <returns>the picture manager</returns>
-        IPictureManager getPictureManager();
+        IPictureManager PictureManager { get; }
 
         /// <summary>
-        /// Generates a number in the range between 1 and <i>range</i>. If range is
-        /// negative, the random generator will be seeded to abs(range), if
-        /// range is 0, the random generator will be initialized to a new
-        /// random seed.In both latter cases, the result will be 0.
+        /// Generates a number in the range between 1 and <i>range</i>.
         /// </summary>
         /// <param name="range">the range</param>
         /// <returns>a random number</returns>
-        char random(short range);
+        /// <remarks>
+        /// If range is negative, the random generator will be seeded
+        /// to Abs(range), if range is 0, the random generator will
+        /// be initialized to a new random seed. In both latter cases,
+        /// the result will be 0.
+        /// </remarks>
+        char Random(short range);
 
         /// <summary>
         /// Updates the status line.
         /// </summary>
-        void updateStatusLine();
+        void UpdateStatusLine();
 
         /// <summary>
-        /// Sets the Z-machine's status line.
+        /// Sets the status line.
         /// </summary>
-        /// <param name="statusline">the status line</param>
-        void setStatusLine(IStatusLine statusline);
+        /// <param name="statusline">The status line.</param>
+        void SetStatusLine(IStatusLine statusline);
 
         /// <summary>
-        /// Sets the game screen.
+        /// Sets the screen model.
         /// </summary>
-        /// <param name="screen">the screen model</param>
-        void setScreen(IScreenModel screen);
+        /// <param name="screen">The screen model.</param>
+        void SetScreen(IScreenModel screen);
 
         /// <summary>
-        /// Gets the game screen.
+        /// Gets the screen model.
         /// </summary>
-        /// <returns>the game screen</returns>
-        IScreenModel getScreen();
+        IScreenModel Screen { get; }
 
         /// <summary>
-        /// Returns screen model 6.
+        /// Gets the screen model 6.
         /// </summary>
-        /// <returns>screen model 6</returns>
-        IScreenModel6 getScreen6();
+        IScreenModel6 Screen6 { get; }
 
         /// <summary>
         /// Sets the save game data store.
         /// </summary>
-        /// <param name="datastore">the data store</param>
-        void setSaveGameDataStore(ISaveGameDataStore datastore);
+        /// <param name="datastore">The save game data store.</param>
+        void SetSaveGameDataStore(ISaveGameDataStore datastore);
 
         /// <summary>
         /// Saves the current state.
         /// </summary>
-        /// <param name="savepc">the save pc</param>
-        /// <returns>true on success, false otherwise</returns>
-        bool save(int savepc);
+        /// <param name="savepc">The save pc.</param>
+        /// <returns>true if the save is successful; otherwise false.</returns>
+        bool Save(int savepc);
 
         /// <summary>
         /// Saves the current state in memory.
         /// </summary>
-        /// <param name="savepc">the save pc</param>
-        /// <returns>true on success, false otherwise</returns>
-        bool save_undo(int savepc);
+        /// <param name="savepc">The save pc.</param>
+        /// <returns>true if the save is successful; otherwise false.</returns>
+        bool SaveUndo(int savepc);
 
         /// <summary>
         /// Restores a previously saved state.
         /// </summary>
-        /// <returns>the portable game state</returns>
-        PortableGameState restore();
+        /// <returns>The portable game state.</returns>
+        PortableGameState Restore();
 
         /// <summary>
         /// Restores a previously saved state from memory.
         /// </summary>
-        /// <returns>the portable game state</returns>
-        PortableGameState restore_undo();
+        /// <returns>The portable game state.</returns>
+        PortableGameState RestoreUndo();
 
         #endregion
     }

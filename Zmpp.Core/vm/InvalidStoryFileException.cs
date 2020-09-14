@@ -32,12 +32,12 @@ namespace Zmpp.Core.Vm
     using System;
 
     /// <summary>
-    /// A simple exception to report an invalid story file
+    /// The exception that is thrown when a story file is not valid.
     /// </summary>
-    public class InvalidStoryException : Exception
+    public class InvalidStoryFileException : Exception
     {
         private const long serialVersionUID = -1238988006329747571L;
-        public InvalidStoryException()
+        public InvalidStoryFileException()
         {
         }
     }

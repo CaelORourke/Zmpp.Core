@@ -55,7 +55,7 @@ namespace Zmpp.Core.Instructions
 
         protected override OperandCount getOperandCount() { return OperandCount.EXT; }
 
-        public override void execute()
+        public override void Execute()
         {
             switch (getOpcodeNum())
             {
@@ -144,8 +144,8 @@ namespace Zmpp.Core.Instructions
         {
             // Target PC offset is two because of the extra opcode byte and
             // operand type byte compared to the 0OP instruction
-            int pc = getMachine().getPC() + 3;
-            bool success = getMachine().save_undo(pc);
+            int pc = getMachine().PC + 3;
+            bool success = getMachine().SaveUndo(pc);
             storeUnsignedResult(success ? TRUE : FALSE);
             nextInstruction();
         }
@@ -155,7 +155,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void restore_undo()
         {
-            PortableGameState gamestate = getMachine().restore_undo();
+            PortableGameState gamestate = getMachine().RestoreUndo();
             if (gamestate == null)
             {
                 storeUnsignedResult(FALSE);
@@ -164,7 +164,7 @@ namespace Zmpp.Core.Instructions
             else
             {
                 char storevar = gamestate.getStoreVariable(getMachine());
-                getMachine().setVariable(storevar, RESTORE_TRUE);
+                getMachine().SetVariable(storevar, RESTORE_TRUE);
             }
         }
 
@@ -198,7 +198,7 @@ namespace Zmpp.Core.Instructions
         private void set_font()
         {
             char previousFont =
-              getMachine().getScreen().setFont(getUnsignedValue(0));
+              getMachine().Screen.setFont(getUnsignedValue(0));
             storeUnsignedResult(previousFont);
             nextInstruction();
         }
@@ -211,7 +211,7 @@ namespace Zmpp.Core.Instructions
             // Saving to tables is not supported yet, this is the standard save feature
             // Offset is 3 because there are two opcode bytes + 1 optype byte before
             // the actual store var byte
-            saveToStorage(getMachine().getPC() + 3);
+            saveToStorage(getMachine().PC + 3);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Zmpp.Core.Instructions
         private void print_unicode()
         {
             char zchar = (char)getUnsignedValue(0);
-            getMachine().printZsciiChar(zchar);
+            getMachine().PrintZsciiChar(zchar);
             nextInstruction();
         }
 
@@ -250,7 +250,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void mouse_window()
         {
-            getMachine().getScreen6().setMouseWindow(getSignedValue(0));
+            getMachine().Screen6.setMouseWindow(getSignedValue(0));
             nextInstruction();
         }
 
@@ -268,12 +268,12 @@ namespace Zmpp.Core.Instructions
                 writePictureFileInfo(array);
                 // branch if any pictures are available: this information is only
                 // available in the 1.1 spec
-                result = getMachine().getPictureManager().getNumPictures() > 0;
+                result = getMachine().PictureManager.getNumPictures() > 0;
             }
             else
             {
                 Resolution picdim =
-                  getMachine().getPictureManager().getPictureSize(picnum);
+                  getMachine().PictureManager.getPictureSize(picnum);
                 if (picdim != null)
                 {
                     getMachine().WriteUnsigned16(array, ToUnsigned16(picdim.getHeight()));
@@ -292,9 +292,9 @@ namespace Zmpp.Core.Instructions
         private void writePictureFileInfo(int array)
         {
             getMachine().WriteUnsigned16(array,
-                ToUnsigned16(getMachine().getPictureManager().getNumPictures()));
+                ToUnsigned16(getMachine().PictureManager.getNumPictures()));
             getMachine().WriteUnsigned16(array + 2,
-                ToUnsigned16(getMachine().getPictureManager().getRelease()));
+                ToUnsigned16(getMachine().PictureManager.getRelease()));
         }
 
         /// <summary>
@@ -314,8 +314,8 @@ namespace Zmpp.Core.Instructions
             {
                 x = getUnsignedValue(2);
             }
-            getMachine().getScreen6().getSelectedWindow().drawPicture(
-                getMachine().getPictureManager().getPicture(picnum), y, x);
+            getMachine().Screen6.getSelectedWindow().drawPicture(
+                getMachine().PictureManager.getPicture(picnum), y, x);
             nextInstruction();
         }
 
@@ -336,8 +336,8 @@ namespace Zmpp.Core.Instructions
             {
                 x = getUnsignedValue(2);
             }
-            getMachine().getScreen6().getSelectedWindow().erasePicture(
-                getMachine().getPictureManager().getPicture(picnum), y, x);
+            getMachine().Screen6.getSelectedWindow().erasePicture(
+                getMachine().PictureManager.getPicture(picnum), y, x);
             nextInstruction();
         }
 
@@ -346,7 +346,7 @@ namespace Zmpp.Core.Instructions
         /// </summary>
         private void move_window()
         {
-            getMachine().getScreen6().getWindow(getUnsignedValue(0)).move(
+            getMachine().Screen6.getWindow(getUnsignedValue(0)).move(
                 getUnsignedValue(1), getUnsignedValue(2));
             nextInstruction();
         }
@@ -359,7 +359,7 @@ namespace Zmpp.Core.Instructions
             short window = getSignedValue(0);
             char height = getUnsignedValue(1);
             char width = getUnsignedValue(2);
-            getMachine().getScreen6().getWindow(window).setSize(height, width);
+            getMachine().Screen6.getWindow(window).setSize(height, width);
             nextInstruction();
         }
 
@@ -439,7 +439,7 @@ namespace Zmpp.Core.Instructions
             }
             for (int i = 0; i < numItems; i++)
             {
-                getMachine().popStack(stack);
+                getMachine().PopStack(stack);
             }
             nextInstruction();
         }
@@ -455,7 +455,7 @@ namespace Zmpp.Core.Instructions
             {
                 stack = getUnsignedValue(1);
             }
-            branchOnTest(getMachine().pushStack(stack, value));
+            branchOnTest(getMachine().PushStack(stack, value));
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace Zmpp.Core.Instructions
         private void read_mouse()
         {
             int array = getUnsignedValue(0);
-            getMachine().getScreen6().readMouse(array);
+            getMachine().Screen6.readMouse(array);
             nextInstruction();
         }
     }

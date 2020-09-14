@@ -52,7 +52,7 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Number of undo steps.
         /// </summary>
-        private const int NUM_UNDO = 5;
+        private const int NumUndo = 5;
 
         private MachineRunState runstate;
         private IRandomGenerator _random;
@@ -60,9 +60,9 @@ namespace Zmpp.Core.Vm
         private IScreenModel screenModel;
         private ISaveGameDataStore datastore;
         private RingBuffer<PortableGameState> undostates;
-        private InputFunctions inputFunctions;
-        private ISoundSystem soundSystem;
-        private IPictureManager pictureManager;
+        private readonly InputFunctions inputFunctions;
+        private readonly ISoundSystem soundSystem;
+        private readonly IPictureManager pictureManager;
         private ICpu cpu;
         private OutputImpl output;
         private InputImpl input;
@@ -92,12 +92,12 @@ namespace Zmpp.Core.Vm
 
         #region Initialization
 
-        public void initialize(byte[] data, IResources aResources)
+        public void Initialize(byte[] data, IResources aResources)
         {
             this.storyfileData = data;
             this.resources = aResources;
             this._random = new UnpredictableRandomGenerator();
-            this.undostates = new RingBuffer<PortableGameState>(NUM_UNDO);
+            this.undostates = new RingBuffer<PortableGameState>(NumUndo);
 
             cpu = new CpuImpl(this.LOG, this);
             output = new OutputImpl(this);
@@ -216,25 +216,14 @@ namespace Zmpp.Core.Vm
             return (sum & 0xffff);
         }
 
-        public int getVersion()
-        {
-            return getFileHeader().Version;
-        }
+        public int Version => FileHeader.Version;
 
-        public int getRelease()
-        {
-            return getMemory().ReadUnsigned16(StoryFileHeaderAddress.Release);
-        }
+        public int Release => getMemory().ReadUnsigned16(StoryFileHeaderAddress.Release);
 
-        public bool hasValidChecksum()
-        {
-            return this.checksum == getChecksum();
-        }
+        public bool HasValidChecksum => this.checksum == getChecksum();
 
-        public IStoryFileHeader getFileHeader() { return fileheader; }
-
-        public IResources getResources() { return resources; }
-
+        public IStoryFileHeader FileHeader => fileheader;
+        public IResources Resources => resources;
         #endregion
 
         #region Memory interface functionality
@@ -295,38 +284,45 @@ namespace Zmpp.Core.Vm
         /// <returns>cpu object</returns>
         private ICpu getCpu() { return cpu; }
 
-        public char getVariable(char varnum) { return getCpu().getVariable(varnum); }
+        public char GetVariable(char varnum) { return getCpu().GetVariable(varnum); }
 
-        public void setVariable(char varnum, char value)
+        public void SetVariable(char varnum, char value)
         {
-            getCpu().setVariable(varnum, value);
+            getCpu().SetVariable(varnum, value);
         }
 
-        public char getStackTop() { return getCpu().getStackTop(); }
-
-        public char getStackElement(int index)
+        public char StackTop => getCpu().StackTop;
+        public char GetStackElement(int index)
         {
-            return getCpu().getStackElement(index);
+            return getCpu().GetStackElement(index);
         }
 
         public void setStackTop(char value) { getCpu().setStackTop(value); }
 
-        public void incrementPC(int length) { getCpu().incrementPC(length); }
+        public void IncrementPC(int length) { getCpu().IncrementPC(length); }
 
-        public void setPC(int address) { getCpu().setPC(address); }
-
-        public int getPC() { return getCpu().getPC(); }
-
-        public char getSP() { return getCpu().getSP(); }
-
-        public char popStack(char userstackAddress)
+        public int PC
         {
-            return getCpu().popStack(userstackAddress);
+            get
+            {
+                return getCpu().PC;
+            }
+
+            set
+            {
+                getCpu().PC = value;
+            }
         }
 
-        public bool pushStack(char stack, char value)
+        public char SP => getCpu().SP;
+        public char PopStack(char userstackAddress)
         {
-            return getCpu().pushStack(stack, value);
+            return getCpu().PopStack(userstackAddress);
+        }
+
+        public bool PushStack(char stack, char value)
+        {
+            return getCpu().PushStack(stack, value);
         }
 
         public List<RoutineContext> getRoutineContexts()
@@ -339,9 +335,9 @@ namespace Zmpp.Core.Vm
             getCpu().setRoutineContexts(routineContexts);
         }
 
-        public void returnWith(char returnValue)
+        public void ReturnWith(char returnValue)
         {
-            getCpu().returnWith(returnValue);
+            getCpu().ReturnWith(returnValue);
         }
 
         public RoutineContext getCurrentRoutineContext()
@@ -349,19 +345,19 @@ namespace Zmpp.Core.Vm
             return getCpu().getCurrentRoutineContext();
         }
 
-        public int unpackStringAddress(char packedAddress)
+        public int UnpackStringAddress(char packedAddress)
         {
-            return getCpu().unpackStringAddress(packedAddress);
+            return getCpu().UnpackStringAddress(packedAddress);
         }
 
-        public RoutineContext call(char packedAddress, int returnAddress, char[] args, char returnVar)
+        public RoutineContext Call(char packedAddress, int returnAddress, char[] args, char returnVar)
         {
-            return getCpu().call(packedAddress, returnAddress, args, returnVar);
+            return getCpu().Call(packedAddress, returnAddress, args, returnVar);
         }
 
-        public void doBranch(short branchOffset, int instructionLength)
+        public void DoBranch(short branchOffset, int instructionLength)
         {
-            getCpu().doBranch(branchOffset, instructionLength);
+            getCpu().DoBranch(branchOffset, instructionLength);
         }
 
         #endregion
@@ -376,27 +372,30 @@ namespace Zmpp.Core.Vm
         /// <returns>dictionary object</returns>
         private IDictionary getDictionary() { return dictionary; }
 
-        public int lookupToken(int dictionaryAddress, String token)
+        public int LookupToken(int dictionaryAddress, String token)
         {
             if (dictionaryAddress == 0)
             {
-                return getDictionary().lookup(token);
+                return getDictionary().Lookup(token);
             }
-            return new UserDictionary(getMemory(), dictionaryAddress, getZCharDecoder(), encoder).lookup(token);
+            return new UserDictionary(getMemory(), dictionaryAddress, getZCharDecoder(), encoder).Lookup(token);
         }
 
-        public char[] getDictionaryDelimiters()
+        public char[] DictionaryDelimiters
         {
-            // Retrieve the defined separators
-            StringBuilder separators = new StringBuilder();
-            separators.Append(WHITESPACE);
-            for (int i = 0, n = getDictionary().getNumberOfSeparators(); i < n; i++)
+            get
             {
-                separators.Append(getZCharDecoder().DecodeZChar((char)
-                        getDictionary().getSeparator(i)));
+                // Retrieve the defined separators
+                StringBuilder separators = new StringBuilder();
+                separators.Append(WHITESPACE);
+                for (int i = 0, n = getDictionary().NumberOfSeparators; i < n; i++)
+                {
+                    separators.Append(getZCharDecoder().DecodeZChar((char)
+                            getDictionary().GetSeparator(i)));
+                }
+                // The tokenizer will also return the delimiters
+                return separators.ToString().ToCharArray();
             }
-            // The tokenizer will also return the delimiters
-            return separators.ToString().ToCharArray();
         }
 
         #endregion
@@ -420,17 +419,17 @@ namespace Zmpp.Core.Vm
             return encoding.ToZsciiString(str);
         }
 
-        public void encode(int source, int length, int destination)
+        public void Encode(int source, int length, int destination)
         {
             getZCharEncoder().Encode(getMemory(), source, length, destination);
         }
 
-        public int getNumZEncodedBytes(int address)
+        public int GetNumZEncodedBytes(int address)
         {
             return getZCharDecoder().GetNumZEncodedBytes(getMemory(), address);
         }
 
-        public String decode2Zscii(int address, int length)
+        public String Decode2Zscii(int address, int length)
         {
             return getZCharDecoder().Decode2Zscii(getMemory(), address, length);
         }
@@ -458,49 +457,49 @@ namespace Zmpp.Core.Vm
             output.setOutputStream(streamnumber, stream);
         }
 
-        public void selectOutputStream(int streamnumber, bool flag)
+        public void SelectOutputStream(int streamnumber, bool flag)
         {
-            output.selectOutputStream(streamnumber, flag);
+            output.SelectOutputStream(streamnumber, flag);
         }
 
-        public void selectOutputStream3(int tableAddress, int tableWidth)
+        public void SelectOutputStream3(int tableAddress, int tableWidth)
         {
-            output.selectOutputStream3(tableAddress, tableWidth);
+            output.SelectOutputStream3(tableAddress, tableWidth);
         }
 
-        public void printZString(int stringAddress)
+        public void PrintZString(int stringAddress)
         {
-            output.printZString(stringAddress);
+            output.PrintZString(stringAddress);
         }
 
-        public void print(String str)
+        public void Print(String str)
         {
-            output.print(str);
+            output.Print(str);
         }
 
-        public void newline()
+        public void NewLine()
         {
-            output.newline();
+            output.NewLine();
         }
 
-        public void printZsciiChar(char zchar)
+        public void PrintZsciiChar(char zchar)
         {
-            output.printZsciiChar(zchar);
+            output.PrintZsciiChar(zchar);
         }
 
-        public void printNumber(short num)
+        public void PrintNumber(short num)
         {
-            output.printNumber(num);
+            output.PrintNumber(num);
         }
 
-        public void flushOutput()
+        public void FlushOutput()
         {
-            output.flushOutput();
+            output.FlushOutput();
         }
 
-        public void reset()
+        public void Reset()
         {
-            output.reset();
+            output.Reset();
         }
 
         #endregion
@@ -521,17 +520,14 @@ namespace Zmpp.Core.Vm
             input.setInputStream(streamNumber, stream);
         }
 
-        public IInputStream getSelectedInputStream()
+        public IInputStream SelectedInputStream => input.SelectedInputStream;
+
+        public void SelectInputStream(int streamNumber)
         {
-            return input.getSelectedInputStream();
+            input.SelectInputStream(streamNumber);
         }
 
-        public void selectInputStream(int streamNumber)
-        {
-            input.selectInputStream(streamNumber);
-        }
-
-        public char random(short range)
+        public char Random(short range)
         {
             if (range < 0)
             {
@@ -543,84 +539,87 @@ namespace Zmpp.Core.Vm
                 _random = new UnpredictableRandomGenerator();
                 return (char)0;
             }
-            return (char)((_random.next() % range) + 1);
+            return (char)((_random.Next() % range) + 1);
         }
 
         #endregion
 
         #region Control functions
 
-        public MachineRunState getRunState() { return runstate; }
-
-
-        public void setRunState(MachineRunState aRunstate)
+        public MachineRunState RunState
         {
-            this.runstate = aRunstate;
-            if (runstate != null && runstate.isWaitingForInput())
+            get
             {
-                updateStatusLine();
-                flushOutput();
+                return runstate;
+            }
+
+            set
+            {
+                this.runstate = value;
+                if (runstate != null && runstate.IsWaitingForInput)
+                {
+                    UpdateStatusLine();
+                    FlushOutput();
+                }
             }
         }
 
-        public void halt(String errormsg)
+        public void Halt(String errormsg)
         {
-            print(errormsg);
+            Print(errormsg);
             runstate = MachineRunState.STOPPED;
         }
 
-        public void warn(String msg)
+        public void Warn(String msg)
         {
             LOG.LogWarning("WARNING: " + msg);
         }
 
-        public void restart() { restart(true); }
+        public void Restart() { restart(true); }
 
-        public void quit()
+        public void Quit()
         {
             runstate = MachineRunState.STOPPED;
             // On quit, close the streams
-            output.print("*Game ended*");
+            output.Print("*Game ended*");
             closeStreams();
         }
 
-        public void start() { runstate = MachineRunState.RUNNING; }
+        public void Start() { runstate = MachineRunState.RUNNING; }
 
         #endregion
 
         #region Machine services
 
-        public void tokenize(int textbuffer, int parsebuffer, int dictionaryAddress, bool flag)
+        public void Tokenize(int textbuffer, int parsebuffer, int dictionaryAddress, bool flag)
         {
             inputFunctions.tokenize(textbuffer, parsebuffer, dictionaryAddress, flag);
         }
 
-        public char readLine(int textbuffer)
+        public char ReadLine(int textbuffer)
         {
             return inputFunctions.readLine(textbuffer);
         }
 
-        public char readChar() { return inputFunctions.readChar(); }
+        public char ReadChar() { return inputFunctions.readChar(); }
 
-        public ISoundSystem getSoundSystem() { return soundSystem; }
-
-        public IPictureManager getPictureManager() { return pictureManager; }
-
-        public void setSaveGameDataStore(ISaveGameDataStore aDatastore)
+        public ISoundSystem SoundSystem => soundSystem;
+        public IPictureManager PictureManager => pictureManager;
+        public void SetSaveGameDataStore(ISaveGameDataStore aDatastore)
         {
             this.datastore = aDatastore;
         }
 
-        public void updateStatusLine()
+        public void UpdateStatusLine()
         {
-            if (getFileHeader().Version <= 3 && statusLine != null)
+            if (FileHeader.Version <= 3 && statusLine != null)
             {
-                int objNum = cpu.getVariable((char)0x10);
+                int objNum = cpu.GetVariable((char)0x10);
                 String objectName = getZCharDecoder().Decode2Zscii(getMemory(),
-                  getObjectTree().getPropertiesDescriptionAddress(objNum), 0);
-                int global2 = cpu.getVariable((char)0x11);
-                int global3 = cpu.getVariable((char)0x12);
-                if (getFileHeader().IsEnabled(StoryFileHeaderAttribute.ScoreGame))
+                  getObjectTree().GetPropertiesDescriptionAddress(objNum), 0);
+                int global2 = cpu.GetVariable((char)0x11);
+                int global3 = cpu.GetVariable((char)0x12);
+                if (FileHeader.IsEnabled(StoryFileHeaderAttribute.ScoreGame))
                 {
                     statusLine.updateStatusScore(objectName, global2, global3);
                 }
@@ -631,33 +630,31 @@ namespace Zmpp.Core.Vm
             }
         }
 
-        public void setStatusLine(IStatusLine statusLine)
+        public void SetStatusLine(IStatusLine statusLine)
         {
             this.statusLine = statusLine;
         }
 
-        public void setScreen(IScreenModel screen)
+        public void SetScreen(IScreenModel screen)
         {
             this.screenModel = screen;
         }
 
-        public IScreenModel getScreen() { return screenModel; }
-
-        public IScreenModel6 getScreen6() { return (IScreenModel6)screenModel; }
-
-        public bool save(int savepc)
+        public IScreenModel Screen => screenModel;
+        public IScreenModel6 Screen6 => (IScreenModel6)screenModel;
+        public bool Save(int savepc)
         {
             if (datastore != null)
             {
                 PortableGameState gamestate = new PortableGameState();
                 gamestate.captureMachineState(this, savepc);
                 WritableFormChunk formChunk = gamestate.exportToFormChunk();
-                return datastore.saveFormChunk(formChunk);
+                return datastore.WriteFormChunk(formChunk);
             }
             return false;
         }
 
-        public bool save_undo(int savepc)
+        public bool SaveUndo(int savepc)
         {
             PortableGameState undoGameState = new PortableGameState();
             undoGameState.captureMachineState(this, savepc);
@@ -665,12 +662,12 @@ namespace Zmpp.Core.Vm
             return true;
         }
 
-        public PortableGameState restore()
+        public PortableGameState Restore()
         {
             if (datastore != null)
             {
                 PortableGameState gamestate = new PortableGameState();
-                IFormChunk formchunk = datastore.retrieveFormChunk();
+                IFormChunk formchunk = datastore.ReadFormChunk();
                 gamestate.readSaveGame(formchunk);
 
                 // verification has to be here
@@ -686,7 +683,7 @@ namespace Zmpp.Core.Vm
             return null;
         }
 
-        public PortableGameState restore_undo()
+        public PortableGameState RestoreUndo()
         {
             // do not reset screen model, since e.g. AMFV simply picks up the
             // current window state
@@ -696,7 +693,7 @@ namespace Zmpp.Core.Vm
                   undostates.remove(undostates.size() - 1);
                 restart(false);
                 undoGameState.transferStateToMachine(this);
-                LOG.LogInformation(String.Format("restore(), pc is: %4x\n", cpu.getPC()));
+                LOG.LogInformation(String.Format("restore(), pc is: %4x\n", cpu.PC));
                 return undoGameState;
             }
             return null;
@@ -719,9 +716,9 @@ namespace Zmpp.Core.Vm
             {
                 saveGameChecksum = this.checksum;
             }
-            return gamestate.getRelease() == getRelease()
+            return gamestate.getRelease() == Release
               && gamestate.getChecksum() == checksum
-              && gamestate.getSerialNumber().Equals(getFileHeader().SerialNumber);
+              && gamestate.getSerialNumber().Equals(FileHeader.SerialNumber);
         }
 
         /**
@@ -748,16 +745,16 @@ namespace Zmpp.Core.Vm
         private void resetState()
         {
             resetGameData();
-            output.reset();
+            output.Reset();
             //soundSystem.reset(); // TODO: Implement sound system!
-            cpu.reset();
+            cpu.Reset();
             setStandardRevision(1, 0);
-            if (getFileHeader().Version >= 4)
+            if (FileHeader.Version >= 4)
             {
-                getFileHeader().SetEnabled(StoryFileHeaderAttribute.SupportsTimedInput, true);
+                FileHeader.SetEnabled(StoryFileHeaderAttribute.SupportsTimedInput, true);
                 // IBM PC
                 getMemory().WriteUnsigned8(StoryFileHeaderAddress.InterpreterNumber, (char)6);
-                getFileHeader().SetInterpreterVersion(1);
+                FileHeader.SetInterpreterVersion(1);
             }
         }
 
@@ -779,7 +776,7 @@ namespace Zmpp.Core.Vm
         private void restart(bool resetScreenModel)
         {
             // Transcripting and fixed font bits survive the restart
-            IStoryFileHeader fileHeader = getFileHeader();
+            IStoryFileHeader fileHeader = FileHeader;
             bool fixedFontForced =
               fileHeader.IsEnabled(StoryFileHeaderAttribute.ForceFixedFont);
             bool transcripting = fileHeader.IsEnabled(StoryFileHeaderAttribute.Transcripting);
@@ -804,94 +801,94 @@ namespace Zmpp.Core.Vm
          */
         private IObjectTree getObjectTree() { return objectTree; }
 
-        public void insertObject(int parentNum, int objectNum)
+        public void InsertObject(int parentNum, int objectNum)
         {
-            getObjectTree().insertObject(parentNum, objectNum);
+            getObjectTree().InsertObject(parentNum, objectNum);
         }
 
-        public void removeObject(int objectNum)
+        public void RemoveObject(int objectNum)
         {
-            getObjectTree().removeObject(objectNum);
+            getObjectTree().RemoveObject(objectNum);
         }
 
-        public void clearAttribute(int objectNum, int attributeNum)
+        public void ClearAttribute(int objectNum, int attributeNum)
         {
-            getObjectTree().clearAttribute(objectNum, attributeNum);
+            getObjectTree().ClearAttribute(objectNum, attributeNum);
         }
 
-        public bool isAttributeSet(int objectNum, int attributeNum)
+        public bool IsAttributeSet(int objectNum, int attributeNum)
         {
-            return getObjectTree().isAttributeSet(objectNum, attributeNum);
+            return getObjectTree().IsAttributeSet(objectNum, attributeNum);
         }
 
-        public void setAttribute(int objectNum, int attributeNum)
+        public void SetAttribute(int objectNum, int attributeNum)
         {
-            getObjectTree().setAttribute(objectNum, attributeNum);
+            getObjectTree().SetAttribute(objectNum, attributeNum);
         }
 
-        public int getParent(int objectNum)
+        public int GetParent(int objectNum)
         {
-            return getObjectTree().getParent(objectNum);
+            return getObjectTree().GetParent(objectNum);
         }
 
-        public void setParent(int objectNum, int parent)
+        public void SetParent(int objectNum, int parent)
         {
-            getObjectTree().setParent(objectNum, parent);
+            getObjectTree().SetParent(objectNum, parent);
         }
 
-        public int getChild(int objectNum)
+        public int GetChild(int objectNum)
         {
-            return getObjectTree().getChild(objectNum);
+            return getObjectTree().GetChild(objectNum);
         }
 
-        public void setChild(int objectNum, int child)
+        public void SetChild(int objectNum, int child)
         {
-            getObjectTree().setChild(objectNum, child);
+            getObjectTree().SetChild(objectNum, child);
         }
 
-        public int getSibling(int objectNum)
+        public int GetSibling(int objectNum)
         {
-            return getObjectTree().getSibling(objectNum);
+            return getObjectTree().GetSibling(objectNum);
         }
 
-        public void setSibling(int objectNum, int sibling)
+        public void SetSibling(int objectNum, int sibling)
         {
-            getObjectTree().setSibling(objectNum, sibling);
+            getObjectTree().SetSibling(objectNum, sibling);
         }
 
-        public int getPropertiesDescriptionAddress(int objectNum)
+        public int GetPropertiesDescriptionAddress(int objectNum)
         {
-            return getObjectTree().getPropertiesDescriptionAddress(objectNum);
+            return getObjectTree().GetPropertiesDescriptionAddress(objectNum);
         }
 
-        public int getPropertyAddress(int objectNum, int property)
+        public int GetPropertyAddress(int objectNum, int property)
         {
-            return getObjectTree().getPropertyAddress(objectNum, property);
+            return getObjectTree().GetPropertyAddress(objectNum, property);
         }
 
-        public int getPropertyLength(int propertyAddress)
+        public int GetPropertyLength(int propertyAddress)
         {
-            return getObjectTree().getPropertyLength(propertyAddress);
+            return getObjectTree().GetPropertyLength(propertyAddress);
         }
 
-        public char getProperty(int objectNum, int property)
+        public char GetProperty(int objectNum, int property)
         {
-            return getObjectTree().getProperty(objectNum, property);
+            return getObjectTree().GetProperty(objectNum, property);
         }
 
-        public void setProperty(int objectNum, int property, char value)
+        public void SetProperty(int objectNum, int property, char value)
         {
-            getObjectTree().setProperty(objectNum, property, value);
+            getObjectTree().SetProperty(objectNum, property, value);
         }
 
-        public int getNextProperty(int objectNum, int property)
+        public int GetNextProperty(int objectNum, int property)
         {
-            return getObjectTree().getNextProperty(objectNum, property);
+            return getObjectTree().GetNextProperty(objectNum, property);
         }
 
         public Resolution getResolution()
         {
-            return getScreen6().getResolution();
+            return Screen6.getResolution();
         }
 
         #endregion

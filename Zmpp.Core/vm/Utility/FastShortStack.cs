@@ -31,18 +31,20 @@ namespace Zmpp.Core.Vm.Utility
 {
     /// <summary>
     /// This class implements a faster version of the Z-machin main stack.
+    /// </summary>
+    /// <remarks>
     /// This combines abstract access with the bypassing of unnecessary
     /// object creation.
-    /// </summary>
+    /// </remarks>
     public sealed class FastShortStack
     {
-        private char[] values;
+        private readonly char[] values;
         private char stackpointer;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Vm.Utility.FastShortStack"/>class.
         /// </summary>
-        /// <param name="size">the stack size</param>
+        /// <param name="size">The stack size.</param>
         public FastShortStack(int size)
         {
             values = new char[size];
@@ -50,53 +52,55 @@ namespace Zmpp.Core.Vm.Utility
         }
 
         /// <summary>
-        /// Returns the current stack pointer.
+        /// Gets the current stack pointer.
         /// </summary>
-        /// <returns>the stack pointer</returns>
-        public char getStackPointer() { return stackpointer; }
+        public char StackPointer => stackpointer;
 
         /// <summary>
         /// Pushes a value on the stack and increases the stack pointer.
         /// </summary>
-        /// <param name="value">the value</param>
-        public void push(char value) { values[stackpointer++] = value; }
+        /// <param name="value">The value.</param>
+        public void Push(char value) { values[stackpointer++] = value; }
 
         /// <summary>
-        /// Returns the top value of the stack without modifying the stack pointer.
+        /// Gets the top value of the stack without modifying the stack pointer.
         /// </summary>
-        /// <returns>the top value</returns>
-        public char top() { return values[stackpointer - 1]; }
+        public char Top => values[stackpointer - 1];
 
         /// <summary>
         /// Replaces the top element with the specified value.
         /// </summary>
-        /// <param name="value">the value to replace</param>
-        public void replaceTopElement(char value)
+        /// <param name="value">The value.</param>
+        public void ReplaceTopElement(char value)
         {
             values[stackpointer - 1] = value;
         }
 
         /// <summary>
-        /// Returns the size of the stack. Is equal to stack pointer, but has a
-        /// different semantic meaning.
+        /// Gets the size of the stack.
         /// </summary>
-        /// <returns>the size of the stack</returns>
-        public int size() { return stackpointer; }
+        /// <remarks>
+        /// Equal to stack pointer but has a different semantic meaning.
+        /// </remarks>
+        public int Size => stackpointer;
 
         /// <summary>
-        /// Returns the top value of the stack and decreases the stack pointer.
+        /// Gets the top value of the stack and decreases the stack pointer.
         /// </summary>
-        /// <returns>the top value</returns>
-        public char pop()
+        /// <returns>The top value.</returns>
+        public char Pop()
         {
             return values[--stackpointer];
         }
 
         /// <summary>
-        /// Returns the value at index of the stack, here stack is treated as an array.
+        /// Gets the value at the specified index of the stack.
         /// </summary>
-        /// <param name="index">the index</param>
-        /// <returns>the value at the index</returns>
-        public char getValueAt(int index) { return values[index]; }
+        /// <param name="index">The index.</param>
+        /// <returns>The value at the index.</returns>
+        /// <remarks>
+        /// Here the stack is treated as an array.
+        /// </remarks>
+        public char GetValueAt(int index) { return values[index]; }
     }
 }

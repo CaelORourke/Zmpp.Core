@@ -32,19 +32,21 @@ namespace Zmpp.Core.Vm.Utility
     using System;
 
     /// <summary>
-    /// This class implements the "random" random number generator mentioned
+    /// Represents the "random" random number generator mentioned
     /// in the Z-machine standard document.
     /// </summary>
     public class UnpredictableRandomGenerator : IRandomGenerator
     {
-        private Random rand;
+        private readonly Random rand;
 
-        /** Constructor. */
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Vm.Utility.UnpredictableRandomGenerator"/>class.
+        /// </summary>
         public UnpredictableRandomGenerator()
         {
             rand = new Random(DateTime.Now.Millisecond);
         }
 
-        public int next() { return rand.Next(RandomGenerator.MAX_VALUE - 1) + 1; }
+        public int Next() { return rand.Next(RandomGenerator.MaxValue - 1) + 1; }
     }
 }

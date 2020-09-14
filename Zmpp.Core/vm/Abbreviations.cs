@@ -33,44 +33,43 @@ namespace Zmpp.Core.Vm
     using Zmpp.Core.Encoding;
 
     /// <summary>
-    /// This class represents a view to the abbreviations table. The table
-    /// starts at the predefined address within the header and contains pointers
-    /// to ZSCII strings in the memory map.These pointers are word addresses
-    /// as opposed to all other addresses in the memory map, therefore the
-    /// actual value has to multiplied by two to get the real address.
+    /// Represents a view of the abbreviations table.
     /// </summary>
+    /// <remarks>
+    /// The table starts at the predefined address within the header and
+    /// contains pointers to ZSCII strings in the memory map. These pointers
+    /// are word addresses as opposed to all other addresses in the memory
+    /// map, therefore the actual value has to multiplied by two to get the
+    /// real address.
+    /// </remarks>
     public class Abbreviations : IAbbreviationsTable
     {
         /// <summary>
-        /// The memory object.
+        /// The memory map.
         /// </summary>
-        private IMemory memory;
+        private readonly IMemory memory;
 
         /// <summary>
         /// The start address of the abbreviations table.
         /// </summary>
-        private int address;
+        private readonly int address;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Vm.Abbreviations"/>
+        /// class for the specified memory and address.
         /// </summary>
-        /// <param name="memory">the memory map</param>
-        /// <param name="address">the start address of the abbreviations table</param>
+        /// <param name="memory">The Memory object.</param>
+        /// <param name="address">The start address of the abbreviations table.</param>
         public Abbreviations(IMemory memory, int address)
         {
-            //base();
             this.memory = memory;
             this.address = address;
         }
 
-        /// <summary>
-        /// The abbreviation table contains word addresses, so read out the pointer
-        /// and multiply by two
-        /// </summary>
-        /// <param name="entryNum">the entry index in the abbreviations table</param>
-        /// <returns>the word address</returns>
         public int GetWordAddress(int entryNum)
         {
+            /// The abbreviation table contains word addresses.
+            /// Read the pointer and multiply by two
             return memory.ReadUnsigned16(address + entryNum * 2) * 2;
         }
     }

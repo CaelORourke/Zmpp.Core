@@ -29,52 +29,49 @@
 
 namespace Zmpp.Core.Vm
 {
-    using System;
-
     /// <summary>
-    /// This is the interface definition for a dictionary.
+    /// Represents a dictionary.
     /// </summary>
     public interface IDictionary
     {
         /// <summary>
-        /// Returns the number of separators.
+        /// Gets the number of separators.
         /// </summary>
-        /// <returns>the number of separators</returns>
-        int getNumberOfSeparators();
+        int NumberOfSeparators { get; }
 
         /// <summary>
-        /// Returns the separator at position i as a ZSCII character.
+        /// Gets the separator at the specified index as a ZSCII character.
         /// </summary>
-        /// <param name="i">the separator number, zero-based</param>
+        /// <param name="index">The separator index which is zero-based.</param>
         /// <returns>the separator</returns>
-        byte getSeparator(int i);
+        byte GetSeparator(int index);
 
         /// <summary>
-        /// Returns the length of a dictionary entry.
+        /// Gets the length of a dictionary entry.
         /// </summary>
-        /// <returns>the entry length</returns>
-        int getEntryLength();
+        int EntryLength { get; }
 
         /// <summary>
-        /// Returns the number of dictionary entries.
+        /// Gets the number of dictionary entries.
         /// </summary>
-        /// <returns>the number of entries</returns>
-        short getNumberOfEntries();
+        short NumberOfEntries { get; }
 
         /// <summary>
-        /// Returns the entry address at the specified position.
+        /// Gets the entry address at the specified position.
         /// </summary>
-        /// <param name="entryNum">entry number between (0 - getNumberOfEntries() - 1)</param>
-        /// <returns>the entry address</returns>
-        int getEntryAddress(int entryNum);
+        /// <param name="entryNum">The entry number between (0 - getNumberOfEntries() - 1).</param>
+        /// <returns>The entry address.</returns>
+        int GetEntryAddress(int entryNum);
 
         /// <summary>
-        /// Looks up a string in the dictionary. The word will be truncated to
-        /// the maximum word length and looked up.The result is the address
-        /// of the entry or 0 if it is not found.
+        /// Looks up a string in the dictionary.
         /// </summary>
-        /// <param name="token">a token in ZSCII encoding</param>
-        /// <returns>the address of the token or 0</returns>
-        int lookup(String token);
+        /// <param name="token">The token in ZSCII encoding.</param>
+        /// <returns>The address of the token if found or 0.</returns>
+        /// <remarks>
+        /// The word will be truncated to the maximum word length
+        /// and looked up.
+        /// </remarks>
+        int Lookup(string token);
     }
 }
