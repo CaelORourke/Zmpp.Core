@@ -29,26 +29,29 @@
 
 namespace Zmpp.Core.Vm
 {
-    using Zmpp.Core.Encoding;
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using System.Globalization;
+    using Zmpp.Core.Encoding;
     using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
     /// This class contains functions that deal with user input.
-    /// Note: For version 1.5 a number of changes will be performed on this
-    /// class. Timed input will be eliminated completely, as well as leftover.
-    /// Command history might be left out as well
     /// </summary>
+    /// <remarks>
+    /// For version 1.5 a number of changes will be performed on this
+    /// class. Timed input will be eliminated completely, as well as leftover.
+    /// Command history might be left out as well.
+    /// </remarks>
     public class InputFunctions
     {
-        private IMachine machine;
+        private readonly IMachine machine;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="machine">the machine object</param>
+        /// <param name="machine">The machine object.</param>
         public InputFunctions(IMachine machine)
         {
             this.machine = machine;
@@ -68,9 +71,10 @@ namespace Zmpp.Core.Vm
         /// </summary>
         /// <param name="textbuffer">text buffer address</param>
         /// <returns>terminator character</returns>
-        public char readLine(int textbuffer)
+        public char ReadLine(int textbuffer)
         {
-            String inputLine = machine.SelectedInputStream.readLine();
+            string inputLine = machine.SelectedInputStream.ReadLine();
+            inputLine =  machine.ToZsciiString(inputLine.ToLower(CultureInfo.DefaultThreadCurrentCulture)) + "\r";
             processInput(textbuffer, inputLine);
             return inputLine[inputLine.Length - 1];
         }
@@ -83,7 +87,7 @@ namespace Zmpp.Core.Vm
         /// <param name="terminateChar">the terminating character</param>
         /// <param name="textbuffer">the text buffer</param>
         /// <param name="textpointer">points at the position behind the last input char</param>
-        public void checkTermination(char terminateChar, int textbuffer, int textpointer)
+        public void CheckTermination(char terminateChar, int textbuffer, int textpointer)
         {
             int version = machine.Version;
             if (version >= 5)
@@ -122,7 +126,7 @@ namespace Zmpp.Core.Vm
                         (char)(inputString[i] & 0xff));
             }
             char terminateChar = inputString[inputString.Length - 1];
-            checkTermination(terminateChar, textbuffer, inputString.Length + 1);
+            CheckTermination(terminateChar, textbuffer, inputString.Length + 1);
         }
 
         /*
@@ -184,7 +188,7 @@ namespace Zmpp.Core.Vm
 
         public char readChar()
         {
-            String inputLine = machine.SelectedInputStream.readLine();
+            String inputLine = machine.SelectedInputStream.ReadLine();
             return inputLine[0];
         }
 

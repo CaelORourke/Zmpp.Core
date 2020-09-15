@@ -33,6 +33,7 @@ namespace Zmpp.Core.Vm
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using System.Threading.Tasks;
     using Zmpp.Core.UI;
     using Zmpp.Core;
     using Zmpp.Core.Blorb;
@@ -42,9 +43,10 @@ namespace Zmpp.Core.Vm
     using Zmpp.Core.Vm.Utility;
     using System.IO;
     using System.Net.Http;
+    using System.Net;
 
     /// <summary>
-    /// Provides methods for constructing a machine object.
+    /// Provides static methods for constructing a machine object.
     /// </summary>
     /// <remarks>
     /// Constructing a Machine object is a very complex task, the building process
@@ -53,167 +55,108 @@ namespace Zmpp.Core.Vm
     /// of MachineFactory. Instead, an init struct and a init callback object
     /// should be provided.
     /// </remarks>
-    public class MachineFactory
+    public static class MachineFactory
     {
-        /// <summary>
-        /// Initialization structure.
-        /// </summary>
-        public sealed class MachineInitStruct
+        public static IMachine Create(ILogger logger, Uri uri, IViewModel viewModel)
         {
-            public string storyFile, blorbFile;
-            public Uri storyURL, blorbURL;
-            public IInputStream keyboardInputStream;
-            public IStatusLine statusLine;
-            public IScreenModel screenModel;
-            public IIOSystem ioSystem;
-            public ISaveGameDataStore saveGameDataStore;
-            public INativeImageFactory nativeImageFactory;
-            public ISoundEffectFactory soundEffectFactory;
+            byte[] storyData = ReadStoryData(uri);
+            IResources resources = ReadResources(uri); // only for Blorb files
+            return Create(logger, storyData, resources, viewModel);
         }
 
-        private readonly ILogger logger;
-        private readonly MachineInitStruct initStruct;
-        private readonly IFormChunk blorbchunk;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="initStruct">The initialization structure.</param>
-        public MachineFactory(ILogger logger, MachineInitStruct initStruct)
+        public static IMachine Create(ILogger logger, string path, IViewModel viewModel)
         {
-            this.logger = logger;
-            this.initStruct = initStruct;
+            byte[] storyData = ReadStoryData(path);
+            IResources resources = ReadResources(path); // only for Blorb files
+            return Create(logger, storyData, resources, viewModel);
         }
 
-        /// <summary>
-        /// This is the main creation function.
-        /// </summary>
-        /// <returns>the machine</returns>
-        public IMachine BuildMachine()
+        private static IMachine Create(ILogger logger, byte[] storyData, IResources resources, IViewModel viewModel)
         {
             MachineImpl machine = new MachineImpl(logger);
-            machine.Initialize(ReadStoryData(), ReadResources());
-            if (IsInvalidStory(machine.Version)) {
+            machine.Initialize(storyData, resources);
+            if (IsInvalidStory(machine.Version))
+            {
                 throw new InvalidStoryFileException();
             }
-            InitIOSystem(machine);
+            InitIOSystem(machine, viewModel);
             return machine;
         }
 
         #region Helpers
 
         /// <summary>
-        /// Reads the story data.
+        /// Reads the story file from the specified URL.
         /// </summary>
-        /// <returns>the story data</returns>
-        private byte[] ReadStoryData()
+        /// <returns>byte data</returns>
+        private static byte[] ReadStoryData(Uri uri)
         {
-            if (initStruct.storyFile != null || initStruct.blorbFile != null)
-                return ReadStoryDataFromFile();
-            //if (initStruct.storyURL != null || initStruct.blorbURL != null)
-            //    return readStoryDataFromUrl();
-            return null;
+            using (var client = new HttpClient())
+            {
+                byte[] data = client.GetByteArrayAsync(uri.AbsoluteUri).Result;
+                return data;
+            }
         }
-
-        ///// <summary>
-        ///// Reads the story file from the specified URL.
-        ///// </summary>
-        ///// <returns>byte data</returns>
-        //private byte[] readStoryDataFromUrl()
-        //{
-        //    //java.io.InputStream storyis = null, blorbis = null;
-        //    Stream storyis = null, blorbis = null;
-
-        //    try
-        //    {
-        //        if (initStruct.storyURL != null)
-        //        {
-        //            //storyis = initStruct.storyURL.openStream();
-        //            storyis = new HttpClient().GetStreamAsync(initStruct.storyURL).Result;
-        //        }
-        //        //if (initStruct.blorbURL != null)
-        //        //{
-        //        //    blorbis = initStruct.blorbURL.openStream();
-        //        //}
-        //    } catch (Exception ex) {
-        //        logger.LogError(ex.StackTrace);
-        //    }
-
-        //    if (storyis != null) {
-        //        //return FileUtils.readFileBytes(storyis);
-        //        MemoryStream ms = storyis as MemoryStream;
-        //        if (ms != null)
-        //            return ms.ToArray();
-        //    }
-        //    //else
-        //    //{
-        //    //    return new BlorbFile(readBlorb(blorbis)).getStoryData();
-        //    //}
-        //}
 
         /// <summary>
         /// Reads story data from file.
         /// </summary>
         /// <returns>byte data</returns>
-        private byte[] ReadStoryDataFromFile()
+        private static byte[] ReadStoryData(string path)
         {
-            if (initStruct.storyFile != null) {
-                return File.ReadAllBytes(initStruct.storyFile);
+            if (path != null) {
+                return File.ReadAllBytes(path);
             }
-            //else
-            //{
-            //    // Read from Z BLORB
-            //    FormChunk formchunk = readBlorbFromFile();
-            //    return formchunk != null ? new BlorbFile(formchunk).getStoryData() : null;
-            return null;
-            //}
+            else
+            {
+                // Read from Z BLORB
+                IFormChunk formchunk = ReadBlorbFromFile(path);
+                return formchunk != null ? new BlorbFile(formchunk).StoryData : null;
+            }
+        }
+
+        /**
+         * Reads Blorb data from file.
+         * @return the data's form chunk
+         */
+        private static IFormChunk ReadBlorbFromFile(string path)
+        {
+            IFormChunk blorbchunk = null;
+            if (blorbchunk == null) {
+                byte[] data = File.ReadAllBytes(path);
+                if (data != null)
+                {
+                    blorbchunk = new FormChunk(new Memory(data));
+                    if (!"IFRS".Equals(blorbchunk.SubId))
+                    {
+                        throw new IOException($"'{path}' is not a valid Blorb file.");
+                    }
+                }
+            }
+            return blorbchunk;
         }
 
         /// <summary>
         /// Reads the resource data.
         /// </summary>
         /// <returns>the resource data</returns>
-        protected IResources ReadResources()
+        private static IResources ReadResources(string path)
         {
-            // TODO: Implement blorb namespace!
-            //if (initStruct.blorbFile != null) return readResourcesFromFile();
-            //if (initStruct.blorbURL != null) return readResourcesFromUrl();
+            //    FormChunk formchunk = readBlorbFromFile();
+            //    return (formchunk != null) ?
+            //      new BlorbResources(initStruct.nativeImageFactory,
+            //                         initStruct.soundEffectFactory, formchunk) : null;
             return null;
         }
 
-        ///**
-        // * Reads Blorb data from file.
-        // * @return the data's form chunk
-        // * @throws IOException if i/o error occurred
-        // */
-        //private FormChunk readBlorbFromFile() throws IOException
-        //{
-        //    if (blorbchunk == null) {
-        //        byte[] data = FileUtils.readFileBytes(initStruct.blorbFile);
-        //        if (data != null)
-        //        {
-        //            blorbchunk = new DefaultFormChunk(new DefaultMemory(data));
-        //            if (!"IFRS".equals(blorbchunk.getSubId()))
-        //            {
-        //                throw new IOException("not a valid Blorb file");
-        //            }
-        //        }
-        //    }
-        //    return blorbchunk;
-        //}
-
-        ///**
-        // * Reads story resources from input blorb file.
-        // * @return resources object
-        // * @throws IOException if i/o error occurred
-        // */
-        //private Resources readResourcesFromFile() throws IOException
-        //{
-        //    FormChunk formchunk = readBlorbFromFile();
-        //    return (formchunk != null) ?
-        //      new BlorbResources(initStruct.nativeImageFactory,
-        //                         initStruct.soundEffectFactory, formchunk) : null;
-        //  }
+        /// <summary>
+        /// Reads the resource data.
+        /// </summary>
+        /// <returns>the resource data</returns>
+        private static IResources ReadResources(Uri uri)
+        {
+            return null;
+        }
 
         //  /**
         //   * Reads Blorb's form chunk from the specified input stream object.
@@ -253,9 +196,9 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Checks the story file version.
         /// </summary>
-        /// <param name="version">the story file version</param>
+        /// <param name="version">The story file version.</param>
         /// <returns>true if not supported</returns>
-        private bool IsInvalidStory(int version)
+        private static bool IsInvalidStory(int version)
         {
 
             return version < 1 || version > 8;
@@ -265,22 +208,22 @@ namespace Zmpp.Core.Vm
         /// Initializes the I/O system.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private void InitIOSystem(MachineImpl machine)
+        private static void InitIOSystem(MachineImpl machine, IViewModel viewModel)
         {
-            InitInputStreams(machine);
-            InitOutputStreams(machine);
-            machine.SetStatusLine(initStruct.statusLine);
-            machine.SetScreen(initStruct.screenModel);
-            machine.SetSaveGameDataStore(initStruct.saveGameDataStore);
+            InitInputStreams(machine, viewModel);
+            InitOutputStreams(machine, viewModel);
+            machine.SetStatusLine(viewModel.StatusLine);
+            machine.SetScreen(viewModel.ScreenModel);
+            machine.SetSaveGameDataStore(viewModel.SaveGameDataStore);
         }
 
         /// <summary>
         /// Initializes the input streams.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private void InitInputStreams(MachineImpl machine)
+        private static void InitInputStreams(MachineImpl machine, IViewModel viewModel)
         {
-            machine.setInputStream(0, initStruct.keyboardInputStream);
+            machine.setInputStream(0, viewModel.InputStream);
             // TODO: Implement FileInputStream!
             //machine.setInputStream(1, new FileInputStream(logger, initStruct.ioSystem, machine));
         }
@@ -289,9 +232,9 @@ namespace Zmpp.Core.Vm
         /// Initializes the output streams.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private void InitOutputStreams(MachineImpl machine)
+        private static void InitOutputStreams(MachineImpl machine, IViewModel viewModel)
         {
-            machine.setOutputStream(1, initStruct.screenModel.getOutputStream());
+            machine.setOutputStream(1, viewModel.ScreenModel.getOutputStream());
             machine.SelectOutputStream(1, true);
             // TODO: Implement TranscriptOutputStream!
             //machine.setOutputStream(2, new TranscriptOutputStream(logger, initStruct.ioSystem, machine));

@@ -54,7 +54,7 @@ namespace Zmpp.Core.Vm
                 {
                     if (inputStream[i] != null)
                     {
-                        inputStream[i].close();
+                        inputStream[i].Close();
                     }
                 }
             }

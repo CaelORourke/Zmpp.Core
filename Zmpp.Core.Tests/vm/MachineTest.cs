@@ -243,8 +243,8 @@ namespace Zmpp.Core.Vm.Tests
             outputStream2.Verify(os => os.close(), Times.Once());
             outputStream3.Verify(os => os.flush(), Times.AtLeastOnce());
             outputStream3.Verify(os => os.close(), Times.Once());
-            inputStream0.Verify(os => os.close(), Times.Once());
-            inputStream1.Verify(os => os.close(), Times.Once());
+            inputStream0.Verify(os => os.Close(), Times.Once());
+            inputStream1.Verify(os => os.Close(), Times.Once());
 
             Assert.AreEqual(MachineRunState.RUNNING, result);
             Assert.AreEqual(MachineRunState.STOPPED, result2);

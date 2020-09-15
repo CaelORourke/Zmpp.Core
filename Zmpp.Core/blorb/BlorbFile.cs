@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 10/07/2005
+ * Created on 2006/03/03
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -27,25 +27,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Zmpp.Core.IO
+namespace Zmpp.Core.Blorb
 {
-    using System;
+    using Zmpp.Core.Iff;
 
     /// <summary>
-    /// This interface defines a Z-machine input stream.
+    /// Represents a Blorb file.
     /// </summary>
-    public interface IInputStream
+    public class BlorbFile
     {
-        /// <summary>
-        /// Reads the next available line of ZSCII characters from the stream.
-        /// This is somewhat immediate.
-        /// </summary>
-        /// <returns>the next line of available ZSCII characters</returns>
-        String ReadLine();
+        private readonly IFormChunk formChunk;
 
         /// <summary>
-        /// Release underlying resources.
+        /// Initializes a new instance of the <see cref="Zmpp.Core.Blorb.BlorbFile"/>
+        /// class for the specified form chunk.
         /// </summary>
-        void Close();
+        /// <param name="formchunk">The FORM chunk.</param>
+        public BlorbFile(IFormChunk formchunk)
+        {
+            this.formChunk = formchunk;
+        }
+
+        /// <summary>
+        /// Gets the story data contained in the Blorb.
+        /// </summary>
+        public byte[] StoryData
+        {
+            get
+            {
+                IChunk chunk = formChunk.GetSubChunk("ZCOD");
+                int size = chunk.Size;
+                byte[] data = new byte[size];
+                chunk.Memory.CopyBytesToArray(data, 0, Chunk.ChunkHeaderLength, size);
+                return data;
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@
 
     public class ConsoleScreenModel : IScreenModel
     {
-        private IOutputStream output;
+        private readonly IOutputStream output;
 
         public ConsoleScreenModel()
         {

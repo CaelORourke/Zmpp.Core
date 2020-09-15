@@ -30,11 +30,10 @@
 namespace ZMachineConsole
 {
     using Microsoft.Extensions.Logging;
+    using System;
     using Zmpp.Core;
     using Zmpp.Core.Instructions;
     using Zmpp.Core.Vm;
-    using System;
-    using System.IO;
 
     /// <summary>
     /// This class based on the ExecutionControl class.
@@ -55,38 +54,24 @@ namespace ZMachineConsole
 
         }
 
-        internal void Run(string storyFilePath)
+        internal async void Run(string storyFilePath)
         {
             _logger.LogInformation("ZMachine started at {dateTime}", DateTime.UtcNow);
 
-            var saveFileName = Path.Combine(Path.GetDirectoryName(storyFilePath), String.Concat(Path.GetFileNameWithoutExtension(storyFilePath), ".dat"));
-            var consoleInput = new ConsoleInput();
-            var statusLine = new ConsoleStatusLine();
-            var screenModel = new ConsoleScreenModel();
-            var saveGameDataStore = new FileSaveGameDataStore(saveFileName);
-
-            MachineFactory.MachineInitStruct initStruct = new MachineFactory.MachineInitStruct()
-            {
-                storyFile = storyFilePath,
-                blorbFile = null,
-                storyURL = null,
-                blorbURL = null,
-                keyboardInputStream = consoleInput,
-                statusLine = statusLine,
-                screenModel = screenModel,
-                ioSystem = null,
-                saveGameDataStore = saveGameDataStore,
-                nativeImageFactory = null,
-                soundEffectFactory = null
-            };
+            ConsoleViewModel console = new ConsoleViewModel(storyFilePath);
 
             instructionDecoder = new InstructionDecoder();
 
-            MachineFactory factory = new MachineFactory(_logger, initStruct);
-            machine = factory.BuildMachine();
+            //Uri uri = new Uri("https://github.com/Adeimantius/Z-Machine/raw/master/Zork%201/DATA/ZORK1.DAT");
+            //machine = MachineFactory.Create(_logger, uri, console);
+            //storyFilePath = @"C:\shane\ZORK1.DAT";
+            machine = MachineFactory.Create(_logger, storyFilePath, console);
             machine.Start();
+
             instructionDecoder.initialize(machine);
+
             int version = machine.Version;
+
             // ZMPP should support everything by default
             if (version <= 3)
             {
@@ -105,6 +90,7 @@ namespace ZMachineConsole
             {
                 EnableHeaderFlag(StoryFileHeaderAttribute.SupportsColours);
             }
+
             int defaultForeground = DefaultForeground;
             int defaultBackground = DefaultBackground;
             _logger.LogInformation("GAME DEFAULT FOREGROUND: " + defaultForeground);
@@ -112,7 +98,6 @@ namespace ZMachineConsole
             machine.Screen.setBackground(defaultBackground, -1);
             machine.Screen.setForeground(defaultForeground, -1);
 
-            consoleInput.Init(machine);// TODO: consoleInput & IMachine have a weird circular dependency!
             var runstate = Start();
             while (runstate != null && runstate.IsReadLine)
             {

@@ -598,7 +598,7 @@ namespace Zmpp.Core.Vm
 
         public char ReadLine(int textbuffer)
         {
-            return inputFunctions.readLine(textbuffer);
+            return inputFunctions.ReadLine(textbuffer);
         }
 
         public char ReadChar() { return inputFunctions.readChar(); }
