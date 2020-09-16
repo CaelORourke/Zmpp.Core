@@ -40,33 +40,32 @@ namespace Zmpp.Core.Media
         /// <summary>
         /// Clears the collection.
         /// </summary>
-        void clear();
+        void Clear();
 
         /// <summary>
         /// Accesses the resource.
         /// </summary>
         /// <param name="number">the number of the resource</param>
         /// <returns>the resource</returns>
-        T getResource(int number);
+        T GetResource(int number);
 
         /// <summary>
         /// Loads a resource into the internal cache if this collection supports
         /// caching.
         /// </summary>
         /// <param name="number">the number of the resource</param>
-        void loadResource(int number);
+        void LoadResource(int number);
 
         /// <summary>
         /// Throws the resource out of the internal cache if this collection
         /// supports caching.
         /// </summary>
         /// <param name="number">the number of the resource</param>
-        void unloadResource(int number);
+        void UnloadResource(int number);
 
         /// <summary>
-        /// Returns the number of resources.
+        /// Gets the number of resources.
         /// </summary>
-        /// <returns>the number of resources</returns>
-        int getNumResources();
+        int NumResources { get; }
     }
 }

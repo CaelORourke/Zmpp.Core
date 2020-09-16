@@ -30,20 +30,7 @@
 namespace Zmpp.Core.Vm
 {
     using Microsoft.Extensions.Logging;
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
     using Zmpp.Core.UI;
-    using Zmpp.Core;
-    using Zmpp.Core.Blorb;
-    using Zmpp.Core.Iff;
-    using Zmpp.Core.IO;
-    using Zmpp.Core.Media;
-    using Zmpp.Core.Vm.Utility;
-    using System.IO;
-    using System.Net.Http;
-    using System.Net;
 
     /// <summary>
     /// Provides static methods for constructing a machine object.
@@ -57,152 +44,14 @@ namespace Zmpp.Core.Vm
     /// </remarks>
     public static class MachineFactory
     {
-        public static IMachine Create(ILogger logger, Uri uri, IViewModel viewModel)
-        {
-            byte[] storyData = ReadStoryData(uri);
-            IResources resources = ReadResources(uri); // only for Blorb files
-            return Create(logger, storyData, resources, viewModel);
-        }
-
-        public static IMachine Create(ILogger logger, string path, IViewModel viewModel)
-        {
-            byte[] storyData = ReadStoryData(path);
-            IResources resources = ReadResources(path); // only for Blorb files
-            return Create(logger, storyData, resources, viewModel);
-        }
-
-        private static IMachine Create(ILogger logger, byte[] storyData, IResources resources, IViewModel viewModel)
+        public static IMachine Create(ILogger logger, IViewModel viewModel)
         {
             MachineImpl machine = new MachineImpl(logger);
-            machine.Initialize(storyData, resources);
-            if (IsInvalidStory(machine.Version))
-            {
-                throw new InvalidStoryFileException();
-            }
             InitIOSystem(machine, viewModel);
             return machine;
         }
 
-        #region Helpers
-
-        /// <summary>
-        /// Reads the story file from the specified URL.
-        /// </summary>
-        /// <returns>byte data</returns>
-        private static byte[] ReadStoryData(Uri uri)
-        {
-            using (var client = new HttpClient())
-            {
-                byte[] data = client.GetByteArrayAsync(uri.AbsoluteUri).Result;
-                return data;
-            }
-        }
-
-        /// <summary>
-        /// Reads story data from file.
-        /// </summary>
-        /// <returns>byte data</returns>
-        private static byte[] ReadStoryData(string path)
-        {
-            if (path != null) {
-                return File.ReadAllBytes(path);
-            }
-            else
-            {
-                // Read from Z BLORB
-                IFormChunk formchunk = ReadBlorbFromFile(path);
-                return formchunk != null ? new BlorbFile(formchunk).StoryData : null;
-            }
-        }
-
-        /**
-         * Reads Blorb data from file.
-         * @return the data's form chunk
-         */
-        private static IFormChunk ReadBlorbFromFile(string path)
-        {
-            IFormChunk blorbchunk = null;
-            if (blorbchunk == null) {
-                byte[] data = File.ReadAllBytes(path);
-                if (data != null)
-                {
-                    blorbchunk = new FormChunk(new Memory(data));
-                    if (!"IFRS".Equals(blorbchunk.SubId))
-                    {
-                        throw new IOException($"'{path}' is not a valid Blorb file.");
-                    }
-                }
-            }
-            return blorbchunk;
-        }
-
-        /// <summary>
-        /// Reads the resource data.
-        /// </summary>
-        /// <returns>the resource data</returns>
-        private static IResources ReadResources(string path)
-        {
-            //    FormChunk formchunk = readBlorbFromFile();
-            //    return (formchunk != null) ?
-            //      new BlorbResources(initStruct.nativeImageFactory,
-            //                         initStruct.soundEffectFactory, formchunk) : null;
-            return null;
-        }
-
-        /// <summary>
-        /// Reads the resource data.
-        /// </summary>
-        /// <returns>the resource data</returns>
-        private static IResources ReadResources(Uri uri)
-        {
-            return null;
-        }
-
-        //  /**
-        //   * Reads Blorb's form chunk from the specified input stream object.
-        //   * @param blorbis input stream
-        //   * @return the form chunk
-        //   * @throws IOException i/o error occurred
-        //   */
-        //  private FormChunk readBlorb(java.io.InputStream blorbis) throws IOException
-        //{
-        //    if (blorbchunk == null) {
-        //        byte[] data = FileUtils.readFileBytes(blorbis);
-        //        if (data != null)
-        //        {
-        //            blorbchunk = new DefaultFormChunk(new DefaultMemory(data));
-        //        }
-        //    }
-        //    return blorbchunk;
-        //}
-
-        ///**
-        // * Reads story resources from URL.
-        // * @return resources object
-        // * @throws IOException i/o error occurred
-        // */
-        //private Resources readResourcesFromUrl() throws IOException
-        //{
-        //    FormChunk formchunk = readBlorb(initStruct.blorbURL.openStream());
-        //    return (formchunk != null) ?
-        //      new BlorbResources(initStruct.nativeImageFactory,
-        //                         initStruct.soundEffectFactory, formchunk) : null;
-        //  }
-
-        #endregion
-
         #region Private methods
-
-        /// <summary>
-        /// Checks the story file version.
-        /// </summary>
-        /// <param name="version">The story file version.</param>
-        /// <returns>true if not supported</returns>
-        private static bool IsInvalidStory(int version)
-        {
-
-            return version < 1 || version > 8;
-        }
 
         /// <summary>
         /// Initializes the I/O system.

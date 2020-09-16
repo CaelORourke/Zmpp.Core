@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 2006/02/13
+ * Created on 2006/02/06
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -27,47 +27,68 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Zmpp.Core.Media
+namespace Zmpp.Core.Blorb
 {
+    using Zmpp.Core.Iff;
+    using Zmpp.Core.Media;
+
     /// <summary>
-    /// This interface defines access to the Z-machine's media resources.
+    /// This class encapsulates a Blorb file and offers access to the sound
+    /// and graphics media collections.
     /// </summary>
-    public interface IResources
+    public class BlorbResources : IResources
     {
         /// <summary>
-        /// The release number of the resource file.
+        /// The images from the Blorb file.
         /// </summary>
-        /// <returns>the release number</returns>
-        int Release { get; }
+        private readonly IMediaCollection<IZmppImage> images;
 
         /// <summary>
-        /// Returns the images of this file.
+        /// The sounds from the Blorb file.
         /// </summary>
-        /// <returns>the images</returns>
-        IMediaCollection<IZmppImage> Images { get; }
+        private readonly IMediaCollection<ISoundEffect> sounds;
 
         /// <summary>
-        /// Returns the sounds of this file.
+        /// The cover art from the Blorb file.
         /// </summary>
-        /// <returns>the sounds</returns>
-        IMediaCollection<ISoundEffect> Sounds { get; }
+        private readonly BlorbCoverArt coverart;
 
         /// <summary>
-        /// Returns the number of the cover art picture.
+        /// The meta data from the Blorb file.
         /// </summary>
-        /// <returns>the number of the cover art picture</returns>
-        int CoverArtNum { get; }
+        private readonly BlorbMetadataHandler metadata;
 
         /// <summary>
-        /// Returns the inform meta data if available.
+        /// The release number from the Blorb file.
         /// </summary>
-        /// <returns>the meta data</returns>
-        InformMetadata Metadata { get; }
+        private readonly int release;
 
         /// <summary>
-        /// Returns true if the resource file has information.
+        /// Constructor.
         /// </summary>
-        /// <returns>true if information, false, otherwise</returns>
-        bool HasInfo { get; }
+        /// <param name="imageFactory">The INativeImageFactory object.</param>
+        /// <param name="soundEffectFactory">The ISoundEffectFactory object.</param>
+        /// <param name="formchunk">The form chunk in Blorb format.</param>
+        public BlorbResources(INativeImageFactory imageFactory,
+            ISoundEffectFactory soundEffectFactory,
+            FormChunk formchunk)
+        {
+            images = new BlorbImages(imageFactory, formchunk);
+            sounds = new BlorbSounds(soundEffectFactory, formchunk);
+            coverart = new BlorbCoverArt(formchunk);
+            metadata = new BlorbMetadataHandler(formchunk);
+        }
+
+        public IMediaCollection<IZmppImage> Images => images;
+
+        public IMediaCollection<ISoundEffect> Sounds => sounds;
+
+        public int CoverArtNum => coverart.CoverArtNum;
+
+        public InformMetadata Metadata => metadata.Metadata;
+
+        public int Release => release;
+
+        public bool HasInfo => metadata.Metadata != null;
     }
 }

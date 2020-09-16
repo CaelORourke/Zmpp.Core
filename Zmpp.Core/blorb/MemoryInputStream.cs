@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 2008/04/25
+ * Created on 2006/02/06
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -27,38 +27,56 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace ZMachineConsole
+namespace Zmpp.Core.Blorb
 {
-    using Microsoft.Extensions.Logging;
-    using System;
+    using Zmpp.Core;
 
     /// <summary>
-    /// This class based on the ExecutionControl class.
+    /// This class encapsulates a memory object within an input stream.
     /// </summary>
-    public class ConsoleApplication
+    public class MemoryInputStream// : InputStream
     {
-        private readonly ILogger logger;
+        /// <summary>
+        /// The memory object this stream is based on.
+        /// </summary>
+        private readonly IMemory memory;
 
-        public ConsoleApplication(ILogger<ConsoleApplication> logger)
+        /// <summary>
+        /// The position in the stream.
+        /// </summary>
+        private int position;
+
+        /// <summary>
+        /// Supports a mark.
+        /// </summary>
+        private int mark;
+
+        /// <summary>
+        /// The size of the memory.
+        /// </summary>
+        private readonly int size;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="memory">a memory object</param>
+        /// <param name="offset">the byte offset</param>
+        /// <param name="size">the memory size</param>
+        public MemoryInputStream(IMemory memory, int offset, int size)
         {
-            this.logger = logger;
+            this.memory = memory;
+            position += offset;
+            this.size = size;
         }
 
-        internal void Run(string storyFilePath)
+        public int Read()
         {
-            logger.LogInformation("ZMachine started at {dateTime}", DateTime.UtcNow);
-
-            ConsoleViewModel console = new ConsoleViewModel(storyFilePath);
-            ZMachine zMachine = new ZMachine(logger, console);
-
-            //Uri uri = new Uri("https://github.com/Adeimantius/Z-Machine/raw/master/Zork%201/DATA/ZORK1.DAT");
-            //machine = MachineFactory.Create(_logger, uri, console);
-            //storyFilePath = @"C:\shane\ZORK1.DAT";
-            zMachine.Open(storyFilePath);
-
-            zMachine.Start();
-
-            logger.LogInformation("ZMachine stopped at {dateTime}", DateTime.UtcNow);
+            if (position >= size) return -1;
+            return memory.ReadUnsigned8(position++);
         }
+
+        public void Mark(int readLimit) { mark = position; }
+
+        public void Reset() { position = mark; }
     }
 }

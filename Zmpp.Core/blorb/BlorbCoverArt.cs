@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 2008/04/25
+ * Created on 2006/03/04
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -27,38 +27,43 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace ZMachineConsole
+namespace Zmpp.Core.Blorb
 {
-    using Microsoft.Extensions.Logging;
-    using System;
+    using Zmpp.Core.Iff;
+    using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
-    /// This class based on the ExecutionControl class.
+    /// Represents the Frontispiece chunk.
     /// </summary>
-    public class ConsoleApplication
+    class BlorbCoverArt
     {
-        private readonly ILogger logger;
+        private int coverartnum;
 
-        public ConsoleApplication(ILogger<ConsoleApplication> logger)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="formchunk">The form chunk.</param>
+        public BlorbCoverArt(IFormChunk formchunk)
         {
-            this.logger = logger;
+            ReadFrontispiece(formchunk);
         }
 
-        internal void Run(string storyFilePath)
+        /// <summary>
+        /// Reads the frontiscpiece image from the specified FORM chunk.
+        /// </summary>
+        /// <param name="formchunk">The FORM chunk.</param>
+        private void ReadFrontispiece(IFormChunk formchunk)
         {
-            logger.LogInformation("ZMachine started at {dateTime}", DateTime.UtcNow);
-
-            ConsoleViewModel console = new ConsoleViewModel(storyFilePath);
-            ZMachine zMachine = new ZMachine(logger, console);
-
-            //Uri uri = new Uri("https://github.com/Adeimantius/Z-Machine/raw/master/Zork%201/DATA/ZORK1.DAT");
-            //machine = MachineFactory.Create(_logger, uri, console);
-            //storyFilePath = @"C:\shane\ZORK1.DAT";
-            zMachine.Open(storyFilePath);
-
-            zMachine.Start();
-
-            logger.LogInformation("ZMachine stopped at {dateTime}", DateTime.UtcNow);
+            IChunk fspcchunk = formchunk.GetSubChunk("Fspc");
+            if (fspcchunk != null)
+            {
+                coverartnum = (int)ReadUnsigned32(fspcchunk.Memory, Chunk.ChunkHeaderLength);
+            }
         }
+
+        /// <summary>
+        /// Gets the number of the cover art.
+        /// </summary>
+        public int CoverArtNum => coverartnum;
     }
 }

@@ -88,6 +88,8 @@ namespace Zmpp.Core.Vm
         {
             this.LOG = logger;
             this.inputFunctions = new InputFunctions(this);
+            this.input = new InputImpl();
+            this.output = new OutputImpl(this);
         }
 
         #region Initialization
@@ -100,8 +102,8 @@ namespace Zmpp.Core.Vm
             this.undostates = new RingBuffer<PortableGameState>(NumUndo);
 
             cpu = new CpuImpl(this.LOG, this);
-            output = new OutputImpl(this);
-            input = new InputImpl();
+            //output = new OutputImpl(this);
+            //input = new InputImpl();
 
             IMediaCollection<ISoundEffect> sounds = null;
             IMediaCollection <IZmppImage > pictures = null;
@@ -109,9 +111,9 @@ namespace Zmpp.Core.Vm
 
             if (resources != null)
             {
-                sounds = resources.getSounds();
-                pictures = resources.getImages();
-                resourceRelease = resources.getRelease();
+                sounds = resources.Sounds;
+                pictures = resources.Images;
+                resourceRelease = resources.Release;
             }
 
             // TODO: Implement these!

@@ -1,5 +1,5 @@
 ﻿/*
- * Created on 2008/04/25
+ * Created on 2006/02/06
  * Copyright (c) 2005-2010, Wei-ju Wu.
  * All rights reserved.
  *
@@ -27,38 +27,65 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace ZMachineConsole
+namespace Zmpp.Core.Blorb
 {
-    using Microsoft.Extensions.Logging;
     using System;
+    using System.Collections.Generic;
+    using Zmpp.Core.Iff;
+    using Zmpp.Core.Media;
 
     /// <summary>
-    /// This class based on the ExecutionControl class.
+    /// Represents the Blorb sound collection.
     /// </summary>
-    public class ConsoleApplication
+    public class BlorbSounds : BlorbMediaCollection<ISoundEffect>
     {
-        private readonly ILogger logger;
+        /// <summary>
+        /// This map implements the database.
+        /// </summary>
+        private Dictionary<int, ISoundEffect> sounds;
 
-        public ConsoleApplication(ILogger<ConsoleApplication> logger)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="factory">The ISoundEffectFactory object.</param>
+        /// <param name="formchunk">The form chunk.</param>
+        public BlorbSounds(ISoundEffectFactory factory, IFormChunk formchunk) : base(null, factory, formchunk)
         {
-            this.logger = logger;
         }
 
-        internal void Run(string storyFilePath)
+        public override void Clear()
         {
-            logger.LogInformation("ZMachine started at {dateTime}", DateTime.UtcNow);
+            base.Clear();
+            sounds.Clear();
+        }
 
-            ConsoleViewModel console = new ConsoleViewModel(storyFilePath);
-            ZMachine zMachine = new ZMachine(logger, console);
+        protected override void InitDatabase()
+        {
+            sounds = new Dictionary<int, ISoundEffect>();
+        }
 
-            //Uri uri = new Uri("https://github.com/Adeimantius/Z-Machine/raw/master/Zork%201/DATA/ZORK1.DAT");
-            //machine = MachineFactory.Create(_logger, uri, console);
-            //storyFilePath = @"C:\shane\ZORK1.DAT";
-            zMachine.Open(storyFilePath);
+        protected override bool IsHandledResource(byte[] usageId)
+        {
+            return usageId[0] == 'S' && usageId[1] == 'n' && usageId[2] == 'd' && usageId[3] == ' ';
+        }
 
-            zMachine.Start();
+        public override ISoundEffect GetResource(int resourcenumber)
+        {
+            return sounds[resourcenumber];
+        }
 
-            logger.LogInformation("ZMachine stopped at {dateTime}", DateTime.UtcNow);
+        protected override bool PutToDatabase(IChunk aiffChunk, int resnum)
+        {
+            try
+            {
+                sounds[resnum] = soundEffectFactory.createSoundEffect(aiffChunk);
+                return true;
+            }
+            catch (Exception)
+            {
+                //ex.printStackTrace();
+            }
+            return false;
         }
     }
 }

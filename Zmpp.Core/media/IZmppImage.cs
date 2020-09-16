@@ -40,6 +40,6 @@ namespace Zmpp.Core.Media
         /// <param name="screenwidth">screen width</param>
         /// <param name="screenheight">screen height</param>
         /// <returns>resolution</returns>
-        Resolution getSize(int screenwidth, int screenheight);
+        Resolution GetSize(int screenwidth, int screenheight);
     }
 }

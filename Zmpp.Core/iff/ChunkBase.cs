@@ -34,12 +34,12 @@ namespace Zmpp.Core.Iff
         /// <summary>
         /// The length of an IFF chunk id in bytes.
         /// </summary>
-        protected static int ChunkIdLength = 4;
+        public static int ChunkIdLength = 4;
 
         /// <summary>
         /// The length of an IFF chunk size word in bytes.
         /// </summary>
-        protected static int ChunkSizewordLength = 4;
+        public static int ChunkSizewordLength = 4;
 
         /// <summary>
         /// The chunk header size in bytes.
