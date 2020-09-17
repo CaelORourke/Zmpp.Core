@@ -528,8 +528,8 @@ namespace Zmpp.Core.Instructions
             {
                 window = getSignedValue(2);
             }
-            getMachine().Screen.setForeground(getSignedValue(0), window);
-            getMachine().Screen.setBackground(getSignedValue(1), window);
+            getMachine().Screen.SetForeground(getSignedValue(0), window);
+            getMachine().Screen.SetBackground(getSignedValue(1), window);
             nextInstruction();
         }
 

@@ -42,71 +42,128 @@ namespace ZMachineConsole
     using Zmpp.Core.Vm;
 
     /// <summary>
-    /// This class based on the ExecutionControl class.
+    /// Represents a z-machine.
     /// </summary>
+    /// <remarks>
+    /// Based on the ExecutionControl class from the original source.
+    /// </remarks>
     public class ZMachine
     {
-        private int step = 1;
         public const bool DEBUG = false;
         public const bool DEBUG_INTERRUPT = false;
 
         private readonly ILogger logger;
         private readonly IMachine machine;
         private readonly InstructionDecoder instructionDecoder;
+        private readonly IViewModel viewModel;
 
+        private int step = 1;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ZMachineConsole.ZMachine"/>
+        /// class for the specified view model.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="viewModel">The view model.</param>
         public ZMachine(ILogger logger, IViewModel viewModel)
         {
             this.logger = logger;
-
-            logger.LogInformation("ZMachine started at {dateTime}", DateTime.UtcNow);
-
             this.instructionDecoder = new InstructionDecoder();
-
             this.machine = MachineFactory.Create(logger, viewModel);
-
-            logger.LogInformation("ZMachine stopped at {dateTime}", DateTime.UtcNow);
+            this.viewModel = viewModel;
         }
 
+        /// <summary>
+        /// Opens the story file from the specified file path.
+        /// </summary>
+        /// <param name="storyFilePath">The file path.</param>
         public void OpenStoryFile(string storyFilePath)
         {
+            IResources resources = null;
             byte[] storyData = ReadStoryData(storyFilePath);
-            IResources resources = ReadResources(storyFilePath); // only for Blorb files
+
+            if (IsBlorb(storyData))
+            {
+                resources = ReadResources(storyFilePath); // only for Blorb files
+            }
 
             Initialize(storyData, resources);
         }
 
-        //public void OpenStoryFile(Uri storyFileUrl)
-        //{
-        //    byte[] storyData = ReadStoryData(storyFileUrl);
-        //    IResources resources = ReadResources(storyFileUrl); // only for Blorb files
+        /// <summary>
+        /// Opens the story file from the specified URL.
+        /// </summary>
+        /// <param name="storyFileUrl">The URL.</param>
+        public void OpenStoryFile(Uri storyFileUrl)
+        {
+            IResources resources = null;
+            byte[] storyData = ReadStoryData(storyFileUrl);
 
-        //    Initialize(storyData, resources);
-        //}
+            if (IsBlorb(storyData))
+            {
+                resources = ReadResources(storyFileUrl); // only for Blorb files
+            }
 
+            Initialize(storyData, resources);
+        }
+
+        /// <summary>
+        /// Opens the specified story file.
+        /// </summary>
+        /// <param name="storyFile">The file path or the URL of the story file.</param>
         public void Open(string storyFile)
         {
+            // if the story file is a valid path
             if (File.Exists(storyFile))
             {
                 OpenStoryFile(storyFile);
             }
+            else
+            {
+                // try the story file as a URL
+                if (Uri.TryCreate(storyFile, UriKind.RelativeOrAbsolute, out Uri uri))
+                {
+                    OpenStoryFile(uri);
+                }
+                throw new StoryFileNotFoundException("Could not open the requested story file.");
+            }
         }
 
+        private bool IsBlorb(byte[] data)
+        {
+            IMemory memory = new Memory(data);
+            byte[] id = new byte[ChunkBase.ChunkIdLength];
+            memory.CopyBytesToArray(id, 0, 0, ChunkBase.ChunkIdLength);
+            // Array.Copy(data, 0, id, 0, ChunkBase.ChunkIdLength);
+            string Id = System.Text.Encoding.UTF8.GetString((byte[])(object)id, 0, id.Length);
+            if (!"FORM".Equals(Id))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Initializes the z-machine using the specified story data and resources.
+        /// </summary>
+        /// <param name="data">The story data.</param>
+        /// <param name="resources">The story resources.</param>
         private void Initialize(byte[] data, IResources resources)
         {
             machine.Initialize(data, resources);
             if (IsInvalidStory(machine.Version))
             {
-                throw new InvalidStoryFileException();
+                throw new InvalidStoryFileException($"I don't understand version {machine.Version} story files.");
             }
 
             instructionDecoder.initialize(machine);
         }
 
         /// <summary>
-        /// Checks the story file version.
+        /// Indicates whether the story file version is valid.
         /// </summary>
         /// <param name="version">The story file version.</param>
-        /// <returns>true if not supported</returns>
+        /// <returns>true if the story file version is supported; otherwise false.</returns>
         private bool IsInvalidStory(int version)
         {
 
@@ -116,9 +173,27 @@ namespace ZMachineConsole
         #region Story & Resource Data
 
         /// <summary>
-        /// Reads the story file from the specified URL.
+        /// Reads the story file data from the specified file path.
         /// </summary>
-        /// <returns>byte data</returns>
+        /// <returns>The story file data.</returns>
+        private byte[] ReadStoryData(string path)
+        {
+            if (path != null)
+            {
+                return File.ReadAllBytes(path);
+            }
+            else
+            {
+                // get the story data from the Blorb file
+                IFormChunk formchunk = ReadBlorbFromFile(path);
+                return formchunk != null ? new BlorbFile(formchunk).StoryData : null;
+            }
+        }
+
+        /// <summary>
+        /// Reads the story file data from the specified URL.
+        /// </summary>
+        /// <returns>The story file data.</returns>
         private byte[] ReadStoryData(Uri uri)
         {
             using (var client = new HttpClient())
@@ -129,70 +204,56 @@ namespace ZMachineConsole
         }
 
         /// <summary>
-        /// Reads story data from file.
+        /// Reads the resource data from the specified file path.
         /// </summary>
-        /// <returns>byte data</returns>
-        private byte[] ReadStoryData(string path)
+        /// <returns>The resource data.</returns>
+        private IResources ReadResources(string path)
         {
-            if (path != null)
-            {
-                return File.ReadAllBytes(path);
-            }
-            //else
-            //{
-            //    // Read from Z BLORB
-            //    IFormChunk formchunk = ReadBlorbFromFile(path);
-            //    return formchunk != null ? new BlorbFile(formchunk).StoryData : null;
-            //}
-            return null;
+            IFormChunk formchunk = ReadBlorbFromFile(path);
+            return (formchunk != null) ?
+                new BlorbResources(viewModel.NativeImageFactory, viewModel.SoundEffectFactory, formchunk) : null;
         }
 
         /// <summary>
-        /// Reads the resource data.
+        /// Reads the resource data from the specified URL.
         /// </summary>
-        /// <returns>the resource data</returns>
-        private IResources ReadResources(string path)
+        /// <returns>The resource data.</returns>
+        private IResources ReadResources(Uri uri)
         {
             // TODO: Implement this method!!!
             return null;
-            //IFormChunk formchunk = ReadBlorbFromFile(path);
-            //return (formchunk != null) ?
-            //    new BlorbResources(initStruct.nativeImageFactory, initStruct.soundEffectFactory, formchunk) : null;
+            //using (var client = new HttpClient())
+            //{
+            //    byte[] data = client.GetByteArrayAsync(uri.AbsoluteUri).Result;
+            //    return data;
+            //}
         }
 
-        /**
-         * Reads Blorb data from file.
-         * @return the data's form chunk
-         */
+        /// <summary>
+        /// Reads the Blorb data from the specified file path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The form chunk.</returns>
         private IFormChunk ReadBlorbFromFile(string path)
         {
             IFormChunk blorbchunk = null;
-            if (blorbchunk == null)
+            byte[] data = File.ReadAllBytes(path);
+            if (data != null)
             {
-                byte[] data = File.ReadAllBytes(path);
-                if (data != null)
+                blorbchunk = new FormChunk(new Memory(data));
+                if (!"IFRS".Equals(blorbchunk.SubId))
                 {
-                    blorbchunk = new FormChunk(new Memory(data));
-                    if (!"IFRS".Equals(blorbchunk.SubId))
-                    {
-                        throw new IOException($"'{path}' is not a valid Blorb file.");
-                    }
+                    throw new IOException($"'{path}' is not a valid Blorb file.");
                 }
             }
             return blorbchunk;
         }
 
-        /// <summary>
-        /// Reads the resource data.
-        /// </summary>
-        /// <returns>the resource data</returns>
-        private static IResources ReadResources(Uri uri)
-        {
-            return null;
-        }
-
         #endregion
 
+        /// <summary>
+        /// Starts the z-machine.
+        /// </summary>
         public void Start()
         {
             int version = machine.Version;
@@ -218,12 +279,12 @@ namespace ZMachineConsole
 
             int defaultForeground = DefaultForeground;
             int defaultBackground = DefaultBackground;
-            logger.LogInformation("GAME DEFAULT FOREGROUND: " + defaultForeground);
-            logger.LogInformation("GAME DEFAULT BACKGROUND: " + defaultBackground);
-            machine.Screen.setBackground(defaultBackground, -1);
-            machine.Screen.setForeground(defaultForeground, -1);
+            logger.LogDebug($"Game Default Foreground: {defaultForeground}.");
+            logger.LogDebug($"Game Default Background: {defaultBackground}.");
+            machine.Screen.SetBackground(defaultBackground, -1);
+            machine.Screen.SetForeground(defaultForeground, -1);
 
-            logger.LogInformation("ZMachine started at {dateTime}", DateTime.UtcNow);
+            logger.LogInformation("Z-machine started at {dateTime}.", DateTime.UtcNow);
 
             machine.Start();
 
@@ -233,9 +294,12 @@ namespace ZMachineConsole
                 runstate = Run();
             }
 
-            logger.LogInformation("ZMachine stopped at {dateTime}", DateTime.UtcNow);
+            logger.LogInformation("Z-machine stopped at {dateTime}.", DateTime.UtcNow);
         }
 
+        /// <summary>
+        /// Stops the z-machine.
+        /// </summary>
         public void Stop()
         {
             // TODO: Implement this method!!!
@@ -271,20 +335,23 @@ namespace ZMachineConsole
         public int Step => step;
 
         /// <summary>
-        /// The execution loop. It runs until either an input state is reached
-        /// or the machine is set to stop state.
+        /// The execution loop.
         /// </summary>
         /// <returns>the new MachineRunState</returns>
+        /// <remarks>
+        /// It runs until either an input state is reached
+        /// or the machine is set to stop state.
+        /// </remarks>
         private MachineRunState Run()
         {
             while (machine.RunState != MachineRunState.STOPPED)
             {
                 int pc = machine.PC;
                 IInstruction instr = instructionDecoder.decodeInstruction(pc);
-                // if the print is executed after execute(), the result is different !!
+                // if the print is executed after Execute() the result is different !!
                 if (DEBUG && machine.RunState == MachineRunState.RUNNING)
                 {
-                    Console.Out.WriteLine(String.Format("{0:D4}: ${1:x5} {2}", step, (int)pc, instr.ToString()));
+                    Console.Out.WriteLine(string.Format("{0:D4}: ${1:x5} {2}", step, (int)pc, instr.ToString()));
                 }
                 instr.Execute();
 

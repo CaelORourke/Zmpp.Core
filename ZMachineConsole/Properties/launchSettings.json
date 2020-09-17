@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ZMachineConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\shane\\projects\\Zmpp.Core\\Zmpp.Core.Tests\\testfiles\\Journey.blb\""
+    }
+  }
+}

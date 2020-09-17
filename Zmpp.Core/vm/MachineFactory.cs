@@ -83,7 +83,7 @@ namespace Zmpp.Core.Vm
         /// <param name="machine">the machine object</param>
         private static void InitOutputStreams(MachineImpl machine, IViewModel viewModel)
         {
-            machine.setOutputStream(1, viewModel.ScreenModel.getOutputStream());
+            machine.setOutputStream(1, viewModel.ScreenModel.OutputStream);
             machine.SelectOutputStream(1, true);
             // TODO: Implement TranscriptOutputStream!
             //machine.setOutputStream(2, new TranscriptOutputStream(logger, initStruct.ioSystem, machine));

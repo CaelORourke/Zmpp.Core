@@ -198,7 +198,7 @@ namespace Zmpp.Core.Instructions
         private void set_font()
         {
             char previousFont =
-              getMachine().Screen.setFont(getUnsignedValue(0));
+              getMachine().Screen.SetFont(getUnsignedValue(0));
             storeUnsignedResult(previousFont);
             nextInstruction();
         }

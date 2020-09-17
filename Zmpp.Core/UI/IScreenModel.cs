@@ -37,115 +37,114 @@ namespace Zmpp.Core.UI
     public interface IScreenModel
     {
         /// <summary>
-        /// Returns the current annotation of the bottom window.
+        /// Gets the current annotation of the bottom window.
         /// </summary>
-        /// <returns>the annotation in the bottom window</returns>
-        TextAnnotation getBottomAnnotation();
+        TextAnnotation BottomAnnotation { get; }
 
         /// <summary>
-        /// Returns the current annotation of the top window.
+        /// Gets the current annotation of the top window.
         /// </summary>
-        /// <returns>the annotation in the top window</returns>
-        TextAnnotation getTopAnnotation();
+        TextAnnotation TopAnnotation { get; }
 
         /// <summary>
         /// Resets the screen model.
         /// </summary>
-        void reset();
+        void Reset();
 
         /// <summary>
-        /// Splits the screen into two windows, the upper window will contain
-        /// linesUpperWindow lines.If linesUpperWindow is 0, the window will
-        /// be unsplit.
+        /// Splits the screen into two windows.
         /// </summary>
-        /// <param name="linesUpperWindow">the number of lines the upper window will have</param>
-        void splitWindow(int linesUpperWindow);
+        /// <param name="linesUpperWindow">The number of lines the upper window will have.</param>
+        /// <remarks>
+        /// The upper window will contain linesUpperWindow lines. If
+        /// linesUpperWindow is 0 the window will be unsplit.
+        /// </remarks>
+        void SplitWindow(int linesUpperWindow);
 
         /// <summary>
         /// Sets the active window.
         /// </summary>
-        /// <param name="window">the active window</param>
-        void setWindow(int window);
+        /// <param name="window">The active window.</param>
+        void SetWindow(int window);
 
         /// <summary>
-        /// Returns the active window.
+        /// Gets the active window.
         /// </summary>
-        /// <returns>the active window</returns>
-        int getActiveWindow();
+        int ActiveWindow { get; }
 
         /// <summary>
         /// Sets the text style.
         /// </summary>
-        /// <param name="style">the text style</param>
-        void setTextStyle(int style);
+        /// <param name="style">The text style.</param>
+        void SetTextStyle(int style);
 
         /// <summary>
         /// Sets the buffer mode.
         /// </summary>
-        /// <param name="flag">true if should be buffered, false otherwise</param>
-        void setBufferMode(bool flag);
+        /// <param name="flag">true to enable buffering; otherwise false.</param>
+        void SetBufferMode(bool flag);
 
         /// <summary>
         /// Version 4/5: If value is 1, erase from current cursor position to the
         /// end of the line.
         /// </summary>
-        /// <param name="value">the parameter</param>
-        void eraseLine(int value);
+        /// <param name="value">The parameter.</param>
+        void EraseLine(int value);
 
         /// <summary>
         /// Clears the window with the specified number to the background color.
+        /// </summary>
+        /// <param name="window">The window number.</param>
+        /// <remarks>
         /// If window is -1, the screen is unsplit and the area is cleared.
         /// If window is -2, the whole screen is cleared, but the splitting status
         /// is retained.
-        /// </summary>
-        /// <param name="window">the window number</param>
-        void eraseWindow(int window);
+        /// </remarks>
+        void EraseWindow(int window);
 
         /// <summary>
         /// Moves the cursor in the current window to the specified position.
         /// </summary>
-        /// <param name="line">the line</param>
-        /// <param name="column">the column</param>
-        /// <param name="window">the window</param>
-        void setTextCursor(int line, int column, int window);
+        /// <param name="line">The line.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="window">The window.</param>
+        void SetTextCursor(int line, int column, int window);
 
         /// <summary>
-        /// Retrieves the active window's cursor.
+        /// Gets the cursor for the active window.
         /// </summary>
-        /// <returns>the current window's cursor</returns>
-        ITextCursor getTextCursor();
+        ITextCursor TextCursor { get; }
 
         ///// <summary>
         ///// Sets the paging mode. This is useful if the input stream is a file.
         ///// </summary>
         ///// <param name="flag">true to enable paging, false to disable</param>
-        //void setPaging(bool flag);
+        //void SetPaging(bool flag);
 
         /// <summary>
         /// Sets the font in the current window.
         /// </summary>
-        /// <param name="fontnumber">the font number</param>
-        /// <returns>the previous font number</returns>
-        char setFont(char fontnumber);
+        /// <param name="fontnumber">The font number.</param>
+        /// <returns>The previous font number.</returns>
+        char SetFont(char fontnumber);
 
         /// <summary>
         /// Sets the background color.
         /// </summary>
-        /// <param name="colornumber">the color number</param>
-        /// <param name="window">the window</param>
-        void setBackground(int colornumber, int window);
+        /// <param name="colornumber">The color number.</param>
+        /// <param name="window">The window.</param>
+        void SetBackground(int colornumber, int window);
 
         /// <summary>
         /// Sets the foreground color.
         /// </summary>
-        /// <param name="colornumber">a color number</param>
-        /// <param name="window">the window</param>
-        void setForeground(int colornumber, int window);
+        /// <param name="colornumber">The color number.</param>
+        /// <param name="window">The window.</param>
+        void SetForeground(int colornumber, int window);
 
         /// <summary>
-        /// Returns the output stream associated with the screen.
+        /// Gets the output stream associated with the screen.
         /// </summary>
-        /// <returns>the output stream</returns>
-        IOutputStream getOutputStream();
+        IOutputStream OutputStream { get; }
     }
 }

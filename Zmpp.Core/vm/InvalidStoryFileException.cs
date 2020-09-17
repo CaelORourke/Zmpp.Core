@@ -30,15 +30,17 @@
 namespace Zmpp.Core.Vm
 {
     using System;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// The exception that is thrown when a story file is not valid.
     /// </summary>
+    [Serializable()]
     public class InvalidStoryFileException : Exception
     {
-        private const long serialVersionUID = -1238988006329747571L;
-        public InvalidStoryFileException()
-        {
-        }
+        public InvalidStoryFileException() : base() { }
+        public InvalidStoryFileException(string message) : base(message) { }
+        public InvalidStoryFileException(string message, Exception inner) : base(message, inner) { }
+        protected InvalidStoryFileException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -13,84 +13,71 @@
             output = new ConsoleOutput();
         }
 
-        public void eraseLine(int value)
+        public void EraseLine(int value)
         {
             throw new NotImplementedException();
         }
 
-        public void eraseWindow(int window)
+        public void EraseWindow(int window)
         {
             throw new NotImplementedException();
         }
 
-        public int getActiveWindow()
+        public int ActiveWindow => throw new NotImplementedException();
+
+        public TextAnnotation BottomAnnotation => throw new NotImplementedException();
+
+        public IOutputStream OutputStream => output;
+
+        public ITextCursor TextCursor => throw new NotImplementedException();
+
+        public TextAnnotation TopAnnotation => throw new NotImplementedException();
+
+        public void Reset()
+        {
+            Console.Clear();
+        }
+
+        public void SetBackground(int colornumber, int window)
+        {
+            // TODO: Support colors!!!
+            //Console.BackgroundColor = (ConsoleColor)colornumber;
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+
+        public void SetBufferMode(bool flag)
         {
             throw new NotImplementedException();
         }
 
-        public TextAnnotation getBottomAnnotation()
+        public char SetFont(char fontnumber)
         {
             throw new NotImplementedException();
         }
 
-        public IOutputStream getOutputStream()
+        public void SetForeground(int colornumber, int window)
         {
-            return output;
-        }
-
-        public ITextCursor getTextCursor()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TextAnnotation getTopAnnotation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void reset()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void setBackground(int colornumber, int window)
-        {
-            Console.BackgroundColor = (ConsoleColor)colornumber;
-        }
-
-        public void setBufferMode(bool flag)
-        {
-            throw new NotImplementedException();
-        }
-
-        public char setFont(char fontnumber)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void setForeground(int colornumber, int window)
-        {
-            // TODO: Seems like the same colornumber is being sent for both foreground and background color?
+            // TODO: Support colors!!!
             //Console.ForegroundColor = (ConsoleColor)colornumber;
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public void setTextCursor(int line, int column, int window)
+        public void SetTextCursor(int line, int column, int window)
         {
             throw new NotImplementedException();
         }
 
-        public void setTextStyle(int style)
+        public void SetTextStyle(int style)
         {
             throw new NotImplementedException();
         }
 
-        public void setWindow(int window)
+        public void SetWindow(int window)
         {
             throw new NotImplementedException();
         }
 
-        public void splitWindow(int linesUpperWindow)
+        public void SplitWindow(int linesUpperWindow)
         {
             throw new NotImplementedException();
         }

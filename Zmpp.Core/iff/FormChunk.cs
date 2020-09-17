@@ -67,7 +67,7 @@ namespace Zmpp.Core.Iff
         private void InitBaseInfo()
         {
             if (!"FORM".Equals(Id)) {
-                throw new IOException("not a valid IFF format");
+                throw new IOException("This is not a valid IFF format.");
             }
 
             // Determine the sub id

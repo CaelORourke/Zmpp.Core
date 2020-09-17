@@ -71,7 +71,7 @@ namespace Zmpp.Core.Blorb
         /// <param name="formchunk">The form chunk in Blorb format.</param>
         public BlorbResources(INativeImageFactory imageFactory,
             ISoundEffectFactory soundEffectFactory,
-            FormChunk formchunk)
+            IFormChunk formchunk)
         {
             images = new BlorbImages(imageFactory, formchunk);
             sounds = new BlorbSounds(soundEffectFactory, formchunk);

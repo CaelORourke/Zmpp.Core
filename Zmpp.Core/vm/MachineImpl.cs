@@ -787,7 +787,7 @@ namespace Zmpp.Core.Vm
 
             if (resetScreenModel)
             {
-                screenModel.reset();
+                screenModel.Reset();
             }
             fileHeader.SetEnabled(StoryFileHeaderAttribute.Transcripting, transcripting);
             fileHeader.SetEnabled(StoryFileHeaderAttribute.ForceFixedFont, fixedFontForced);

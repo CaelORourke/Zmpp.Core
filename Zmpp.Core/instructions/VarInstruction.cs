@@ -498,7 +498,7 @@ namespace Zmpp.Core.Instructions
             IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
-                screenModel.splitWindow(getUnsignedValue(0));
+                screenModel.SplitWindow(getUnsignedValue(0));
             }
             nextInstruction();
         }
@@ -511,7 +511,7 @@ namespace Zmpp.Core.Instructions
             IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
-                screenModel.setWindow(getUnsignedValue(0));
+                screenModel.SetWindow(getUnsignedValue(0));
             }
             nextInstruction();
         }
@@ -524,7 +524,7 @@ namespace Zmpp.Core.Instructions
             IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
-                screenModel.setTextStyle(getUnsignedValue(0));
+                screenModel.SetTextStyle(getUnsignedValue(0));
             }
             nextInstruction();
         }
@@ -537,7 +537,7 @@ namespace Zmpp.Core.Instructions
             IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
-                screenModel.setBufferMode(getUnsignedValue(0) > 0);
+                screenModel.SetBufferMode(getUnsignedValue(0) > 0);
             }
             nextInstruction();
         }
@@ -550,7 +550,7 @@ namespace Zmpp.Core.Instructions
             IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
-                screenModel.eraseWindow(getSignedValue(0));
+                screenModel.EraseWindow(getSignedValue(0));
             }
             nextInstruction();
         }
@@ -563,7 +563,7 @@ namespace Zmpp.Core.Instructions
             IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
-                screenModel.eraseLine(getUnsignedValue(0));
+                screenModel.EraseLine(getUnsignedValue(0));
             }
             nextInstruction();
         }
@@ -590,7 +590,7 @@ namespace Zmpp.Core.Instructions
                 }
                 if (line > 0)
                 {
-                    screenModel.setTextCursor(line, column, window);
+                    screenModel.SetTextCursor(line, column, window);
                 }
             }
             nextInstruction();
@@ -604,7 +604,7 @@ namespace Zmpp.Core.Instructions
             IScreenModel screenModel = getMachine().Screen;
             if (screenModel != null)
             {
-                ITextCursor cursor = screenModel.getTextCursor();
+                ITextCursor cursor = screenModel.TextCursor;
                 int arrayAddr = getUnsignedValue(0);
                 getMachine().WriteUnsigned16(arrayAddr, (char)cursor.getLine());
                 getMachine().WriteUnsigned16(arrayAddr + 2, (char)cursor.getColumn());
@@ -802,7 +802,7 @@ namespace Zmpp.Core.Instructions
             }
 
             char zchar = (char)0;
-            ITextCursor cursor = getMachine().Screen.getTextCursor();
+            ITextCursor cursor = getMachine().Screen.TextCursor;
             int column = cursor.getColumn();
             int row = cursor.getLine();
 
@@ -815,7 +815,7 @@ namespace Zmpp.Core.Instructions
                     getMachine().PrintZsciiChar(zchar);
                 }
                 row += skip + 1;
-                getMachine().Screen.setTextCursor(row, column,
+                getMachine().Screen.SetTextCursor(row, column,
                     ScreenModel.CURRENT_WINDOW);
             }
             nextInstruction();

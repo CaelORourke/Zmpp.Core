@@ -329,7 +329,7 @@ namespace Zmpp.Core.Vm.Tests
             outputStream1.Verify(os => os.flush(), Times.Once());
             outputStream2.Verify(os => os.flush(), Times.Once());
             outputStream3.Verify(os => os.flush(), Times.Once());
-            screen.Verify(s => s.reset(), Times.Once());
+            screen.Verify(s => s.Reset(), Times.Once());
         }
 
         [TestMethod]
