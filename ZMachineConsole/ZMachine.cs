@@ -84,7 +84,11 @@ namespace ZMachineConsole
 
             if (IsBlorb(storyData))
             {
-                resources = ReadResources(storyFilePath); // only for Blorb files
+                IFormChunk formChunk = ReadBlorb(storyData);
+                storyData = (formChunk != null) ?
+                    new BlorbFile(formChunk).StoryData : null;
+                resources = (formChunk != null) ?
+                    new BlorbResources(viewModel.NativeImageFactory, viewModel.SoundEffectFactory, formChunk) : null;
             }
 
             Initialize(storyData, resources);
@@ -101,7 +105,11 @@ namespace ZMachineConsole
 
             if (IsBlorb(storyData))
             {
-                resources = ReadResources(storyFileUrl); // only for Blorb files
+                IFormChunk formChunk = ReadBlorb(storyData);
+                storyData = (formChunk != null) ?
+                    new BlorbFile(formChunk).StoryData : null;
+                resources = (formChunk != null) ?
+                    new BlorbResources(viewModel.NativeImageFactory, viewModel.SoundEffectFactory, formChunk) : null;
             }
 
             Initialize(storyData, resources);
@@ -178,16 +186,7 @@ namespace ZMachineConsole
         /// <returns>The story file data.</returns>
         private byte[] ReadStoryData(string path)
         {
-            if (path != null)
-            {
-                return File.ReadAllBytes(path);
-            }
-            else
-            {
-                // get the story data from the Blorb file
-                IFormChunk formchunk = ReadBlorbFromFile(path);
-                return formchunk != null ? new BlorbFile(formchunk).StoryData : null;
-            }
+            return File.ReadAllBytes(path);
         }
 
         /// <summary>
@@ -204,46 +203,19 @@ namespace ZMachineConsole
         }
 
         /// <summary>
-        /// Reads the resource data from the specified file path.
-        /// </summary>
-        /// <returns>The resource data.</returns>
-        private IResources ReadResources(string path)
-        {
-            IFormChunk formchunk = ReadBlorbFromFile(path);
-            return (formchunk != null) ?
-                new BlorbResources(viewModel.NativeImageFactory, viewModel.SoundEffectFactory, formchunk) : null;
-        }
-
-        /// <summary>
-        /// Reads the resource data from the specified URL.
-        /// </summary>
-        /// <returns>The resource data.</returns>
-        private IResources ReadResources(Uri uri)
-        {
-            // TODO: Implement this method!!!
-            return null;
-            //using (var client = new HttpClient())
-            //{
-            //    byte[] data = client.GetByteArrayAsync(uri.AbsoluteUri).Result;
-            //    return data;
-            //}
-        }
-
-        /// <summary>
         /// Reads the Blorb data from the specified file path.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>The form chunk.</returns>
-        private IFormChunk ReadBlorbFromFile(string path)
+        private IFormChunk ReadBlorb(byte[] data)
         {
             IFormChunk blorbchunk = null;
-            byte[] data = File.ReadAllBytes(path);
             if (data != null)
             {
                 blorbchunk = new FormChunk(new Memory(data));
                 if (!"IFRS".Equals(blorbchunk.SubId))
                 {
-                    throw new IOException($"'{path}' is not a valid Blorb file.");
+                    throw new IOException($"Is not a valid Blorb file.");
                 }
             }
             return blorbchunk;

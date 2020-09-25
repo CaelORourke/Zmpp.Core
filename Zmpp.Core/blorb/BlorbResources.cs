@@ -29,6 +29,7 @@
 
 namespace Zmpp.Core.Blorb
 {
+    using System.Collections.Generic;
     using Zmpp.Core.Iff;
     using Zmpp.Core.Media;
 
@@ -56,7 +57,7 @@ namespace Zmpp.Core.Blorb
         /// <summary>
         /// The meta data from the Blorb file.
         /// </summary>
-        private readonly BlorbMetadataHandler metadata;
+        private readonly List<StoryMetadata> metadata;
 
         /// <summary>
         /// The release number from the Blorb file.
@@ -76,7 +77,7 @@ namespace Zmpp.Core.Blorb
             images = new BlorbImages(imageFactory, formchunk);
             sounds = new BlorbSounds(soundEffectFactory, formchunk);
             coverart = new BlorbCoverArt(formchunk);
-            metadata = new BlorbMetadataHandler(formchunk);
+            metadata = BlorbMetadata.Parse(formchunk);
         }
 
         public IMediaCollection<IZmppImage> Images => images;
@@ -85,10 +86,10 @@ namespace Zmpp.Core.Blorb
 
         public int CoverArtNum => coverart.CoverArtNum;
 
-        public InformMetadata Metadata => metadata.Metadata;
+        public StoryMetadata Metadata => (metadata?.Count > 0) ? metadata[0] : null;
 
         public int Release => release;
 
-        public bool HasInfo => metadata.Metadata != null;
+        public bool HasInfo => (metadata?.Count > 0);
     }
 }

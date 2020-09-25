@@ -29,6 +29,8 @@
 
 namespace Zmpp.Core.Media
 {
+    using Zmpp.Core.Blorb;
+
     /// <summary>
     /// This interface defines access to the Z-machine's media resources.
     /// </summary>
@@ -62,7 +64,7 @@ namespace Zmpp.Core.Media
         /// Returns the inform meta data if available.
         /// </summary>
         /// <returns>the meta data</returns>
-        InformMetadata Metadata { get; }
+        StoryMetadata Metadata { get; }
 
         /// <summary>
         /// Returns true if the resource file has information.

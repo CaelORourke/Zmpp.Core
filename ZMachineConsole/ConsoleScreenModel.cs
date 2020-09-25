@@ -4,6 +4,9 @@
     using Zmpp.Core.UI;
     using System;
 
+    /// <summary>
+    /// Represents a <see cref="System.Console"/> screen model.
+    /// </summary>
     public class ConsoleScreenModel : IScreenModel
     {
         private readonly IOutputStream output;
@@ -20,7 +23,7 @@
 
         public void EraseWindow(int window)
         {
-            throw new NotImplementedException();
+            Console.Clear();
         }
 
         public int ActiveWindow => throw new NotImplementedException();
@@ -69,7 +72,8 @@
 
         public void SetTextStyle(int style)
         {
-            throw new NotImplementedException();
+            // TODO: Support font styles.
+            // TODO: Add constants for style. Roman (if 0), Reverse Video (if 1), Bold (if 2), Italic (4), Fixed Pitch (8)
         }
 
         public void SetWindow(int window)

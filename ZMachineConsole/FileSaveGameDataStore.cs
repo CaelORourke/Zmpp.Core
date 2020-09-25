@@ -7,7 +7,7 @@
 
     public class FileSaveGameDataStore : ISaveGameDataStore
     {
-        private string fileName = "";
+        private readonly string fileName = "";
 
         public FileSaveGameDataStore(string fileName)
         {
