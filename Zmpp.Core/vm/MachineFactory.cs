@@ -46,7 +46,7 @@ namespace Zmpp.Core.Vm
     {
         public static IMachine Create(ILogger logger, IViewModel viewModel)
         {
-            MachineImpl machine = new MachineImpl(logger);
+            Machine machine = new Machine(logger);
             InitIOSystem(machine, viewModel);
             return machine;
         }
@@ -57,7 +57,7 @@ namespace Zmpp.Core.Vm
         /// Initializes the I/O system.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private static void InitIOSystem(MachineImpl machine, IViewModel viewModel)
+        private static void InitIOSystem(Machine machine, IViewModel viewModel)
         {
             InitInputStreams(machine, viewModel);
             InitOutputStreams(machine, viewModel);
@@ -70,7 +70,7 @@ namespace Zmpp.Core.Vm
         /// Initializes the input streams.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private static void InitInputStreams(MachineImpl machine, IViewModel viewModel)
+        private static void InitInputStreams(Machine machine, IViewModel viewModel)
         {
             machine.setInputStream(0, viewModel.InputStream);
             // TODO: Implement FileInputStream!
@@ -81,7 +81,7 @@ namespace Zmpp.Core.Vm
         /// Initializes the output streams.
         /// </summary>
         /// <param name="machine">the machine object</param>
-        private static void InitOutputStreams(MachineImpl machine, IViewModel viewModel)
+        private static void InitOutputStreams(Machine machine, IViewModel viewModel)
         {
             machine.setOutputStream(1, viewModel.ScreenModel.OutputStream);
             machine.SelectOutputStream(1, true);

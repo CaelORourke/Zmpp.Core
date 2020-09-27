@@ -163,7 +163,7 @@ namespace Zmpp.Core.Instructions
         private void z_catch()
         {
             // Stores the index of the current stack frame
-            storeUnsignedResult((char)(getMachine().getRoutineContexts().Count - 1));
+            storeUnsignedResult((char)(getMachine().GetRoutineContexts().Count - 1));
             nextInstruction();
         }
     }

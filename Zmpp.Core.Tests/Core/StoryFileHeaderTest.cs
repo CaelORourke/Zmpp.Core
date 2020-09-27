@@ -558,7 +558,7 @@ namespace Zmpp.Core.Tests
         #endregion
 
         /// <summary>
-        /// Simulate a situation to set mouse coordinates
+        /// Simulate a situation to set mouse coordinates.
         /// </summary>
         [TestMethod]
         public void SetMouseCoordinatesNoExtensionTable()

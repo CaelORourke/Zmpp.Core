@@ -45,7 +45,7 @@ namespace Zmpp.Core.Instructions.Tests
     [TestClass]
     public class InstructionDecoderTest
     {
-        private MachineImpl machine;
+        private Machine machine;
 
         private Mock<IOutputStream> outputStream1, outputStream2, outputStream3;
         private Mock<IInputStream> inputStream1, inputStream0;
@@ -65,7 +65,7 @@ namespace Zmpp.Core.Instructions.Tests
         var logger = new Mock<ILogger>();
 
         byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
-        machine = new MachineImpl(logger.Object);
+        machine = new Machine(logger.Object);
         machine.Initialize(data, null);
 
         screen = new Mock<IScreenModel>();

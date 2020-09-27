@@ -405,7 +405,7 @@ namespace Zmpp.Core.Instructions
             // Handle stack variable as a special case (standard 1.1)
             if (varnum == 0)
             {
-                getMachine().setStackTop(value);
+                getMachine().StackTop = value;
             }
             else
             {
@@ -542,7 +542,7 @@ namespace Zmpp.Core.Instructions
             int stackFrame = getUnsignedValue(1);
 
             // Unwind the stack
-            int currentStackFrame = getMachine().getRoutineContexts().Count - 1;
+            int currentStackFrame = getMachine().GetRoutineContexts().Count - 1;
             if (currentStackFrame < stackFrame)
             {
                 getMachine().Halt("@throw from an invalid stack frame state");

@@ -30,19 +30,19 @@
 namespace Zmpp.Core.Vm
 {
     /// <summary>
-    /// This class holds information about a subroutine.
+    /// Represents the context of a routine.
     /// </summary>
     public class RoutineContext
     {
         /// <summary>
         /// Set as return variable value if the call is a call_nx.
         /// </summary>
-        public const char DISCARD_RESULT = (char)0xffff;
+        public const char DiscardResult = (char)0xffff;
 
         /// <summary>
         /// The local variables
         /// </summary>
-        private char[] locals;
+        private readonly char[] locals;
 
         /// <summary>
         /// The return address.
@@ -70,110 +70,71 @@ namespace Zmpp.Core.Vm
         private char returnValue;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the
+        /// <see cref="Zmpp.Core.Vm.RoutineContext"/> class
+        /// for the specified number of local variables.
         /// </summary>
-        /// <param name="numLocalVariables">the number of local variables</param>
+        /// <param name="numLocalVariables">The number of local variables.</param>
         public RoutineContext(int numLocalVariables)
         {
             locals = new char[numLocalVariables];
         }
 
         /// <summary>
-        /// Sets the number of arguments.
+        /// Gets or sets the number of arguments.
         /// </summary>
-        /// <param name="aNumArgs">the number of arguments</param>
-        public void setNumArguments(int aNumArgs)
+        public int NumArguments
         {
-            this.numArgs = aNumArgs;
+            get => numArgs;
+            set => this.numArgs = value;
         }
 
         /// <summary>
-        /// Returns the number of arguments.
+        /// Gets the number of local variables.
         /// </summary>
-        /// <returns>the number of arguments</returns>
-        public int getNumArguments() { return numArgs; }
+        public int NumLocalVariables => (locals == null) ? 0 : locals.Length;
 
         /// <summary>
-        /// Returns the number of local variables.
+        /// Sets a value for the specified local variable.
         /// </summary>
-        /// <returns>the number of local variables</returns>
-        public int getNumLocalVariables()
-        {
-            return (locals == null) ? 0 : locals.Length;
-        }
-
-        /// <summary>
-        /// Sets a value to the specified local variable.
-        /// </summary>
-        /// <param name="localNum">the local variable number, starting with 0</param>
-        /// <param name="value">the value</param>
-        public void setLocalVariable(char localNum, char value)
+        /// <param name="localNum">The local variable number starting with 0.</param>
+        /// <param name="value">The value.</param>
+        public void SetLocalVariable(char localNum, char value)
         {
             locals[localNum] = value;
         }
 
         /// <summary>
-        /// Retrieves the value of the specified local variable.
+        /// Gets the value of the specified local variable.
         /// </summary>
-        /// <param name="localNum">the local variable number, starting at 0</param>
-        /// <returns>the value of the specified variable</returns>
-        public char getLocalVariable(char localNum)
+        /// <param name="localNum">The local variable number starting at 0.</param>
+        /// <returns>The value of the specified variable.</returns>
+        public char GetLocalVariable(char localNum)
         {
             return locals[localNum];
         }
 
         /// <summary>
-        /// Returns the routine's return address.
+        /// Gets or sets the return address of the routine.
         /// </summary>
-        /// <returns>the routine's return address</returns>
-        public int getReturnAddress() { return returnAddress; }
+        public int ReturnAddress { get => returnAddress; set => this.returnAddress = value; }
 
         /// <summary>
-        /// Sets the return address.
+        /// Gets or sets the return variable number of the routine.
         /// </summary>
-        /// <param name="address">the return address</param>
-        public void setReturnAddress(int address)
-        {
-            this.returnAddress = address;
-        }
+        /// <remarks>
+        /// Returns the return variable number or DiscardResult.
+        /// </remarks>
+        public char ReturnVariable { get => returnVarNum; set => returnVarNum = value; }
 
         /// <summary>
-        /// Returns the routine's return variable number.
+        /// Gets or sets the stack pointer at invocation time.
         /// </summary>
-        /// <returns>the return variable number or DISCARD_RESULT</returns>
-        public char getReturnVariable() { return returnVarNum; }
+        public char InvocationStackPointer { get => invocationStackPointer; set => invocationStackPointer = value; }
 
         /// <summary>
-        /// Sets the routine's return variable number.
+        /// Gets or sets the return value.
         /// </summary>
-        /// <param name="varnum">the return variable number or DISCARD_RESULT</param>
-        public void setReturnVariable(char varnum) { returnVarNum = varnum; }
-
-        /// <summary>
-        /// Returns the stack pointer at invocation time.
-        /// </summary>
-        /// <returns>the stack pointer at invocation time</returns>
-        public char getInvocationStackPointer() { return invocationStackPointer; }
-
-        /// <summary>
-        /// Sets the stack pointer at invocation time.
-        /// </summary>
-        /// <param name="stackpointer">the stack pointer at invocation time.</param>
-        public void setInvocationStackPointer(char stackpointer)
-        {
-            invocationStackPointer = stackpointer;
-        }
-
-        /// <summary>
-        /// Returns the return value.
-        /// </summary>
-        /// <returns>the return value</returns>
-        public char getReturnValue() { return returnValue; }
-
-        /// <summary>
-        /// Sets the return value.
-        /// </summary>
-        /// <param name="value">the return value</param>
-        public void setReturnValue(char value) { returnValue = value; }
+        public char ReturnValue { get => returnValue; set => returnValue = value; }
     }
 }

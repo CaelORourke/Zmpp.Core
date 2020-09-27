@@ -39,14 +39,14 @@ namespace Zmpp.Core.Encoding.Tests
     [TestClass]
     public class CustomAccentTableTest
     {
-        private const int ADDRESS = 4711;
+        private const int Address = 4711;
 
         public CustomAccentTableTest()
         {
         }
 
         [TestMethod]
-        public void testGetLengthNoTable()
+        public void GetLengthNoTable()
         {
             // arrange
             var memory = new Mock<IMemory>();
@@ -60,23 +60,23 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testGetLength()
+        public void GetLength()
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.ReadUnsigned8(ADDRESS)).Returns((char)3);
-            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
+            memory.Setup(m => m.ReadUnsigned8(Address)).Returns((char)3);
+            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, Address);
 
             // act
             var result = accentTable.Length;
 
             // assert
-            memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(Address), Times.Once());
             Assert.AreEqual(3, result);
         }
 
         [TestMethod]
-        public void testGetAccentNoTable()
+        public void GetAccentNoTable()
         {
             // arrange
             var memory = new Mock<IMemory>();
@@ -90,60 +90,60 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testGetAccent()
+        public void GetAccent()
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 7)).Returns('^');
-            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
+            memory.Setup(m => m.ReadUnsigned16(Address + 7)).Returns('^');
+            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, Address);
 
             // act
             var result = accentTable.GetAccent(3);
 
             // assert
-            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 7), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(Address + 7), Times.Once());
             Assert.AreEqual('^', result);
         }
 
         [TestMethod]
-        public void testGetIndexOfLowerCase()
+        public void GetIndexOfLowerCase()
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.ReadUnsigned8(ADDRESS)).Returns((char)80);
-            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 2 * 6 + 1)).Returns('B');
-            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 1)).Returns('a');
-            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 2 + 1)).Returns('b');
-            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
+            memory.Setup(m => m.ReadUnsigned8(Address)).Returns((char)80);
+            memory.Setup(m => m.ReadUnsigned16(Address + 2 * 6 + 1)).Returns('B');
+            memory.Setup(m => m.ReadUnsigned16(Address + 1)).Returns('a');
+            memory.Setup(m => m.ReadUnsigned16(Address + 2 + 1)).Returns('b');
+            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, Address);
 
             // act
             var result = accentTable.GetIndexOfLowerCase(6);
 
             // assert
-            memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.Once());
-            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 2 * 6 + 1), Times.Once());
-            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 1), Times.Once());
-            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 2 + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(Address), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(Address + 2 * 6 + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(Address + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned16(Address + 2 + 1), Times.Once());
             Assert.AreEqual(1, result);
         }
 
         [TestMethod]
-        public void testGetIndexOfLowerCaseNotFound()
+        public void GetIndexOfLowerCaseNotFound()
         {
             // arrange
             var memory = new Mock<IMemory>();
-            memory.Setup(m => m.ReadUnsigned8(ADDRESS)).Returns((char)2);
-            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 2 * 1 + 1)).Returns('^');
-            memory.Setup(m => m.ReadUnsigned16(ADDRESS + 1)).Returns('a');
-            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, ADDRESS);
+            memory.Setup(m => m.ReadUnsigned8(Address)).Returns((char)2);
+            memory.Setup(m => m.ReadUnsigned16(Address + 2 * 1 + 1)).Returns('^');
+            memory.Setup(m => m.ReadUnsigned16(Address + 1)).Returns('a');
+            CustomAccentTable accentTable = new CustomAccentTable(memory.Object, Address);
 
             // act
             var result = accentTable.GetIndexOfLowerCase(1);
 
             // assert
-            memory.Verify(m => m.ReadUnsigned8(ADDRESS), Times.AtLeastOnce());
-            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 2 * 1 + 1), Times.AtLeastOnce());
-            memory.Verify(m => m.ReadUnsigned16(ADDRESS + 1), Times.Once());
+            memory.Verify(m => m.ReadUnsigned8(Address), Times.AtLeastOnce());
+            memory.Verify(m => m.ReadUnsigned16(Address + 2 * 1 + 1), Times.AtLeastOnce());
+            memory.Verify(m => m.ReadUnsigned16(Address + 1), Times.Once());
             Assert.AreEqual(1, result);
         }
     }

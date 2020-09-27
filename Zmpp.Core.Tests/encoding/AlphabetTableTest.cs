@@ -43,7 +43,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testChar0IsSpace()
+        public void Char0IsSpace()
         {
             // arrange
             IAlphabetTable v1Table = new AlphabetTableV1();
@@ -78,7 +78,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testChar1IsNewLineInV1()
+        public void Char1IsNewLineInV1()
         {
             // arrange
             IAlphabetTable v1Table = new AlphabetTableV1();
@@ -95,7 +95,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testIsAbbreviation()
+        public void IsAbbreviation()
         {
             // arrange
             IAlphabetTable v1Table = new AlphabetTableV1();
@@ -121,7 +121,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testShiftChars()
+        public void ShiftChars()
         {
             // arrange
             IAlphabetTable v1Table = new AlphabetTableV1();

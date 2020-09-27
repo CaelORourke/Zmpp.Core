@@ -37,112 +37,125 @@ namespace Zmpp.Core.Vm
     using static Zmpp.Core.MemoryUtil;
 
     /// <summary>
-    /// This class represents the state of the Z machine in an external format,
+    /// Represents the state of the Z machine
     /// so it can be exchanged using the Quetzal IFF format.
     /// </summary>
     public class PortableGameState
     {
-        private const long serialVersionUID = -9131764506887529659L;
-
         /// <summary>
         /// The return variable value for discard result.
         /// </summary>
-        public const char DISCARD_RESULT = (char)0xffff;
+        public const char DiscardResult = (char)0xffff;
 
         /// <summary>
-        /// This class represents a stack frame in the portable game state model.
+        /// Represents a stack frame.
         /// </summary>
-        public class StackFrame///public static class StackFrame
+        public class StackFrame
         {
-            private const long serialVersionUID = 3880452419775034120L;
-
             /// <summary>
             /// The return program counter.
             /// </summary>
-            public int pc;
+            private int pc;
 
             /// <summary>
             /// The return variable.
             /// </summary>
-            public char returnVariable;
+            private char returnVariable;
 
             /// <summary>
             /// The local variables.
             /// </summary>
-            public char[] locals;
+            private char[] locals;
 
             /// <summary>
             /// The evaluation stack.
             /// </summary>
-            public char[] evalStack;
+            private char[] evalStack;
 
             /// <summary>
             /// The arguments.
             /// </summary>
-            public char[] args;
+            private char[] args;
 
             /// <summary>
-            /// Returns the program counter.
+            /// Gets or set the program counter.
             /// </summary>
-            /// <returns>program counter</returns>
-            public int getProgramCounter() { return pc; }
-
-            /// <summary>
-            /// Returns the return variable.
-            /// </summary>
-            /// <returns>return variable</returns>
-            public char getReturnVariable() { return returnVariable; }
-
-            /// <summary>
-            /// Returns the eval stack.
-            /// </summary>
-            /// <returns>eval stack</returns>
-            public char[] getEvalStack() { return evalStack; }
-
-            /// <summary>
-            /// Returns the local variables.
-            /// </summary>
-            /// <returns>local variables</returns>
-            public char[] getLocals() { return locals; }
-
-            /// <summary>
-            /// Returns the routine arguments.
-            /// </summary>
-            /// <returns>routine arguments</returns>
-            public char[] getArgs() { return args; }
-
-            /// <summary>
-            /// Sets the program counter.
-            /// </summary>
-            /// <param name="aPc">new program counter</param>
-            public void setProgramCounter(int aPc) { this.pc = aPc; }
-
-            /// <summary>
-            /// Sets the return variable number.
-            /// </summary>
-            /// <param name="varnum">variable number</param>
-            public void setReturnVariable(char varnum)
+            public int ProgramCounter
             {
-                this.returnVariable = varnum;
+                get
+                {
+                    return pc;
+                }
+
+                set
+                {
+                    pc = value;
+                }
             }
 
             /// <summary>
-            /// Sets the eval stack.
+            /// Gets or sets the return variable.
             /// </summary>
-            /// <param name="stack">eval stack</param>
-            public void setEvalStack(char[] stack) { this.evalStack = stack; }
+            public char ReturnVariable
+            {
+                get
+                {
+                    return returnVariable;
+                }
+
+                set
+                {
+                    returnVariable = value;
+                }
+            }
 
             /// <summary>
-            /// Sets the local variables.
+            /// Gets or sets the eval stack.
             /// </summary>
-            /// <param name="locals">local variables</param>
-            public void setLocals(char[] locals) { this.locals = locals; }
+            public char[] EvalStack
+            {
+                get
+                {
+                    return evalStack;
+                }
+
+                set
+                {
+                    evalStack = value;
+                }
+            }
 
             /// <summary>
-            /// Sets the routine arguments.
+            /// Gets or sets the local variables.
             /// </summary>
-            /// <param name="args">routine arguments</param>
-            public void setArgs(char[] args) { this.args = args; }
+            public char[] Locals
+            {
+                get
+                {
+                    return locals;
+                }
+
+                set
+                {
+                    locals = value;
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets the routine arguments.
+            /// </summary>
+            public char[] Args
+            {
+                get
+                {
+                    return args;
+                }
+
+                set
+                {
+                    args = value;
+                }
+            }
         }
 
         /// <summary>
@@ -178,10 +191,11 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// The list of stack frames in this game state, from oldest to latest.
         /// </summary>
-        private List<StackFrame> stackFrames;
+        private readonly List<StackFrame> stackFrames;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the
+        /// <see cref="Zmpp.Core.Vm.PortableGameState"/> class.
         /// </summary>
         public PortableGameState()
         {
@@ -192,82 +206,96 @@ namespace Zmpp.Core.Vm
         #region Accessing the state
 
         /// <summary>
-        /// Returns the game release number.
+        /// Gets or sets the game release number.
         /// </summary>
-        /// <returns>the release number</returns>
-        public int getRelease() { return release; }
-
-        /// <summary>
-        /// Returns the game checksum.
-        /// </summary>
-        /// <returns>the checksum</returns>
-        public int getChecksum() { return checksum; }
-
-        /// <summary>
-        /// Returns the game serial number.
-        /// </summary>
-        /// <returns>the serial number</returns>
-        public String getSerialNumber() { return Encoding.UTF8.GetString((byte[])(object)serialBytes, 0, serialBytes.Length); }
-
-        /// <summary>
-        /// Returns the program counter.
-        /// </summary>
-        /// <returns>the program counter</returns>
-        public int getProgramCounter() { return pc; }
-
-        /// <summary>
-        /// Returns the list of stack frames.
-        /// </summary>
-        /// <returns>the stack frames</returns>
-        public List<StackFrame> getStackFrames() { return stackFrames; }
-
-        /// <summary>
-        /// Returns the delta bytes. This is the changes in dynamic memory, where
-        /// 0 represents no change.
-        /// </summary>
-        /// <returns>the delta bytes</returns>
-        public byte[] getDeltaBytes() { return delta; }
-
-        /// <summary>
-        /// Returns the current dump of dynamic memory captured from a Machine object.
-        /// </summary>
-        /// <returns>the dynamic memory dump</returns>
-        public byte[] getDynamicMemoryDump() { return dynamicMem; }
-
-        /// <summary>
-        /// Sets the release number.
-        /// </summary>
-        /// <param name="release">release number</param>
-        public void setRelease(int release) { this.release = release; }
-
-        /// <summary>
-        /// Sets the checksum.
-        /// </summary>
-        /// <param name="checksum">checksum</param>
-        public void setChecksum(int checksum) { this.checksum = checksum; }
-
-        /// <summary>
-        /// Sets the serial number.
-        /// </summary>
-        /// <param name="serial">serial number</param>
-        public void setSerialNumber(String serial)
+        public int Release
         {
-            //this.serialBytes = serial.getBytes();
-            this.serialBytes = new byte[Encoding.UTF8.GetByteCount(serial)];
-            Encoding.UTF8.GetBytes(serial, 0, serial.Length, (byte[])(object)this.serialBytes, 0);
+            get
+            {
+                return release;
+            }
+
+            set
+            {
+                release = value;
+            }
         }
 
         /// <summary>
-        /// Sets the program counter.
+        /// Gets or sets the game checksum.
         /// </summary>
-        /// <param name="aPc">program counter</param>
-        public void setProgramCounter(int aPc) { this.pc = aPc; }
+        public int Checksum
+        {
+            get
+            {
+                return checksum;
+            }
+
+            set
+            {
+                checksum = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the game serial number.
+        /// </summary>
+        public string SerialNumber
+        {
+            get
+            {
+                return Encoding.UTF8.GetString((byte[])(object) serialBytes, 0, serialBytes.Length);
+            }
+
+            set
+            {
+                this.serialBytes = new byte[Encoding.UTF8.GetByteCount(value)];
+                Encoding.UTF8.GetBytes(value, 0, value.Length, (byte[])(object)this.serialBytes, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the program counter.
+        /// </summary>
+        public int ProgramCounter
+        {
+            get
+            {
+                return pc;
+            }
+
+            set
+            {
+                pc = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the stack frames.
+        /// </summary>
+        public List<StackFrame> StackFrames => stackFrames;
+
+        /// <summary>
+        /// Gets the delta bytes.
+        /// </summary>
+        /// <returns>The delta bytes.</returns>
+        /// <remarks>
+        /// This is the changes in dynamic memory where
+        /// 0 represents no change.
+        /// </remarks>
+        public byte[] GetDeltaBytes() { return delta; }
+
+        /// <summary>
+        /// Gets the current dump of dynamic memory captured from a Machine object.
+        /// </summary>
+        /// <returns>The dynamic memory dump.</returns>
+        public byte[] GetDynamicMemoryDump() { return dynamicMem; }
 
         /// <summary>
         /// Sets the dynamic memory.
         /// </summary>
-        /// <param name="memdata">dynamic memory data</param>
-        public void setDynamicMem(byte[] memdata) { this.dynamicMem = memdata; }
+        /// <param name="memdata">The dynamic memory data.</param>
+        public void SetDynamicMem(byte[] memdata) { this.dynamicMem = memdata; }
 
         #endregion
 
@@ -276,26 +304,26 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Initialize the state from an IFF form.
         /// </summary>
-        /// <param name="formChunk">the IFF form</param>
-        /// <returns>false if there was a consistency problem during the read</returns>
-        public bool readSaveGame(IFormChunk formChunk)
+        /// <param name="formChunk">The IFF form.</param>
+        /// <returns>true if the read is successful; otherwise false.</returns>
+        public bool ReadSaveGame(IFormChunk formChunk)
         {
             stackFrames.Clear();
             if (formChunk != null && "IFZS".Equals(formChunk.SubId))
             {
-                readIfhdChunk(formChunk);
-                readStacksChunk(formChunk);
-                readMemoryChunk(formChunk);
+                ReadIfhdChunk(formChunk);
+                ReadStacksChunk(formChunk);
+                ReadMemoryChunk(formChunk);
                 return true;
             }
             return false;
         }
 
         /// <summary>
-        /// Evaluate the contents of the IFhd chunk.
+        /// Read the contents of the IFhd chunk.
         /// </summary>
-        /// <param name="formChunk">the FORM chunk</param>
-        private void readIfhdChunk(IFormChunk formChunk)
+        /// <param name="formChunk">The FORM chunk.</param>
+        private void ReadIfhdChunk(IFormChunk formChunk)
         {
             IChunk ifhdChunk = formChunk.GetSubChunk("IFhd");
             IMemory chunkMem = ifhdChunk.Memory;
@@ -314,16 +342,16 @@ namespace Zmpp.Core.Vm
             offset += 2;
 
             // read pc
-            pc = decodePcBytes(chunkMem.ReadUnsigned8(offset),
+            pc = DecodePcBytes(chunkMem.ReadUnsigned8(offset),
                                 chunkMem.ReadUnsigned8(offset + 1),
                                 chunkMem.ReadUnsigned8(offset + 2));
         }
 
         /// <summary>
-        /// Evaluate the contents of the Stks chunk.
+        /// Read the contents of the Stks chunk.
         /// </summary>
         /// <param name="formChunk">the FORM chunk</param>
-        private void readStacksChunk(IFormChunk formChunk)
+        private void ReadStacksChunk(IFormChunk formChunk)
         {
             IChunk stksChunk = formChunk.GetSubChunk("Stks");
             IMemory chunkMem = stksChunk.Memory;
@@ -333,7 +361,7 @@ namespace Zmpp.Core.Vm
             while (offset < chunksize)
             {
                 StackFrame stackFrame = new StackFrame();
-                offset = readStackFrame(stackFrame, chunkMem, offset);
+                offset = ReadStackFrame(stackFrame, chunkMem, offset);
                 stackFrames.Add(stackFrame);
             }
         }
@@ -342,14 +370,14 @@ namespace Zmpp.Core.Vm
         /// Reads a stack frame from the specified chunk at the specified
         /// offset.
         /// </summary>
-        /// <param name="stackFrame">the stack frame to set the data into</param>
-        /// <param name="chunkMem">the Stks chunk to read from</param>
-        /// <param name="offset">the offset to read the stack</param>
-        /// <returns>the offset after reading the stack frame</returns>
-        public int readStackFrame(StackFrame stackFrame, IMemory chunkMem, int offset)
+        /// <param name="stackFrame">The stack frame to set the data into.</param>
+        /// <param name="chunkMem">The Stks chunk to read from.</param>
+        /// <param name="offset">The offset to read the stack.</param>
+        /// <returns>The offset after reading the stack frame.</returns>
+        public int ReadStackFrame(StackFrame stackFrame, IMemory chunkMem, int offset)
         {
             int tmpoff = offset;
-            stackFrame.pc = decodePcBytes(chunkMem.ReadUnsigned8(tmpoff),
+            stackFrame.ProgramCounter = DecodePcBytes(chunkMem.ReadUnsigned8(tmpoff),
                                             chunkMem.ReadUnsigned8(tmpoff + 1),
                                             chunkMem.ReadUnsigned8(tmpoff + 2));
             tmpoff += 3;
@@ -357,51 +385,52 @@ namespace Zmpp.Core.Vm
             byte pvFlags = (byte)(chunkMem.ReadUnsigned8(tmpoff++) & 0xff);
             int numLocals = pvFlags & 0x0f;
             bool discardResult = (pvFlags & 0x10) > 0;
-            stackFrame.locals = new char[numLocals];
+            stackFrame.Locals = new char[numLocals];
 
-            // Read the return variable, ignore the result if DISCARD_RESULT
+            // Read the return variable
             char returnVar = chunkMem.ReadUnsigned8(tmpoff++);
-            stackFrame.returnVariable = discardResult ? DISCARD_RESULT :
-                                                        returnVar;
+            // ignore the result if DiscardResult is true
+            stackFrame.ReturnVariable = discardResult ? DiscardResult : returnVar;
+
             byte argSpec = (byte)(chunkMem.ReadUnsigned8(tmpoff++) & 0xff);
-            stackFrame.args = getArgs(argSpec);
+            stackFrame.Args = GetArgs(argSpec);
             int evalStackSize = chunkMem.ReadUnsigned16(tmpoff);
-            stackFrame.evalStack = new char[evalStackSize];
+            stackFrame.EvalStack = new char[evalStackSize];
             tmpoff += 2;
 
             // Read local variables
             for (int i = 0; i < numLocals; i++)
             {
-                stackFrame.locals[i] = chunkMem.ReadUnsigned16(tmpoff);
+                stackFrame.Locals[i] = chunkMem.ReadUnsigned16(tmpoff);
                 tmpoff += 2;
             }
 
             // Read evaluation stack values
             for (int i = 0; i < evalStackSize; i++)
             {
-                stackFrame.evalStack[i] = chunkMem.ReadUnsigned16(tmpoff);
+                stackFrame.EvalStack[i] = chunkMem.ReadUnsigned16(tmpoff);
                 tmpoff += 2;
             }
             return tmpoff;
         }
 
         /// <summary>
-        /// Evaluate the contents of the Cmem and the UMem chunks.
+        /// Read the contents of the Cmem and the UMem chunks.
         /// </summary>
-        /// <param name="formChunk">the FORM chunk</param>
-        private void readMemoryChunk(IFormChunk formChunk)
+        /// <param name="formChunk">The FORM chunk.</param>
+        private void ReadMemoryChunk(IFormChunk formChunk)
         {
             IChunk cmemChunk = formChunk.GetSubChunk("CMem");
             IChunk umemChunk = formChunk.GetSubChunk("UMem");
-            if (cmemChunk != null) { readCMemChunk(cmemChunk); }
-            if (umemChunk != null) { readUMemChunk(umemChunk); }
+            if (cmemChunk != null) { ReadCMemChunk(cmemChunk); }
+            if (umemChunk != null) { ReadUMemChunk(umemChunk); }
         }
 
         /// <summary>
         /// Decompresses and reads the dynamic memory state.
         /// </summary>
-        /// <param name="cmemChunk">the CMem chunk</param>
-        private void readCMemChunk(IChunk cmemChunk)
+        /// <param name="cmemChunk">The CMem chunk.</param>
+        private void ReadCMemChunk(IChunk cmemChunk)
         {
             IMemory chunkMem = cmemChunk.Memory;
             int offset = ChunkBase.ChunkHeaderLength;
@@ -437,8 +466,8 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Reads the uncompressed dynamic memory state.
         /// </summary>
-        /// <param name="umemChunk">the UMem chunk</param>
-        private void readUMemChunk(IChunk umemChunk)
+        /// <param name="umemChunk">The UMem chunk.</param>
+        private void ReadUMemChunk(IChunk umemChunk)
         {
             IMemory chunkMem = umemChunk.Memory;
             int datasize = umemChunk.Size;
@@ -451,17 +480,18 @@ namespace Zmpp.Core.Vm
         #region Reading the state from a Machine
 
         /// <summary>
-        /// Makes a snapshot of the current machine state. The savePc argument
-        /// is taken as the restore program counter.
+        /// Captures a snapshot of the current machine state.
         /// </summary>
-        /// <param name="machine">a Machine</param>
-        /// <param name="savePc">the program counter restore value</param>
-        public void captureMachineState(IMachine machine, int savePc)
+        /// <param name="machine">The Machine object.</param>
+        /// <param name="savePc">The program counter restore value.</param>
+        /// <remarks>
+        /// The savePc argument is taken as the restore program counter.
+        /// </remarks>
+        public void CaptureMachineState(IMachine machine, int savePc)
         {
             IStoryFileHeader fileheader = machine.FileHeader;
             release = machine.Release;
             checksum = machine.ReadUnsigned16(StoryFileHeaderAddress.Checksum);
-            //serialBytes = fileheader.getSerialNumber().getBytes();
             serialBytes = new byte[Encoding.UTF8.GetByteCount(fileheader.SerialNumber)];
             Encoding.UTF8.GetBytes(fileheader.SerialNumber, 0, fileheader.SerialNumber.Length, (byte[])(object)serialBytes, 0);
             pc = savePc;
@@ -473,85 +503,90 @@ namespace Zmpp.Core.Vm
             dynamicMem = new byte[staticMemStart];
             // Save the state of dynamic memory
             machine.CopyBytesToArray(dynamicMem, 0, 0, staticMemStart);
-            captureStackFrames(machine);
+            CaptureStackFrames(machine);
         }
 
         /// <summary>
-        /// Read the list of RoutineContexts in Machine, convert them to StackFrames,
-        /// prepending a dummy stack frame.
+        /// Captures the routine contexts of the specified machine.
         /// </summary>
-        /// <param name="machine">the machine object</param>
-        private void captureStackFrames(IMachine machine)
+        /// <param name="machine">The Machine object.</param>
+        /// <remarks>
+        /// The routine contexts are captured as a collection of stack frames
+        /// prepended with a dummy stack frame.
+        /// </remarks>
+        private void CaptureStackFrames(IMachine machine)
         {
-            List<RoutineContext> contexts = machine.getRoutineContexts();
+            List<RoutineContext> contexts = machine.GetRoutineContexts();
             // Put in initial dummy stack frame
             StackFrame dummyFrame = new StackFrame();
-            dummyFrame.args = new char[0];
-            dummyFrame.locals = new char[0];
-            int numElements = calculateNumStackElements(machine, contexts, 0, 0);
-            dummyFrame.evalStack = new char[numElements];
+            dummyFrame.Args = new char[0];
+            dummyFrame.Locals = new char[0];
+            int numElements = CalculateNumStackElements(machine, contexts, 0, 0);
+            dummyFrame.EvalStack = new char[numElements];
             for (int i = 0; i < numElements; i++)
             {
-                dummyFrame.evalStack[i] = machine.GetStackElement(i);
+                dummyFrame.EvalStack[i] = machine.GetStackElement(i);
             }
             stackFrames.Add(dummyFrame);
 
-            // Write out stack frames
+            // write out the stack frames
             for (int c = 0; c < contexts.Count; c++)
             {
                 RoutineContext context = contexts[c];
 
                 StackFrame stackFrame = new StackFrame();
-                stackFrame.pc = context.getReturnAddress();
-                stackFrame.returnVariable = context.getReturnVariable();
+                stackFrame.ProgramCounter = context.ReturnAddress;
+                stackFrame.ReturnVariable = context.ReturnVariable;
 
-                // Copy local variables
-                stackFrame.locals = new char[context.getNumLocalVariables()];
-                for (int i = 0; i < stackFrame.locals.Length; i++)
+                // copy the local variables
+                stackFrame.Locals = new char[context.NumLocalVariables];
+                for (int i = 0; i < stackFrame.Locals.Length; i++)
                 {
-                    stackFrame.locals[i] = context.getLocalVariable((char)i);
+                    stackFrame.Locals[i] = context.GetLocalVariable((char)i);
                 }
 
-                // Create argument array
-                stackFrame.args = new char[context.getNumArguments()];
-                for (int i = 0; i < stackFrame.args.Length; i++)
+                // create an array of arguments
+                stackFrame.Args = new char[context.NumArguments];
+                for (int i = 0; i < stackFrame.Args.Length; i++)
                 {
-                    stackFrame.args[i] = (char)i;
+                    stackFrame.Args[i] = (char)i;
                 }
 
-                // Transfer evaluation stack
-                int localStackStart = context.getInvocationStackPointer();
-                numElements = calculateNumStackElements(machine, contexts, c + 1,
+                // transfer evaluation stack
+                int localStackStart = context.InvocationStackPointer;
+                numElements = CalculateNumStackElements(machine, contexts, c + 1,
                     localStackStart);
-                stackFrame.evalStack = new char[numElements];
+                stackFrame.EvalStack = new char[numElements];
                 for (int i = 0; i < numElements; i++)
                 {
-                    stackFrame.evalStack[i] = machine.GetStackElement(localStackStart + i);
+                    stackFrame.EvalStack[i] = machine.GetStackElement(localStackStart + i);
                 }
                 stackFrames.Add(stackFrame);
             }
         }
 
         /// <summary>
-        /// Determines the number of stack elements between localStackStart and
+        /// Gets the number of stack elements between localStackStart and
         /// the invocation stack pointer of the specified routine context.
-        /// If contextIndex is greater than the size of the List contexts, the
-        /// functions assumes this is the top routine context and therefore
+        /// </summary>
+        /// <param name="machine">The Machine object.</param>
+        /// <param name="contexts">The list of RoutineContext.</param>
+        /// <param name="contextIndex">The index of the context to calculate the difference.</param>
+        /// <param name="localStackStart">The local stack start pointer.</param>
+        /// <returns>The number of stack elements in the specified stack frame.</returns>
+        /// <remarks>
+        /// If contextIndex is greater than the size of the List contexts the
+        /// method assumes that this is the top routine context and
         /// calculates the difference between the current stack pointer and
         /// localStackStart.
-        /// </summary>
-        /// <param name="machine">the Machine object</param>
-        /// <param name="contexts">a list of RoutineContext</param>
-        /// <param name="contextIndex">the index of the context to calculate the difference</param>
-        /// <param name="localStackStart">the local stack start pointer</param>
-        /// <returns>the number of stack elements in the specified stack frame</returns>
-        private int calculateNumStackElements(IMachine machine, List<RoutineContext> contexts, int contextIndex, int localStackStart)
+        /// </remarks>
+        private int CalculateNumStackElements(IMachine machine, List<RoutineContext> contexts, int contextIndex, int localStackStart)
         {
 
             if (contextIndex < contexts.Count)
             {
                 RoutineContext context = contexts[contextIndex];
-                return context.getInvocationStackPointer() - localStackStart;
+                return context.InvocationStackPointer - localStackStart;
             }
             else
             {
@@ -566,16 +601,15 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Exports the current object state to a FormChunk.
         /// </summary>
-        /// <returns>the state as a FormChunk</returns>
-        public WritableFormChunk exportToFormChunk()
+        /// <returns>The FormChunk object.</returns>
+        public WritableFormChunk ExportToFormChunk()
         {
-            //byte[] id = "IFZS".getBytes();
             byte[] id = new byte[Encoding.UTF8.GetByteCount("IFZS")];
             Encoding.UTF8.GetBytes("IFZS", 0, "IFZS".Length, (byte[])(object)id, 0);
             WritableFormChunk formChunk = new WritableFormChunk(id);
-            formChunk.AddChunk(createIfhdChunk());
-            formChunk.AddChunk(createUMemChunk());
-            formChunk.AddChunk(createStksChunk());
+            formChunk.AddChunk(CreateIfhdChunk());
+            formChunk.AddChunk(CreateUMemChunk());
+            formChunk.AddChunk(CreateStksChunk());
 
             return formChunk;
         }
@@ -583,10 +617,9 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Creates the IFhd chunk.
         /// </summary>
-        /// <returns>IFhd chunk</returns>
-        private IChunk createIfhdChunk()
+        /// <returns>The IFhd chunk.</returns>
+        private IChunk CreateIfhdChunk()
         {
-            //byte[] id = "IFhd".getBytes();
             byte[] id = new byte[Encoding.UTF8.GetByteCount("IFhd")];
             Encoding.UTF8.GetBytes("IFhd", 0, "IFhd".Length, (byte[])(object)id, 0);
             byte[] data = new byte[13];
@@ -609,10 +642,9 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Creates the UMem chunk.
         /// </summary>
-        /// <returns>UMem chunk</returns>
-        private IChunk createUMemChunk()
+        /// <returns>The UMem chunk.</returns>
+        private IChunk CreateUMemChunk()
         {
-            //byte[] id = "UMem".getBytes();
             byte[] id = new byte[Encoding.UTF8.GetByteCount("UMem")];
             Encoding.UTF8.GetBytes("UMem", 0, "UMem".Length, (byte[])(object)id, 0);
 
@@ -622,17 +654,16 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Creates the Stks chunk.
         /// </summary>
-        /// <returns>Stks chunk</returns>
-        private IChunk createStksChunk()
+        /// <returns>The Stks chunk.</returns>
+        private IChunk CreateStksChunk()
         {
-            //byte[] id = "Stks".getBytes();
             byte[] id = new byte[Encoding.UTF8.GetByteCount("Stks")];
             Encoding.UTF8.GetBytes("Stks", 0, "Stks".Length, (byte[])(object)id, 0);
             List<Byte> byteBuffer = new List<Byte>();
 
             foreach (StackFrame stackFrame in stackFrames)
             {
-                writeStackFrameToByteBuffer(byteBuffer, stackFrame);
+                WriteStackFrameToByteBuffer(byteBuffer, stackFrame);
             }
             byte[] data = new byte[byteBuffer.Count];
             for (int i = 0; i < data.Length; i++)
@@ -643,63 +674,63 @@ namespace Zmpp.Core.Vm
         }
 
         /// <summary>
-        /// Writes the specified stackframe to the given byte buffer.
+        /// Writes the specified stack frame to the specified byte buffer.
         /// </summary>
-        /// <param name="byteBuffer">a byte buffer</param>
-        /// <param name="stackFrame">the stack frame</param>
-        public void writeStackFrameToByteBuffer(List<Byte> byteBuffer, StackFrame stackFrame)
+        /// <param name="byteBuffer">The byte buffer.</param>
+        /// <param name="stackFrame">The stack frame.</param>
+        public void WriteStackFrameToByteBuffer(List<Byte> byteBuffer, StackFrame stackFrame)
         {
-            int returnPC = stackFrame.pc;
+            int returnPC = stackFrame.ProgramCounter;
             byteBuffer.Add((byte)(((int)((uint)returnPC >> 16)) & 0xff));
             byteBuffer.Add((byte)(((int)((uint)returnPC >> 8)) & 0xff));
             byteBuffer.Add((byte)(returnPC & 0xff));
 
-            // locals flag, is simply the number of local variables
-            bool discardResult = stackFrame.returnVariable == DISCARD_RESULT;
-            byte pvFlag = (byte)(stackFrame.locals.Length & 0x0f);
+            // locals flag is simply the number of local variables
+            bool discardResult = stackFrame.ReturnVariable == DiscardResult;
+            byte pvFlag = (byte)(stackFrame.Locals.Length & 0x0f);
             if (discardResult) { pvFlag |= 0x10; }
             byteBuffer.Add(pvFlag);
 
             // returnvar
-            byteBuffer.Add((byte)(discardResult ? 0 : stackFrame.returnVariable));
+            byteBuffer.Add((byte)(discardResult ? 0 : stackFrame.ReturnVariable));
 
             // argspec
-            byteBuffer.Add(createArgSpecByte(stackFrame.args));
+            byteBuffer.Add(CreateArgSpecByte(stackFrame.Args));
 
             // eval stack size
-            int stacksize = stackFrame.evalStack.Length;
-            addUnsigned16ToByteBuffer(byteBuffer, (char)stacksize);
+            int stacksize = stackFrame.EvalStack.Length;
+            AddUnsigned16ToByteBuffer(byteBuffer, (char)stacksize);
 
             // local variables
-            foreach (char local in stackFrame.locals)
+            foreach (char local in stackFrame.Locals)
             {
-                addUnsigned16ToByteBuffer(byteBuffer, local);
+                AddUnsigned16ToByteBuffer(byteBuffer, local);
             }
 
             // stack values
-            foreach (char stackValue in stackFrame.evalStack)
+            foreach (char stackValue in stackFrame.EvalStack)
             {
-                addUnsigned16ToByteBuffer(byteBuffer, stackValue);
+                AddUnsigned16ToByteBuffer(byteBuffer, stackValue);
             }
         }
 
         /// <summary>
-        /// Appends unsigned 16 bit value to the byte buffer.
+        /// Appends the specified unsigned 16 bit value to the specified byte buffer.
         /// </summary>
-        /// <param name="buffer">byte buffer</param>
-        /// <param name="value">unsigned 16 bit value</param>
-        private void addUnsigned16ToByteBuffer(List<Byte> buffer, char value)
+        /// <param name="buffer">The byte buffer.</param>
+        /// <param name="value">The unsigned 16 bit value.</param>
+        private void AddUnsigned16ToByteBuffer(List<Byte> buffer, char value)
         {
             buffer.Add((byte)((int)((uint)(value & 0xff00) >> 8)));
             buffer.Add((byte)(value & 0xff));
         }
 
         /// <summary>
-        /// Makes an arg spec byte from the arguments.
+        /// Creates an arg spec byte from the specified arguments.
         /// </summary>
-        /// <param name="args">arguments</param>
-        /// <returns>spec byte</returns>
-        private static byte createArgSpecByte(char[] args)
+        /// <param name="args">The arguments.</param>
+        /// <returns>The arg spec byte.</returns>
+        private static byte CreateArgSpecByte(char[] args)
         {
             byte result = 0;
             foreach (int arg in args) { result |= (byte)(1 << arg); }
@@ -714,8 +745,8 @@ namespace Zmpp.Core.Vm
         /// Transfers the current object state to the specified Machine object.
         /// The machine needs to be in a reset state in order to function correctly.
         /// </summary>
-        /// <param name="machine">a Machine object</param>
-        public void transferStateToMachine(IMachine machine)
+        /// <param name="machine">The Machine object.</param>
+        public void TransferStateToMachine(IMachine machine)
         {
             // Copy dynamic memory
             machine.CopyBytesFromArray(dynamicMem, 0, 0, dynamicMem.Length);
@@ -729,9 +760,9 @@ namespace Zmpp.Core.Vm
                 StackFrame dummyFrame = stackFrames[0];
 
                 // Stack
-                for (int s = 0; s < dummyFrame.getEvalStack().Length; s++)
+                for (int s = 0; s < dummyFrame.EvalStack.Length; s++)
                 {
-                    machine.SetVariable((char)0, dummyFrame.getEvalStack()[s]);
+                    machine.SetVariable((char)0, dummyFrame.EvalStack[s]);
                 }
             }
 
@@ -742,38 +773,38 @@ namespace Zmpp.Core.Vm
                 StackFrame stackFrame = stackFrames[i];
                 // ignore the start address
                 RoutineContext context =
-                    new RoutineContext(stackFrame.locals.Length);
+                    new RoutineContext(stackFrame.Locals.Length);
 
-                context.setReturnVariable(stackFrame.returnVariable);
-                context.setReturnAddress(stackFrame.pc);
-                context.setNumArguments(stackFrame.args.Length);
+                context.ReturnVariable = stackFrame.ReturnVariable;
+                context.ReturnAddress = stackFrame.ProgramCounter;
+                context.NumArguments = stackFrame.Args.Length;
 
                 // local variables
-                for (int l = 0; l < stackFrame.locals.Length; l++)
+                for (int l = 0; l < stackFrame.Locals.Length; l++)
                 {
-                    context.setLocalVariable((char)l, stackFrame.locals[l]);
+                    context.SetLocalVariable((char)l, stackFrame.Locals[l]);
                 }
 
                 // Stack
-                for (int s = 0; s < stackFrame.evalStack.Length; s++)
+                for (int s = 0; s < stackFrame.EvalStack.Length; s++)
                 {
-                    machine.SetVariable((char)0, stackFrame.evalStack[s]);
+                    machine.SetVariable((char)0, stackFrame.EvalStack[s]);
                 }
                 contexts.Add(context);
             }
-            machine.setRoutineContexts(contexts);
+            machine.SetRoutineContexts(contexts);
 
             // Prepare the machine continue
-            int resumePc = getProgramCounter();
+            int resumePc = ProgramCounter;
             if (machine.Version <= 3)
             {
-                // In version 3 this is a branch target that needs to be read
-                // Execution is continued at the first instruction after the branch offset
-                resumePc += getBranchOffsetLength(machine, resumePc);
+                // In version 3 this is a branch target that needs to be read.
+                // Execution is continued at the first instruction after the branch offset.
+                resumePc += GetBranchOffsetLength(machine, resumePc);
             }
             else if (machine.Version >= 4)
             {
-                // in version 4 and later, this is always 1
+                // in version 4 and later this is always 1
                 resumePc++;
             }
             machine.PC = resumePc;
@@ -782,21 +813,21 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// For versions >= 4. Returns the store variable
         /// </summary>
-        /// <param name="machine">the machine</param>
-        /// <returns>the store variable</returns>
-        public char getStoreVariable(IMachine machine)
+        /// <param name="machine">The Machine object.</param>
+        /// <returns>The store variable.</returns>
+        public char GetStoreVariable(IMachine machine)
         {
-            int storeVarAddress = getProgramCounter();
+            int storeVarAddress = ProgramCounter;
             return machine.ReadUnsigned8(storeVarAddress);
         }
 
         /// <summary>
         /// Determine if the branch offset is one or two bytes long.
         /// </summary>
-        /// <param name="memory">the Memory object of the current story</param>
-        /// <param name="offsetAddress">the branch offset address</param>
+        /// <param name="memory">The Memory object of the current story.</param>
+        /// <param name="offsetAddress">The branch offset address.</param>
         /// <returns>1 or 2, depending on the value of the branch offset</returns>
-        private static int getBranchOffsetLength(IMemory memory, int offsetAddress)
+        private static int GetBranchOffsetLength(IMemory memory, int offsetAddress)
         {
             char offsetByte1 = memory.ReadUnsigned8(offsetAddress);
 
@@ -809,11 +840,14 @@ namespace Zmpp.Core.Vm
         #region Helpers
 
         /// <summary>
-        /// There is no apparent reason at the moment to implement getArgs().
+        /// Gets the arguments for the specified argument spec byte.
         /// </summary>
-        /// <param name="argspec">the argspec byte</param>
-        /// <returns>the specified arguments</returns>
-        private char[] getArgs(byte argspec)
+        /// <param name="argspec">The argspec byte.</param>
+        /// <returns>The specified arguments.</returns>
+        /// <remarks>
+        /// There is no apparent reason at the moment to implement this method.
+        /// </remarks>
+        private char[] GetArgs(byte argspec)
         {
             int andBit;
             List<char> result = new List<char>();
@@ -841,7 +875,7 @@ namespace Zmpp.Core.Vm
         /// <param name="b1">byte 1</param>
         /// <param name="b2">byte 2</param>
         /// <returns></returns>
-        private int decodePcBytes(char b0, char b1, char b2)
+        private int DecodePcBytes(char b0, char b1, char b2)
         {
             return (int)(((b0 & 0xff) << 16) | ((b1 & 0xff) << 8) | (b2 & 0xff));
         }

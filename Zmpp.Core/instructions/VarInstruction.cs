@@ -288,7 +288,7 @@ namespace Zmpp.Core.Instructions
             // standard 1.1
             if (varnum == 0)
             {
-                getMachine().setStackTop(value);
+                getMachine().StackTop = value;
             }
             else
             {
@@ -751,7 +751,7 @@ namespace Zmpp.Core.Instructions
         {
             int argumentNumber = getUnsignedValue(0);
             int currentNumArgs =
-              getMachine().getCurrentRoutineContext().getNumArguments();
+              getMachine().CurrentRoutineContext.NumArguments;
             branchOnTest(argumentNumber <= currentNumArgs);
         }
 

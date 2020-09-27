@@ -32,25 +32,24 @@ namespace Zmpp.Core.Vm
     using Zmpp.Core;
     using Zmpp.Core.Encoding;
     using Zmpp.Core.IO;
-    using System;
 
     /// <summary>
     /// Output implementation.
     /// </summary>
-    public class OutputImpl : OutputBase, IOutput
+    public class Output : OutputBase, IOutput
     {
-        private IMachine machine;
+        private readonly IMachine machine;
 
         /// <summary>
         /// This is the array of output streams.
         /// </summary>
-        private IOutputStream[] outputStream;
+        private readonly IOutputStream[] outputStream;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="machine">Machine object</param>
-        public OutputImpl(IMachine machine) : base()
+        /// <param name="machine">The Machine object.</param>
+        public Output(IMachine machine) : base()
         {
             this.machine = machine;
             outputStream = new IOutputStream[3];
@@ -61,7 +60,7 @@ namespace Zmpp.Core.Vm
         /// </summary>
         /// <param name="streamnumber">the stream number</param>
         /// <param name="stream">the output stream</param>
-        public void setOutputStream(int streamnumber,IOutputStream stream)
+        public void SetOutputStream(int streamnumber, IOutputStream stream)
         {
             outputStream[streamnumber - 1] = stream;
         }
@@ -71,23 +70,25 @@ namespace Zmpp.Core.Vm
             Print(machine.Decode2Zscii(address, 0));
         }
 
-        public void Print(String str) { printZsciiChars(str); }
+        public void Print(string str) { PrintZsciiChars(str); }
 
         public void NewLine() { PrintZsciiChar(ZsciiEncoding.Newline); }
 
         public void PrintZsciiChar(char zchar)
         {
-            printZsciiChars(zchar.ToString());
+            PrintZsciiChars(zchar.ToString());
         }
 
         /// <summary>
-        /// Prints the specified array of ZSCII characters. This is the only function
-        /// that communicates with the output streams directly.
+        /// Prints the specified array of ZSCII characters.
         /// </summary>
-        /// <param name="zsciiString">the array of ZSCII characters.</param>
-        private void printZsciiChars(String zsciiString)
+        /// <param name="zsciiString">The array of ZSCII characters.</param>
+        /// <remarks>
+        /// This is the only method that communicates with the output streams directly.
+        /// </remarks>
+        private void PrintZsciiChars(string zsciiString)
         {
-            checkTranscriptFlag();
+            CheckTranscriptFlag();
             if (outputStream[OUTPUTSTREAM_MEMORY - 1].isSelected())
             {
                 for (int i = 0, n = zsciiString.Length; i < n; i++)
@@ -135,10 +136,10 @@ namespace Zmpp.Core.Vm
 
         /// <summary>
         /// Checks the fileheader if the transcript flag was set by the game
-        /// bypassing output_stream, e.g.with a storeb to the fileheader flags
-        /// address.Enable the transcript depending on the status of that flag.
+        /// bypassing output_stream, e.g. with a storeb to the fileheader flags
+        /// address. Enable the transcript depending on the status of that flag.
         /// </summary>
-        private void checkTranscriptFlag()
+        private void CheckTranscriptFlag()
         {
             if (outputStream[OUTPUTSTREAM_TRANSCRIPT - 1] != null)
             {
@@ -167,7 +168,7 @@ namespace Zmpp.Core.Vm
             ((MemoryOutputStream)outputStream[OUTPUTSTREAM_MEMORY - 1]).select(tableAddress, tableWidth);
         }
 
-        public void close()
+        public void Close()
         {
             if (outputStream != null)
             {

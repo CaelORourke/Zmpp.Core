@@ -29,20 +29,17 @@
 
 namespace Zmpp.Core.Vm.Tests
 {
-	using Microsoft.Extensions.Logging;
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
-	using Moq;
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Text;
-	using Zmpp.Core.Vm;
-	using Zmpp.Core;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+    using System.IO;
+    using Zmpp.Core;
+    using Zmpp.Core.Vm;
 
-	/// <summary>
-	/// Testing tree access with concrete data of Version 3 - Minizork.
-	/// </summary>
-	[TestClass]
+    /// <summary>
+    /// Testing the tree for Curses.
+    /// </summary>
+    [TestClass]
 	public class CursesObjectTreeTest
     {
 		private const int ADDR_7_20 = 7734;
@@ -55,7 +52,7 @@ namespace Zmpp.Core.Vm.Tests
 			var logger = new Mock<ILogger>();
 			byte[] data = File.ReadAllBytes("testfiles/curses.z5");
 			IMemory curses = new Memory(data);
-			IMachine machine = new MachineImpl(logger.Object);
+			IMachine machine = new Machine(logger.Object);
 			machine.Initialize(data, null);
 			IObjectTree objectTree = new ModernObjectTree(curses, machine.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
@@ -73,7 +70,7 @@ namespace Zmpp.Core.Vm.Tests
             var logger = new Mock<ILogger>();
             byte[] data = File.ReadAllBytes("testfiles/curses.z5");
             IMemory curses = new Memory(data);
-            IMachine machine = new MachineImpl(logger.Object);
+            IMachine machine = new Machine(logger.Object);
             machine.Initialize(data, null);
             IObjectTree objectTree = new ModernObjectTree(curses, machine.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
@@ -93,7 +90,7 @@ namespace Zmpp.Core.Vm.Tests
             var logger = new Mock<ILogger>();
             byte[] data = File.ReadAllBytes("testfiles/curses.z5");
             IMemory curses = new Memory(data);
-            IMachine machine = new MachineImpl(logger.Object);
+            IMachine machine = new Machine(logger.Object);
             machine.Initialize(data, null);
             IObjectTree objectTree = new ModernObjectTree(curses, machine.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
@@ -115,7 +112,7 @@ namespace Zmpp.Core.Vm.Tests
             var logger = new Mock<ILogger>();
             byte[] data = File.ReadAllBytes("testfiles/curses.z5");
             IMemory curses = new Memory(data);
-            IMachine machine = new MachineImpl(logger.Object);
+            IMachine machine = new Machine(logger.Object);
             machine.Initialize(data, null);
             IObjectTree objectTree = new ModernObjectTree(curses, machine.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
@@ -134,7 +131,7 @@ namespace Zmpp.Core.Vm.Tests
             var logger = new Mock<ILogger>();
             byte[] data = File.ReadAllBytes("testfiles/curses.z5");
             IMemory curses = new Memory(data);
-            IMachine machine = new MachineImpl(logger.Object);
+            IMachine machine = new Machine(logger.Object);
             machine.Initialize(data, null);
             IObjectTree objectTree = new ModernObjectTree(curses, machine.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
@@ -160,7 +157,7 @@ namespace Zmpp.Core.Vm.Tests
             var logger = new Mock<ILogger>();
             byte[] data = File.ReadAllBytes("testfiles/curses.z5");
             IMemory curses = new Memory(data);
-            IMachine machine = new MachineImpl(logger.Object);
+            IMachine machine = new Machine(logger.Object);
             machine.Initialize(data, null);
             IObjectTree objectTree = new ModernObjectTree(curses, machine.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 
@@ -180,7 +177,7 @@ namespace Zmpp.Core.Vm.Tests
             var logger = new Mock<ILogger>();
             byte[] data = File.ReadAllBytes("testfiles/curses.z5");
             IMemory curses = new Memory(data);
-            IMachine machine = new MachineImpl(logger.Object);
+            IMachine machine = new Machine(logger.Object);
             machine.Initialize(data, null);
             IObjectTree objectTree = new ModernObjectTree(curses, machine.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
 

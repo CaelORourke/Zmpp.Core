@@ -45,7 +45,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testGetA0Char()
+        public void GetA0Char()
         {
             // arrange
             var memory = new Mock<IMemory>();
@@ -67,7 +67,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testGetA1Char()
+        public void GetA1Char()
         {
             // arrange
             var memory = new Mock<IMemory>();
@@ -89,7 +89,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testGetA2Char()
+        public void GetA2Char()
         {
             // arrange
             var memory = new Mock<IMemory>();
@@ -113,7 +113,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testA0IndexOfNotFound()
+        public void A0IndexOfNotFound()
         {
             // arrange
             var memory = new Mock<IMemory>();
@@ -129,7 +129,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testA1IndexOfNotFound()
+        public void A1IndexOfNotFound()
         {
             // arrange
             var memory = new Mock<IMemory>();
@@ -145,7 +145,7 @@ namespace Zmpp.Core.Encoding.Tests
         }
 
         [TestMethod]
-        public void testA2IndexOfNotFound()
+        public void A2IndexOfNotFound()
         {
             // arrange
             var memory = new Mock<IMemory>();

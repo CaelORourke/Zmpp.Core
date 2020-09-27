@@ -163,7 +163,7 @@ namespace Zmpp.Core.Instructions
             }
             else
             {
-                char storevar = gamestate.getStoreVariable(getMachine());
+                char storevar = gamestate.GetStoreVariable(getMachine());
                 getMachine().SetVariable(storevar, RESTORE_TRUE);
             }
         }

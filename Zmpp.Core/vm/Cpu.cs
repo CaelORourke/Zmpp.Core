@@ -40,19 +40,19 @@ namespace Zmpp.Core.Vm
     /// <summary>
     /// Cpu interface implementation.
     /// </summary>
-    public class CpuImpl : ICpu
+    public class Cpu : ICpu
     {
         private readonly ILogger LOG;
 
         /// <summary>
         /// The stack size is now 64 K.
         /// </summary>
-        private const char STACKSIZE = (char)32768;
+        private const char StackSize = (char)32768;
 
         /// <summary>
         /// The machine object.
         /// </summary>
-        private IMachine machine;
+        private readonly IMachine machine;
 
         /// <summary>
         /// This machine's current program counter.
@@ -79,7 +79,7 @@ namespace Zmpp.Core.Vm
         /// </summary>
         /// <param name="logger">the logger</param>
         /// <param name="machine">the Machine object</param>
-        public CpuImpl(ILogger logger, IMachine machine)
+        public Cpu(ILogger logger, IMachine machine)
         {
             this.LOG = logger;
             this.machine = machine;
@@ -87,30 +87,26 @@ namespace Zmpp.Core.Vm
 
         public void Reset()
         {
-            stack = new FastShortStack(STACKSIZE);
+            stack = new FastShortStack(StackSize);
             routineContextStack = new List<RoutineContext>();
             globalsAddress = machine.ReadUnsigned16(StoryFileHeaderAddress.Globals);
 
             if (machine.Version == 6)
             {
                 // Call main function in version 6
-                Call(getProgramStart(), (char)0,
+                Call(ProgramStart, (char)0,
                      new char[0], (char)0);
             }
             else
             {
-                programCounter = getProgramStart();
+                programCounter = ProgramStart;
             }
         }
 
         /// <summary>
-        /// Returns the story's start address.
+        /// Gets the start address of the story.
         /// </summary>
-        /// <returns>the start address</returns>
-        private char getProgramStart()
-        {
-            return machine.ReadUnsigned16(StoryFileHeaderAddress.ProgramStart);
-        }
+        private char ProgramStart => machine.ReadUnsigned16(StoryFileHeaderAddress.ProgramStart);
 
         public int PC
         {
@@ -128,54 +124,49 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Increments the program counter.
         /// </summary>
-        /// <param name="offset">the increment value.</param>
+        /// <param name="offset">The increment value.</param>
         public void IncrementPC(int offset) { programCounter += offset; }
 
         public int UnpackStringAddress(char packedAddress)
         {
             int version = machine.Version;
             return version == 6 || version == 7 ?
-              packedAddress * 4 + 8 * getStaticStringOffset()
-              : unpackAddress(packedAddress);
+              packedAddress * 4 + 8 * StaticStringOffset
+              : UnpackAddress(packedAddress);
         }
 
         /// <summary>
-        /// Unpacks a routine address, exposed for testing.
+        /// Unpacks a routine address.
         /// </summary>
-        /// <param name="packedAddress">the packed address</param>
-        /// <returns>the unpacked address</returns>
-        public int unpackRoutineAddress(char packedAddress)
+        /// <param name="packedAddress">The packed address.</param>
+        /// <returns>The unpacked address.</returns>
+        /// <remarks>Exposed for testing.</remarks>
+        public int UnpackRoutineAddress(char packedAddress)
         {
             int version = machine.Version;
             return version == 6 || version == 7 ?
-              packedAddress * 4 + 8 * getRoutineOffset()
-              : unpackAddress(packedAddress);
+              packedAddress * 4 + 8 * RoutineOffset
+              : UnpackAddress(packedAddress);
         }
 
         /// <summary>
-        /// Only for V6 and V7 games: the routine offset.
+        /// Gets the routine offset.
         /// </summary>
-        /// <returns>the routine offset</returns>
-        private char getRoutineOffset()
-        {
-            return machine.ReadUnsigned16(StoryFileHeaderAddress.RoutineOffset);
-        }
+        /// <remarks>Only for V6 and V7 games.</remarks>
+        private char RoutineOffset => machine.ReadUnsigned16(StoryFileHeaderAddress.RoutineOffset);
 
         /// <summary>
-        /// Only in V6 and V7: the static string offset.
+        /// Gets the static string offset.
         /// </summary>
-        /// <returns>the static string offset</returns>
-        private char getStaticStringOffset()
-        {
-            return machine.ReadUnsigned16(StoryFileHeaderAddress.StaticStringOffset);
-        }
+        /// <remarks>Only for V6 and V7 games.</remarks>
+        private char StaticStringOffset => machine.ReadUnsigned16(StoryFileHeaderAddress.StaticStringOffset);
 
         /// <summary>
         /// Version specific unpacking.
         /// </summary>
-        /// <param name="packedAddress">the packed address</param>
-        /// <returns>the unpacked address</returns>
-        private int unpackAddress(char packedAddress)
+        /// <param name="packedAddress">The packed address.</param>
+        /// <returns>The unpacked address.</returns>
+        private int UnpackAddress(char packedAddress)
         {
             switch (machine.Version)
             {
@@ -196,7 +187,7 @@ namespace Zmpp.Core.Vm
         {
             if (branchOffset >= 2 || branchOffset < 0)
             {
-                PC = computeBranchTarget(branchOffset, instructionLength);
+                PC = ComputeBranchTarget(branchOffset, instructionLength);
             }
             else
             {
@@ -209,23 +200,27 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Computes the branch target.
         /// </summary>
-        /// <param name="offset">offset value</param>
-        /// <param name="instructionLength">instruction length</param>
-        /// <returns>branch target value</returns>
-        private int computeBranchTarget(short offset, int instructionLength)
+        /// <param name="offset">The offset value.</param>
+        /// <param name="instructionLength">The instruction length.</param>
+        /// <returns>The branch target value.</returns>
+        private int ComputeBranchTarget(short offset, int instructionLength)
         {
             return PC + instructionLength + offset - 2;
         }
 
         #region Stack operations
 
-        public char SP => stack.StackPointer;
         /// <summary>
-        /// Sets the global stack pointer to the specified value. This might pop off
-        /// several values from the stack.
+        /// Gets the global stack pointer.
         /// </summary>
-        /// <param name="stackpointer">the new stack pointer value</param>
-        private void setSP(char stackpointer)
+        public char SP => stack.StackPointer;
+
+        /// <summary>
+        /// Sets the global stack pointer to the specified value.
+        /// </summary>
+        /// <param name="stackpointer">The new stack pointer value.</param>
+        /// <remarks>This might pop off several values from the stack.</remarks>
+        private void SetSP(char stackpointer)
         {
             // remove the last diff elements
             int diff = stack.StackPointer - stackpointer;
@@ -239,11 +234,11 @@ namespace Zmpp.Core.Vm
                 if (stack.Size> 0) { return stack.Top; }
                 throw new IndexOutOfRangeException("Stack underflow error");
             }
-        }
 
-        public void setStackTop(char value)
-        {
-            stack.ReplaceTopElement(value);
+            set
+            {
+                stack.ReplaceTopElement(value);
+            }
         }
 
         public char GetStackElement(int index)
@@ -254,15 +249,15 @@ namespace Zmpp.Core.Vm
         public char PopStack(char userstackAddress)
         {
             return userstackAddress == 0 ? GetVariable((char)0) :
-              popUserStack(userstackAddress);
+              PopUserStack(userstackAddress);
         }
 
         /// <summary>
         /// Pops the user stack.
         /// </summary>
-        /// <param name="userstackAddress">address of user stack</param>
-        /// <returns>popped value</returns>
-        private char popUserStack(char userstackAddress)
+        /// <param name="userstackAddress">The address of the user stack.</param>
+        /// <returns>The popped value.</returns>
+        private char PopUserStack(char userstackAddress)
         {
             int numFreeSlots = machine.ReadUnsigned16(userstackAddress);
             numFreeSlots++;
@@ -279,17 +274,17 @@ namespace Zmpp.Core.Vm
             }
             else
             {
-                return pushUserStack(userstackAddress, value);
+                return PushUserStack(userstackAddress, value);
             }
         }
 
         /// <summary>
         /// Push user stack.
         /// </summary>
-        /// <param name="userstackAddress">address of user stack</param>
-        /// <param name="value">value to push</param>
-        /// <returns>true if successful, false on overflow</returns>
-        private bool pushUserStack(char userstackAddress, char value)
+        /// <param name="userstackAddress">The address of the user stack.</param>
+        /// <param name="value">The value to push.</param>
+        /// <returns>true if successful; otherwise false on overflow.</returns>
+        private bool PushUserStack(char userstackAddress, char value)
         {
             int numFreeSlots = machine.ReadUnsigned16(userstackAddress);
             if (numFreeSlots > 0)
@@ -303,10 +298,10 @@ namespace Zmpp.Core.Vm
 
         public char GetVariable(char variableNumber)
         {
-            ICpu.VariableType varType = getVariableType(variableNumber);
-            if (varType == ICpu.VariableType.STACK)
+            ICpu.VariableType varType = GetVariableType(variableNumber);
+            if (varType == ICpu.VariableType.Stack)
             {
-                if (stack.Size== getInvocationStackPointer())
+                if (stack.Size== InvocationStackPointer)
                 {
                     //throw new IllegalStateException("stack underflow error");
                     LOG.LogCritical("stack underflow error");
@@ -317,73 +312,68 @@ namespace Zmpp.Core.Vm
                     return stack.Pop();
                 }
             }
-            else if (varType == ICpu.VariableType.LOCAL)
+            else if (varType == ICpu.VariableType.Local)
             {
-                char localVarNumber = getLocalVariableNumber(variableNumber);
-                checkLocalVariableAccess(localVarNumber);
-                return getCurrentRoutineContext().getLocalVariable(localVarNumber);
+                char localVarNumber = GetLocalVariableNumber(variableNumber);
+                CheckLocalVariableAccess(localVarNumber);
+                return CurrentRoutineContext.GetLocalVariable(localVarNumber);
             }
             else
             { // GLOBAL
                 return machine.ReadUnsigned16(globalsAddress +
-                    (getGlobalVariableNumber(variableNumber) * 2));
+                    (GetGlobalVariableNumber(variableNumber) * 2));
             }
         }
 
         /// <summary>
-        /// Returns the current invocation stack pointer.
+        /// Gets the current invocation stack pointer.
         /// </summary>
-        /// <returns>the invocation stack pointer</returns>
-        private char getInvocationStackPointer()
-        {
-            return (char)(getCurrentRoutineContext() == null ? 0 :
-              getCurrentRoutineContext().getInvocationStackPointer());
-        }
+        private char InvocationStackPointer => (char)(CurrentRoutineContext == null ? 0 : CurrentRoutineContext.InvocationStackPointer);
 
         public void SetVariable(char variableNumber, char value)
         {
-            ICpu.VariableType varType = getVariableType(variableNumber);
-            if (varType == ICpu.VariableType.STACK)
+            ICpu.VariableType varType = GetVariableType(variableNumber);
+            if (varType == ICpu.VariableType.Stack)
             {
                 stack.Push(value);
             }
-            else if (varType == ICpu.VariableType.LOCAL)
+            else if (varType == ICpu.VariableType.Local)
             {
-                char localVarNumber = getLocalVariableNumber(variableNumber);
-                checkLocalVariableAccess(localVarNumber);
-                getCurrentRoutineContext().setLocalVariable(localVarNumber, value);
+                char localVarNumber = GetLocalVariableNumber(variableNumber);
+                CheckLocalVariableAccess(localVarNumber);
+                CurrentRoutineContext.SetLocalVariable(localVarNumber, value);
             }
             else
             {
                 machine.WriteUnsigned16(globalsAddress +
-                    (getGlobalVariableNumber(variableNumber) * 2), value);
+                    (GetGlobalVariableNumber(variableNumber) * 2), value);
             }
         }
 
         /// <summary>
-        /// Returns the variable type for the given variable number.
+        /// Gets the variable type for the specified variable number.
         /// </summary>
-        /// <param name="variableNumber">the variable number</param>
-        /// <returns>STACK if stack variable, LOCAL if local variable, GLOBAL if global</returns>
-        public static ICpu.VariableType getVariableType(int variableNumber)
+        /// <param name="variableNumber">The variable number.</param>
+        /// <returns>The variable type.</returns>
+        public static ICpu.VariableType GetVariableType(int variableNumber)
         {
             if (variableNumber == 0)
             {
-                return ICpu.VariableType.STACK;
+                return ICpu.VariableType.Stack;
             }
             else if (variableNumber < 0x10)
             {
-                return ICpu.VariableType.LOCAL;
+                return ICpu.VariableType.Local;
             }
             else
             {
-                return ICpu.VariableType.GLOBAL;
+                return ICpu.VariableType.Global;
             }
         }
 
-        public void pushRoutineContext(RoutineContext routineContext)
+        public void PushRoutineContext(RoutineContext routineContext)
         {
-            routineContext.setInvocationStackPointer(SP);
+            routineContext.InvocationStackPointer = SP;
             routineContextStack.Add(routineContext);
         }
 
@@ -394,13 +384,13 @@ namespace Zmpp.Core.Vm
                 //RoutineContext popped = routineContextStack.Remove(routineContextStack.Count - 1);
                 RoutineContext popped = routineContextStack[routineContextStack.Count - 1];
                 routineContextStack.Remove(popped);
-                popped.setReturnValue(returnValue);
+                popped.ReturnValue = returnValue;
 
                 // Restore stack pointer and pc
-                setSP(popped.getInvocationStackPointer());
-                PC = popped.getReturnAddress();
-                char returnVariable = popped.getReturnVariable();
-                if (returnVariable != RoutineContext.DISCARD_RESULT)
+                SetSP(popped.InvocationStackPointer);
+                PC = popped.ReturnAddress;
+                char returnVariable = popped.ReturnVariable;
+                if (returnVariable != RoutineContext.DiscardResult)
                 {
                     SetVariable(returnVariable, returnValue);
                 }
@@ -411,21 +401,24 @@ namespace Zmpp.Core.Vm
             }
         }
 
-        public RoutineContext getCurrentRoutineContext()
+        public RoutineContext CurrentRoutineContext
         {
-            if (routineContextStack.Count == 0)
+            get
             {
-                return null;
+                if (routineContextStack.Count == 0)
+                {
+                    return null;
+                }
+                return routineContextStack[routineContextStack.Count - 1];
             }
-            return routineContextStack[routineContextStack.Count - 1];
         }
 
-        public List<RoutineContext> getRoutineContexts()
+        public List<RoutineContext> GetRoutineContexts()
         {
             return routineContextStack.AsReadOnly().ToList();
         }
 
-        public void setRoutineContexts(List<RoutineContext> contexts)
+        public void SetRoutineContexts(List<RoutineContext> contexts)
         {
             routineContextStack.Clear();
             foreach (RoutineContext context in contexts)
@@ -435,55 +428,52 @@ namespace Zmpp.Core.Vm
         }
 
         /// <summary>
-        /// This function is basically exposed to the debug application.
+        /// Gets the routine stack pointer.
         /// </summary>
-        /// <returns>the current routine stack pointer</returns>
-        public char getRoutineStackPointer()
-        {
-            return (char)routineContextStack.Count;
-        }
+        /// <remarks>This property is exposed for debugging.</remarks>
+        public char RoutineStackPointer => (char)routineContextStack.Count;
 
         public RoutineContext Call(char packedRoutineAddress, int returnAddress, char[] args, char returnVariable)
         {
-            int routineAddress = unpackRoutineAddress(packedRoutineAddress);
+            int routineAddress = UnpackRoutineAddress(packedRoutineAddress);
             int numArgs = args == null ? 0 : args.Length;
-            RoutineContext routineContext = decodeRoutine(routineAddress);
+            RoutineContext routineContext = DecodeRoutine(routineAddress);
 
             // Sets the number of arguments
-            routineContext.setNumArguments(numArgs);
+            routineContext.NumArguments = numArgs;
 
             // Save return parameters
-            routineContext.setReturnAddress(returnAddress);
+            routineContext.ReturnAddress = returnAddress;
 
             // Only if this instruction stores a result
-            if (returnVariable == RoutineContext.DISCARD_RESULT)
+            if (returnVariable == RoutineContext.DiscardResult)
             {
-                routineContext.setReturnVariable(RoutineContext.DISCARD_RESULT);
+                routineContext.ReturnVariable = RoutineContext.DiscardResult;
             }
             else
             {
-                routineContext.setReturnVariable(returnVariable);
+                routineContext.ReturnVariable = returnVariable;
             }
 
             // Set call parameters into the local variables
             // if there are more parameters than local variables,
             // those are thrown away
-            int numToCopy = Math.Min(routineContext.getNumLocalVariables(), numArgs);
+            int numToCopy = Math.Min(routineContext.NumLocalVariables, numArgs);
 
             for (int i = 0; i < numToCopy; i++)
             {
-                routineContext.setLocalVariable((char)i, args[i]);
+                routineContext.SetLocalVariable((char)i, args[i]);
             }
 
             // save invocation stack pointer
-            routineContext.setInvocationStackPointer(SP);
+            routineContext.InvocationStackPointer = SP;
 
             // Pushes the routine context onto the routine stack
-            pushRoutineContext(routineContext);
+            PushRoutineContext(routineContext);
 
             // Jump to the address
             PC = machine.Version >= 5 ? routineAddress + 1 :
-              routineAddress + 1 + 2 * routineContext.getNumLocalVariables();
+              routineAddress + 1 + 2 * routineContext.NumLocalVariables;
             return routineContext;
         }
 
@@ -494,9 +484,9 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// Decodes the routine at the specified address.
         /// </summary>
-        /// <param name="routineAddress">the routine address</param>
-        /// <returns>a RoutineContext object</returns>
-        private RoutineContext decodeRoutine(int routineAddress)
+        /// <param name="routineAddress">The routine address.</param>
+        /// <returns>The RoutineContext object.</returns>
+        private RoutineContext DecodeRoutine(int routineAddress)
         {
             int numLocals = machine.ReadUnsigned8(routineAddress);
             char[] locals = new char[numLocals];
@@ -513,27 +503,27 @@ namespace Zmpp.Core.Vm
             RoutineContext info = new RoutineContext(numLocals);
             for (int i = 0; i < numLocals; i++)
             {
-                info.setLocalVariable((char)i, locals[i]);
+                info.SetLocalVariable((char)i, locals[i]);
             }
             return info;
         }
 
         /// <summary>
-        /// Returns the local variable number for a specified variable number.
+        /// Gets the local variable number for the specified variable number.
         /// </summary>
-        /// <param name="variableNumber">the variable number in an operand (0x01-0x0f)</param>
-        /// <returns>the local variable number</returns>
-        private char getLocalVariableNumber(char variableNumber)
+        /// <param name="variableNumber">The variable number in an operand (0x01-0x0f).</param>
+        /// <returns>The local variable number.</returns>
+        private char GetLocalVariableNumber(char variableNumber)
         {
             return (char)(variableNumber - 1);
         }
 
         /// <summary>
-        /// Returns the global variable for the specified variable number.
+        /// Gets the global variable number for the specified variable number.
         /// </summary>
-        /// <param name="variableNumber">a variable number (0x10-0xff)</param>
-        /// <returns>the global variable number</returns>
-        private char getGlobalVariableNumber(char variableNumber)
+        /// <param name="variableNumber">The variable number in an operand (0x10-0xff).</param>
+        /// <returns>The global variable number.</returns>
+        private char GetGlobalVariableNumber(char variableNumber)
         {
             return (char)(variableNumber - 0x10);
         }
@@ -543,18 +533,18 @@ namespace Zmpp.Core.Vm
         /// is accessed on the current routine context or no current routine context
         /// is set.
         /// </summary>
-        /// <param name="localVariableNumber">the local variable number</param>
-        private void checkLocalVariableAccess(char localVariableNumber)
+        /// <param name="localVariableNumber">The local variable number.</param>
+        private void CheckLocalVariableAccess(char localVariableNumber)
         {
             if (routineContextStack.Count == 0)
             {
-                throw new InvalidOperationException("no routine context set");
+                throw new InvalidOperationException("There is no routine context set.");
             }
 
-            if (localVariableNumber >= getCurrentRoutineContext()
-                .getNumLocalVariables())
+            if (localVariableNumber >= CurrentRoutineContext
+                .NumLocalVariables)
             {
-                throw new InvalidOperationException("access to non-existent local variable: " + (int)localVariableNumber);
+                throw new InvalidOperationException("Access to non-existent local variable: " + (int)localVariableNumber);
             }
         }
 

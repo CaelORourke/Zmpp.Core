@@ -40,46 +40,46 @@ namespace Zmpp.Core.Vm.Tests
     public class RoutineContextTest
     {
         [TestMethod]
-        public void testCreate()
+        public void Create()
         {
             // arrange
             RoutineContext context = new RoutineContext(2);
 
             // act
-            var result = context.getNumLocalVariables();
+            var result = context.NumLocalVariables;
 
             // assert
             Assert.AreEqual(2, result);
         }
 
         [TestMethod]
-        public void testSetters()
+        public void Setters()
         {
             // arrange
             RoutineContext context = new RoutineContext(2);
 
             // act
-            context.setLocalVariable((char)0, (char)72);
-            var result = context.getLocalVariable((char)0);
-            context.setLocalVariable((char)1, (char)76);
-            var result2 = context.getLocalVariable((char)1);
+            context.SetLocalVariable((char)0, (char)72);
+            var result = context.GetLocalVariable((char)0);
+            context.SetLocalVariable((char)1, (char)76);
+            var result2 = context.GetLocalVariable((char)1);
             try
             {
-                context.setLocalVariable((char)2, (char)815);
+                context.SetLocalVariable((char)2, (char)815);
                 Assert.Fail();
             }
             catch (IndexOutOfRangeException)
             {
                 // this is good
             }
-            context.setReturnAddress((char)0x4711);
-            var result3 = context.getReturnAddress();
-            context.setReturnVariable((char)0x13);
-            var result4 = context.getReturnVariable();
-            context.setInvocationStackPointer((char)1234);
-            var result5 = context.getInvocationStackPointer();
-            context.setNumArguments(3);
-            var result6 = context.getNumArguments();
+            context.ReturnAddress = (char)0x4711;
+            var result3 = context.ReturnAddress;
+            context.ReturnVariable = (char)0x13;
+            var result4 = context.ReturnVariable;
+            context.InvocationStackPointer = (char)1234;
+            var result5 = context.InvocationStackPointer;
+            context.NumArguments = 3;
+            var result6 = context.NumArguments;
 
             // assert
             Assert.AreEqual(72, result);

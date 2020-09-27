@@ -44,9 +44,8 @@ namespace Zmpp.Core.Vm
     /// <summary>
     /// This class implements the state and some services of a Z-machine, version 3.
     /// </summary>
-    public class MachineImpl : IMachine, IDrawingArea
+    public class Machine : IMachine, IDrawingArea
     {
-        private const long serialVersionUID = -8497998738628466785L;
         private readonly ILogger LOG;
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace Zmpp.Core.Vm
         private readonly ISoundSystem soundSystem;
         private readonly IPictureManager pictureManager;
         private ICpu cpu;
-        private OutputImpl output;
+        private Output output;
         private InputImpl input;
 
         // Formerly GameData
@@ -84,12 +83,12 @@ namespace Zmpp.Core.Vm
         /// Constructor.
         /// </summary>
         /// <param name="logger">the logger</param>
-        public MachineImpl(ILogger logger)
+        public Machine(ILogger logger)
         {
             this.LOG = logger;
             this.inputFunctions = new InputFunctions(this);
             this.input = new InputImpl();
-            this.output = new OutputImpl(this);
+            this.output = new Output(this);
         }
 
         #region Initialization
@@ -101,7 +100,7 @@ namespace Zmpp.Core.Vm
             this._random = new UnpredictableRandomGenerator();
             this.undostates = new RingBuffer<PortableGameState>(NumUndo);
 
-            cpu = new CpuImpl(this.LOG, this);
+            cpu = new Cpu(this.LOG, this);
             //output = new OutputImpl(this);
             //input = new InputImpl();
 
@@ -293,13 +292,16 @@ namespace Zmpp.Core.Vm
             getCpu().SetVariable(varnum, value);
         }
 
-        public char StackTop => getCpu().StackTop;
+        public char StackTop
+        {
+            get => getCpu().StackTop;
+            set => getCpu().StackTop = value;
+        }
+
         public char GetStackElement(int index)
         {
             return getCpu().GetStackElement(index);
         }
-
-        public void setStackTop(char value) { getCpu().setStackTop(value); }
 
         public void IncrementPC(int length) { getCpu().IncrementPC(length); }
 
@@ -327,14 +329,14 @@ namespace Zmpp.Core.Vm
             return getCpu().PushStack(stack, value);
         }
 
-        public List<RoutineContext> getRoutineContexts()
+        public List<RoutineContext> GetRoutineContexts()
         {
-            return getCpu().getRoutineContexts();
+            return getCpu().GetRoutineContexts();
         }
 
-        public void setRoutineContexts(List<RoutineContext> routineContexts)
+        public void SetRoutineContexts(List<RoutineContext> routineContexts)
         {
-            getCpu().setRoutineContexts(routineContexts);
+            getCpu().SetRoutineContexts(routineContexts);
         }
 
         public void ReturnWith(char returnValue)
@@ -342,10 +344,7 @@ namespace Zmpp.Core.Vm
             getCpu().ReturnWith(returnValue);
         }
 
-        public RoutineContext getCurrentRoutineContext()
-        {
-            return getCpu().getCurrentRoutineContext();
-        }
+        public RoutineContext CurrentRoutineContext => getCpu().CurrentRoutineContext;
 
         public int UnpackStringAddress(char packedAddress)
         {
@@ -456,7 +455,7 @@ namespace Zmpp.Core.Vm
          */
         public void setOutputStream(int streamnumber, IOutputStream stream)
         {
-            output.setOutputStream(streamnumber, stream);
+            output.SetOutputStream(streamnumber, stream);
         }
 
         public void SelectOutputStream(int streamnumber, bool flag)
@@ -649,8 +648,8 @@ namespace Zmpp.Core.Vm
             if (datastore != null)
             {
                 PortableGameState gamestate = new PortableGameState();
-                gamestate.captureMachineState(this, savepc);
-                WritableFormChunk formChunk = gamestate.exportToFormChunk();
+                gamestate.CaptureMachineState(this, savepc);
+                WritableFormChunk formChunk = gamestate.ExportToFormChunk();
                 return datastore.WriteFormChunk(formChunk);
             }
             return false;
@@ -659,7 +658,7 @@ namespace Zmpp.Core.Vm
         public bool SaveUndo(int savepc)
         {
             PortableGameState undoGameState = new PortableGameState();
-            undoGameState.captureMachineState(this, savepc);
+            undoGameState.CaptureMachineState(this, savepc);
             undostates.add(undoGameState);
             return true;
         }
@@ -670,7 +669,7 @@ namespace Zmpp.Core.Vm
             {
                 PortableGameState gamestate = new PortableGameState();
                 IFormChunk formchunk = datastore.ReadFormChunk();
-                gamestate.readSaveGame(formchunk);
+                gamestate.ReadSaveGame(formchunk);
 
                 // verification has to be here
                 if (verifySaveGame(gamestate))
@@ -678,7 +677,7 @@ namespace Zmpp.Core.Vm
                     // do not reset screen model, since e.g. AMFV simply picks up the
                     // current window state
                     restart(false);
-                    gamestate.transferStateToMachine(this);
+                    gamestate.TransferStateToMachine(this);
                     return gamestate;
                 }
             }
@@ -694,7 +693,7 @@ namespace Zmpp.Core.Vm
                 PortableGameState undoGameState =
                   undostates.remove(undostates.size() - 1);
                 restart(false);
-                undoGameState.transferStateToMachine(this);
+                undoGameState.TransferStateToMachine(this);
                 LOG.LogInformation(String.Format("restore(), pc is: %4x\n", cpu.PC));
                 return undoGameState;
             }
@@ -718,9 +717,9 @@ namespace Zmpp.Core.Vm
             {
                 saveGameChecksum = this.checksum;
             }
-            return gamestate.getRelease() == Release
-              && gamestate.getChecksum() == checksum
-              && gamestate.getSerialNumber().Equals(FileHeader.SerialNumber);
+            return gamestate.Release == Release
+              && gamestate.Checksum == checksum
+              && gamestate.SerialNumber.Equals(FileHeader.SerialNumber);
         }
 
         /**
@@ -738,7 +737,7 @@ namespace Zmpp.Core.Vm
         private void closeStreams()
         {
             input.close();
-            output.close();
+            output.Close();
         }
 
         /**

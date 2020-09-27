@@ -39,7 +39,7 @@ namespace Zmpp.Core.Vm
         /// <summary>
         /// The possible variable types.
         /// </summary>
-        enum VariableType { STACK, LOCAL, GLOBAL }
+        enum VariableType { Stack, Local, Global }
 
         /// <summary>
         /// Resets this object to initial state.
@@ -80,16 +80,13 @@ namespace Zmpp.Core.Vm
         char SP { get; }
 
         /// <summary>
-        /// Gets the value at the top of the stack without removing it.
+        /// Gets or sets the value at the top of the stack.
         /// </summary>
-        char StackTop { get; }
-
-        /// <summary>
-        /// Sets the value of the element at the top of the stack without
-        /// incrementing the stack pointer.
-        /// </summary>
-        /// <param name="value">the value to set</param>
-        void setStackTop(char value);
+        /// <remarks>
+        /// Gets the value without removing it. Sets the value
+        /// without incrementing the stack pointer.
+        /// </remarks>
+        char StackTop { get; set; }
 
         /// <summary>
         /// Returns the evaluation stack element at the specified index.
@@ -159,37 +156,38 @@ namespace Zmpp.Core.Vm
         void ReturnWith(char returnValue);
 
         /// <summary>
-        /// Returns the state of the current routine context stack as a non-
+        /// Gets the state of the current routine context stack as a non-
         /// modifiable List.
         /// </summary>
-        /// <returns>the list of routine contexts</returns>
-        /// <remarks>This is exposed to PortableGameState to take a
-        /// machine state snapshot.</remarks>
-        List<RoutineContext> getRoutineContexts();
+        /// <returns>The list of routine contexts.</returns>
+        /// <remarks>
+        /// This is exposed to PortableGameState to take a
+        /// machine state snapshot.
+        /// </remarks>
+        List<RoutineContext> GetRoutineContexts();
 
         /// <summary>
         /// Copies the list of routine contexts into this machine's routine context
         /// stack.
         /// </summary>
-        /// <param name="contexts">a list of routine contexts</param>
+        /// <param name="contexts">The list of routine contexts.</param>
         /// <remarks>This is a consequence of a restore operation.</remarks>
-        void setRoutineContexts(List<RoutineContext> contexts);
+        void SetRoutineContexts(List<RoutineContext> contexts);
 
         /// <summary>
-        /// Returns the current routine context without affecting the state
+        /// Gets the current routine context without affecting the state
         /// of the machine.
         /// </summary>
-        /// <returns>the current routine context</returns>
-        RoutineContext getCurrentRoutineContext();
+        RoutineContext CurrentRoutineContext { get; }
 
         /// <summary>
         /// Performs a routine call.
         /// </summary>
-        /// <param name="routineAddress">the packed routine address</param>
-        /// <param name="returnAddress">the return address</param>
-        /// <param name="args">the argument list</param>
-        /// <param name="returnVariable">the return variable or DISCARD_RESULT</param>
-        /// <returns>the routine context created</returns>
+        /// <param name="routineAddress">The packed routine address.</param>
+        /// <param name="returnAddress">The return address.</param>
+        /// <param name="args">The argument list.</param>
+        /// <param name="returnVariable">The return variable or DiscardResult.</param>
+        /// <returns>The routine context created.</returns>
         RoutineContext Call(char routineAddress, int returnAddress, char[] args, char returnVariable);
 
         #endregion

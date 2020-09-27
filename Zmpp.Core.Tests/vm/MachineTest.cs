@@ -49,7 +49,7 @@ namespace Zmpp.Core.Vm.Tests
         private IMemory minizorkmap;
         private IStoryFileHeader fileheader;
         private Abbreviations abbreviations;
-        private MachineImpl machine;
+        private Machine machine;
 
         private Mock<IOutputStream> outputStream1, outputStream2, outputStream3;
         private Mock<IInputStream> inputStream1, inputStream0;
@@ -65,7 +65,7 @@ namespace Zmpp.Core.Vm.Tests
             byte[] data = File.ReadAllBytes("testfiles/minizork.z3");
             IMemory minizorkmap = new Memory(data);
             IObjectTree objectTree = new ClassicObjectTree(minizorkmap, minizorkmap.ReadUnsigned16(StoryFileHeaderAddress.ObjectTable));
-            machine = new MachineImpl(logger.Object);
+            machine = new Machine(logger.Object);
             machine.Initialize(data, null);
             fileheader = machine.FileHeader;
 

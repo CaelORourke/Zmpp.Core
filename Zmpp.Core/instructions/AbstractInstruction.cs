@@ -304,7 +304,7 @@ namespace Zmpp.Core.Instructions
             else
             {
                 int returnAddress = getMachine().PC + opcodeLength;
-                char returnVariable = storesResult() ? storeVariable : RoutineContext.DISCARD_RESULT;
+                char returnVariable = storesResult() ? storeVariable : RoutineContext.DiscardResult;
                 machine.Call(packedRoutineAddress, returnAddress, args, returnVariable);
             }
         }
@@ -369,7 +369,7 @@ namespace Zmpp.Core.Instructions
                 }
                 else
                 {
-                    char storevar = gamestate.getStoreVariable(getMachine());
+                    char storevar = gamestate.GetStoreVariable(getMachine());
                     getMachine().SetVariable(storevar, Instruction.RESTORE_TRUE);
                 }
             }
