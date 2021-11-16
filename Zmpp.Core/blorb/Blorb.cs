@@ -29,7 +29,6 @@
 
 namespace Zmpp.Core.Blorb
 {
-    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using System.IO;
     using System.Xml.Linq;
@@ -40,15 +39,71 @@ namespace Zmpp.Core.Blorb
     /// This class parses the metadata chunk in the Blorb file and converts
     /// it into a Treaty of Babel metadata object.
     /// </summary>
-    public static class BlorbMetadata
+    public static class Blorb
     {
-        private static readonly ILogger logger;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool IsBlorb(string path)
+        {
+            byte[] data = File.ReadAllBytes(path);
+            return IsBlorb(data);
+        }
 
         /// <summary>
-        /// Extracts inform meta data from the specified FORM chunk.
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static bool IsBlorb(byte[] data)
+        {
+            string Id = System.Text.Encoding.UTF8.GetString(data, 0, ChunkBase.ChunkIdLength);
+            if (!"FORM".Equals(Id))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Reads the Blorb from the specified data.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The form chunk.</returns>
+        public static IFormChunk ReadBlorb(byte[] data)
+        {
+            IFormChunk blorbchunk = null;
+            if (data != null)
+            {
+                blorbchunk = new FormChunk(new Memory(data));
+            }
+            return blorbchunk;
+        }
+
+        /// <summary>
+        /// Reads the meta data from the specified file.
+        /// </summary>
+        /// <param name="path">The file to read.</param>
+        public static List<StoryMetadata> ReadMetadata(string path)
+        {
+            byte[] data = File.ReadAllBytes(path);
+
+            IFormChunk blorbchunk = ReadBlorb(data);
+            if (!"IFRS".Equals(blorbchunk.SubId))
+            {
+                throw new IOException($"'{path}' is not a valid Blorb file.");
+            }
+
+            return ReadMetadata(blorbchunk);
+        }
+
+        /// <summary>
+        /// Reads the meta data from the specified FORM chunk.
         /// </summary>
         /// <param name="formchunk">The FORM chunk.</param>
-        public static List<StoryMetadata> Parse(IFormChunk formchunk)
+        public static List<StoryMetadata> ReadMetadata(IFormChunk formchunk)
         {
             // an ifindex can hold multiple stories
             List<StoryMetadata> storyMetadata = new List<StoryMetadata>();

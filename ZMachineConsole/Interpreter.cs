@@ -42,12 +42,12 @@ namespace ZMachineConsole
     using Zmpp.Core.Vm;
 
     /// <summary>
-    /// Represents a z-machine.
+    /// Represents an interpreter for story files.
     /// </summary>
     /// <remarks>
     /// Based on the ExecutionControl class from the original source.
     /// </remarks>
-    public class ZMachine
+    public class Interpreter
     {
         public const bool DEBUG = false;
         public const bool DEBUG_INTERRUPT = false;
@@ -60,12 +60,32 @@ namespace ZMachineConsole
         private int step = 1;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ZMachineConsole.ZMachine"/>
+        /// Gets the file header.
+        /// </summary>
+        public IStoryFileHeader FileHeader => machine.FileHeader;
+
+        /// <summary>
+        /// Gets the default background color.
+        /// </summary>
+        public int DefaultBackground => machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultBackground);
+
+        /// <summary>
+        /// Gets the default foreground color.
+        /// </summary>
+        public int DefaultForeground => machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultForeground);
+
+        /// <summary>
+        /// Gets the current step number.
+        /// </summary>
+        public int Step => step;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ZMachineConsole.Interpreter"/>
         /// class for the specified view model.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="viewModel">The view model.</param>
-        public ZMachine(ILogger logger, IViewModel viewModel)
+        public Interpreter(ILogger logger, IViewModel viewModel)
         {
             this.logger = logger;
             this.instructionDecoder = new InstructionDecoder();
@@ -74,92 +94,67 @@ namespace ZMachineConsole
         }
 
         /// <summary>
-        /// Opens the story file from the specified file path.
-        /// </summary>
-        /// <param name="storyFilePath">The file path.</param>
-        public void OpenStoryFile(string storyFilePath)
-        {
-            IResources resources = null;
-            byte[] storyData = ReadStoryData(storyFilePath);
-
-            if (IsBlorb(storyData))
-            {
-                IFormChunk formChunk = ReadBlorb(storyData);
-                storyData = (formChunk != null) ?
-                    new BlorbFile(formChunk).StoryData : null;
-                resources = (formChunk != null) ?
-                    new BlorbResources(viewModel.NativeImageFactory, viewModel.SoundEffectFactory, formChunk) : null;
-            }
-
-            Initialize(storyData, resources);
-        }
-
-        /// <summary>
-        /// Opens the story file from the specified URL.
-        /// </summary>
-        /// <param name="storyFileUrl">The URL.</param>
-        public void OpenStoryFile(Uri storyFileUrl)
-        {
-            IResources resources = null;
-            byte[] storyData = ReadStoryData(storyFileUrl);
-
-            if (IsBlorb(storyData))
-            {
-                IFormChunk formChunk = ReadBlorb(storyData);
-                storyData = (formChunk != null) ?
-                    new BlorbFile(formChunk).StoryData : null;
-                resources = (formChunk != null) ?
-                    new BlorbResources(viewModel.NativeImageFactory, viewModel.SoundEffectFactory, formChunk) : null;
-            }
-
-            Initialize(storyData, resources);
-        }
-
-        /// <summary>
         /// Opens the specified story file.
         /// </summary>
         /// <param name="storyFile">The file path or the URL of the story file.</param>
         public void Open(string storyFile)
         {
-            // if the story file is a valid path
+            // if the story file is a file path
             if (File.Exists(storyFile))
             {
-                OpenStoryFile(storyFile);
+                OpenStory(storyFile);
             }
             else
             {
                 // try the story file as a URL
                 if (Uri.TryCreate(storyFile, UriKind.RelativeOrAbsolute, out Uri uri))
                 {
-                    OpenStoryFile(uri);
+                    OpenStory(uri);
                 }
-                throw new StoryFileNotFoundException("Could not open the requested story file.");
+                throw new StoryFileNotFoundException($"I could not find '{storyFile}'.");
             }
-        }
-
-        private bool IsBlorb(byte[] data)
-        {
-            IMemory memory = new Memory(data);
-            byte[] id = new byte[ChunkBase.ChunkIdLength];
-            memory.CopyBytesToArray(id, 0, 0, ChunkBase.ChunkIdLength);
-            // Array.Copy(data, 0, id, 0, ChunkBase.ChunkIdLength);
-            string Id = System.Text.Encoding.UTF8.GetString((byte[])(object)id, 0, id.Length);
-            if (!"FORM".Equals(Id))
-            {
-                return false;
-            }
-            return true;
         }
 
         /// <summary>
-        /// Initializes the z-machine using the specified story data and resources.
+        /// Opens the story file from the specified file path.
+        /// </summary>
+        /// <param name="path">The file to open.</param>
+        public void OpenStory(string path)
+        {
+            byte[] storyData = ReadStoryData(path);
+            Initialize(storyData);
+        }
+
+        /// <summary>
+        /// Opens the story file from the specified URL.
+        /// </summary>
+        /// <param name="url">The file to open.</param>
+        public void OpenStory(Uri url)
+        {
+            byte[] storyData = ReadStoryData(url);
+            Initialize(storyData);
+        }
+
+        /// <summary>
+        /// Initializes the z-machine using the specified data.
         /// </summary>
         /// <param name="data">The story data.</param>
-        /// <param name="resources">The story resources.</param>
-        private void Initialize(byte[] data, IResources resources)
+        private void Initialize(byte[] data)
         {
+            IResources resources = null;
+
+            if (Blorb.IsBlorb(data))
+            {
+                IFormChunk formChunk = Blorb.ReadBlorb(data);
+                data = (formChunk != null) ?
+                    new BlorbFile(formChunk).StoryData : null;
+                resources = (formChunk != null) ?
+                    new BlorbResources(viewModel.NativeImageFactory, viewModel.SoundEffectFactory, formChunk) : null;
+            }
+
             machine.Initialize(data, resources);
-            if (IsInvalidStory(machine.Version))
+
+            if (IsSupportedVersion(machine.Version))
             {
                 throw new InvalidStoryFileException($"I don't understand version {machine.Version} story files.");
             }
@@ -168,60 +163,15 @@ namespace ZMachineConsole
         }
 
         /// <summary>
-        /// Indicates whether the story file version is valid.
+        /// Indicates whether the story file version is supported.
         /// </summary>
         /// <param name="version">The story file version.</param>
         /// <returns>true if the story file version is supported; otherwise false.</returns>
-        private bool IsInvalidStory(int version)
+        private bool IsSupportedVersion(int version)
         {
 
             return version < 1 || version > 8;
         }
-
-        #region Story & Resource Data
-
-        /// <summary>
-        /// Reads the story file data from the specified file path.
-        /// </summary>
-        /// <returns>The story file data.</returns>
-        private byte[] ReadStoryData(string path)
-        {
-            return File.ReadAllBytes(path);
-        }
-
-        /// <summary>
-        /// Reads the story file data from the specified URL.
-        /// </summary>
-        /// <returns>The story file data.</returns>
-        private byte[] ReadStoryData(Uri uri)
-        {
-            using (var client = new HttpClient())
-            {
-                byte[] data = client.GetByteArrayAsync(uri.AbsoluteUri).Result;
-                return data;
-            }
-        }
-
-        /// <summary>
-        /// Reads the Blorb data from the specified file path.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>The form chunk.</returns>
-        private IFormChunk ReadBlorb(byte[] data)
-        {
-            IFormChunk blorbchunk = null;
-            if (data != null)
-            {
-                blorbchunk = new FormChunk(new Memory(data));
-                if (!"IFRS".Equals(blorbchunk.SubId))
-                {
-                    throw new IOException($"Is not a valid Blorb file.");
-                }
-            }
-            return blorbchunk;
-        }
-
-        #endregion
 
         /// <summary>
         /// Starts the z-machine.
@@ -277,6 +227,32 @@ namespace ZMachineConsole
             // TODO: Implement this method!!!
         }
 
+        #region Story & Resource Data
+
+        /// <summary>
+        /// Reads the story file data from the specified file path.
+        /// </summary>
+        /// <returns>The story file data.</returns>
+        private byte[] ReadStoryData(string path)
+        {
+            return File.ReadAllBytes(path);
+        }
+
+        /// <summary>
+        /// Reads the story file data from the specified URL.
+        /// </summary>
+        /// <returns>The story file data.</returns>
+        private byte[] ReadStoryData(Uri uri)
+        {
+            using (var client = new HttpClient())
+            {
+                byte[] data = client.GetByteArrayAsync(uri.AbsoluteUri).Result;
+                return data;
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// Enables the specified header flag.
         /// </summary>
@@ -285,26 +261,6 @@ namespace ZMachineConsole
         {
             FileHeader.SetEnabled(attr, true);
         }
-
-        /// <summary>
-        /// Gets the file header.
-        /// </summary>
-        public IStoryFileHeader FileHeader => machine.FileHeader;
-
-        /// <summary>
-        /// Gets the default background color.
-        /// </summary>
-        public int DefaultBackground => machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultBackground);
-
-        /// <summary>
-        /// Gets the default foreground color.
-        /// </summary>
-        public int DefaultForeground => machine.ReadUnsigned8(StoryFileHeaderAddress.DefaultForeground);
-
-        /// <summary>
-        /// Gets the current step number.
-        /// </summary>
-        public int Step => step;
 
         /// <summary>
         /// The execution loop.

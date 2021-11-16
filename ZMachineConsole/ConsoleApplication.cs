@@ -20,11 +20,11 @@
             try
             {
                 ConsoleViewModel console = new ConsoleViewModel(storyFilePath);
-                ZMachine zMachine = new ZMachine(logger, console);
+                Interpreter interpreter = new Interpreter(logger, console);
 
-                zMachine.Open(storyFilePath);
+                interpreter.Open(storyFilePath);
 
-                zMachine.Start();
+                interpreter.Start();
             }
             catch (Exception ex)
             {

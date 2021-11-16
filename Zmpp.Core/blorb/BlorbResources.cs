@@ -77,7 +77,7 @@ namespace Zmpp.Core.Blorb
             images = new BlorbImages(imageFactory, formchunk);
             sounds = new BlorbSounds(soundEffectFactory, formchunk);
             coverart = new BlorbCoverArt(formchunk);
-            metadata = BlorbMetadata.Parse(formchunk);
+            metadata = Blorb.ReadMetadata(formchunk);
         }
 
         public IMediaCollection<IZmppImage> Images => images;
