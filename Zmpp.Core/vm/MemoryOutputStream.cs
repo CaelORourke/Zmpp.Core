@@ -80,7 +80,7 @@ namespace Zmpp.Core.Vm
             this.machine = machine;
         }
 
-        public void print(char zsciiChar)
+        public void Print(char zsciiChar)
         {
             TablePosition tablePos = tableStack[tableStack.Count - 1];
             int position = tablePos.tableAddress + 2 + tablePos.bytesWritten;
@@ -88,17 +88,17 @@ namespace Zmpp.Core.Vm
             tablePos.bytesWritten++;
         }
 
-        public void flush()
+        public void Flush()
         {
             // intentionally left empty
         }
 
-        public void close()
+        public void Close()
         {
             // intentionally left empty
         }
 
-        public void select(bool flag)
+        public void Select(bool flag)
         {
             if (!flag && tableStack.Count > 0)
             {
@@ -150,7 +150,7 @@ namespace Zmpp.Core.Vm
             }
         }
 
-        public bool isSelected()
+        public bool IsSelected()
         {
             return tableStack.Count > 0;
         }

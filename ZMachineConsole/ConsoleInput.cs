@@ -5,14 +5,8 @@
 
     public class ConsoleInput : IInputStream
     {
-        public void Close()
-        {
-            Console.In.Close();
-        }
+        public void Close() => Console.In.Close();
 
-        public string ReadLine()
-        {
-            return Console.In.ReadLine();
-        }
+        public string ReadLine() => Console.In.ReadLine();
     }
 }

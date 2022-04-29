@@ -5,7 +5,7 @@
 
     public class ConsoleStatusLine : IStatusLine
     {
-        public void updateStatusScore(string objectName, int score, int steps)
+        public void UpdateStatusScore(string objectName, int score, int steps)
         {
             //// capture the original values
             //var left = Console.CursorLeft;
@@ -29,7 +29,7 @@
             //Console.BackgroundColor = background;
         }
 
-        public void updateStatusTime(string objectName, int hours, int minutes)
+        public void UpdateStatusTime(string objectName, int hours, int minutes)
         {
             var padding = Console.WindowWidth - 3 - objectName.Length - hours.ToString().Length - minutes.ToString().Length;
             Console.Title = String.Format(" {0}{1}{2}:{3} ", objectName, new String(' ', padding), hours, minutes);

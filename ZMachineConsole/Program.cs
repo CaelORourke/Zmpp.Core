@@ -17,7 +17,7 @@
             Console.Clear();
 
             var services = ConfigureServices();
-            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+            using (var serviceProvider = services.BuildServiceProvider())
             {
                 serviceProvider.GetService<ConsoleApplication>().Run(args[0]);
             }

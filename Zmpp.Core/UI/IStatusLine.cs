@@ -42,7 +42,7 @@ namespace Zmpp.Core.UI
         /// <param name="objectName">the object name</param>
         /// <param name="score">the score</param>
         /// <param name="steps">the number of steps</param>
-        void updateStatusScore(String objectName, int score, int steps);
+        void UpdateStatusScore(String objectName, int score, int steps);
 
         /// <summary>
         /// Updates the status of a time game.
@@ -50,6 +50,6 @@ namespace Zmpp.Core.UI
         /// <param name="objectName">the object name</param>
         /// <param name="hours">the hours</param>
         /// <param name="minutes">the minutes</param>
-        void updateStatusTime(String objectName, int hours, int minutes);
+        void UpdateStatusTime(String objectName, int hours, int minutes);
     }
 }

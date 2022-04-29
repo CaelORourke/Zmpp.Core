@@ -19,8 +19,8 @@
         {
             try
             {
-                ConsoleViewModel console = new ConsoleViewModel(storyFilePath);
-                Interpreter interpreter = new Interpreter(logger, console);
+                var console = new ConsoleViewModel(storyFilePath);
+                var interpreter = new Interpreter(logger, console);
 
                 interpreter.Open(storyFilePath);
 

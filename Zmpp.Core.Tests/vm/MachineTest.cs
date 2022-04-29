@@ -101,23 +101,23 @@ namespace Zmpp.Core.Vm.Tests
         public void testSetOutputStream()
         {
             // arrange
-            outputStream1.Setup(os => os.isSelected()).Returns(true);
-            outputStream2.Setup(os => os.isSelected()).Returns(false);
-            outputStream3.Setup(os => os.isSelected()).Returns(false);
+            outputStream1.Setup(os => os.IsSelected()).Returns(true);
+            outputStream2.Setup(os => os.IsSelected()).Returns(false);
+            outputStream3.Setup(os => os.IsSelected()).Returns(false);
 
             // act
             machine.SelectOutputStream(1, true);
             machine.Print("test");
 
             // assert
-            outputStream1.Verify(os => os.select(true), Times.Once());
-            outputStream2.Verify(os => os.select(false), Times.Once());
-            outputStream1.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream2.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream3.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream1.Verify(os => os.print('t'), Times.Exactly(2));
-            outputStream1.Verify(os => os.print('e'), Times.Once());
-            outputStream1.Verify(os => os.print('s'), Times.Once());
+            outputStream1.Verify(os => os.Select(true), Times.Once());
+            outputStream2.Verify(os => os.Select(false), Times.Once());
+            outputStream1.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream2.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream3.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream1.Verify(os => os.Print('t'), Times.Exactly(2));
+            outputStream1.Verify(os => os.Print('e'), Times.Once());
+            outputStream1.Verify(os => os.Print('s'), Times.Once());
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace Zmpp.Core.Vm.Tests
             machine.SelectOutputStream(1, true);
 
             // assert
-            outputStream1.Verify(os => os.select(true), Times.Once());
+            outputStream1.Verify(os => os.Select(true), Times.Once());
         }
 
         [TestMethod]
@@ -221,9 +221,9 @@ namespace Zmpp.Core.Vm.Tests
         public void testStartQuit()
         {
             // arrange
-            outputStream1.Setup(os => os.isSelected()).Returns(true);
-            outputStream2.Setup(os => os.isSelected()).Returns(false);
-            outputStream3.Setup(os => os.isSelected()).Returns(false);
+            outputStream1.Setup(os => os.IsSelected()).Returns(true);
+            outputStream2.Setup(os => os.IsSelected()).Returns(false);
+            outputStream3.Setup(os => os.IsSelected()).Returns(false);
 
             // act
             machine.Start();
@@ -232,17 +232,17 @@ namespace Zmpp.Core.Vm.Tests
             var result2 = machine.RunState;
 
             // assert
-            outputStream2.Verify(os => os.select(false), Times.Once());
-            outputStream1.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream2.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream3.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream1.Verify(os => os.print(It.IsAny<char>()), Times.AtLeastOnce());
-            outputStream1.Verify(os => os.flush(), Times.AtLeastOnce());
-            outputStream1.Verify(os => os.close(), Times.Once());
-            outputStream2.Verify(os => os.flush(), Times.AtLeastOnce());
-            outputStream2.Verify(os => os.close(), Times.Once());
-            outputStream3.Verify(os => os.flush(), Times.AtLeastOnce());
-            outputStream3.Verify(os => os.close(), Times.Once());
+            outputStream2.Verify(os => os.Select(false), Times.Once());
+            outputStream1.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream2.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream3.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream1.Verify(os => os.Print(It.IsAny<char>()), Times.AtLeastOnce());
+            outputStream1.Verify(os => os.Flush(), Times.AtLeastOnce());
+            outputStream1.Verify(os => os.Close(), Times.Once());
+            outputStream2.Verify(os => os.Flush(), Times.AtLeastOnce());
+            outputStream2.Verify(os => os.Close(), Times.Once());
+            outputStream3.Verify(os => os.Flush(), Times.AtLeastOnce());
+            outputStream3.Verify(os => os.Close(), Times.Once());
             inputStream0.Verify(os => os.Close(), Times.Once());
             inputStream1.Verify(os => os.Close(), Times.Once());
 
@@ -261,7 +261,7 @@ namespace Zmpp.Core.Vm.Tests
             machine.UpdateStatusLine();
 
             // assert
-            statusLine.Verify(sl => sl.updateStatusScore(It.IsAny<String>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
+            statusLine.Verify(sl => sl.UpdateStatusScore(It.IsAny<String>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
         }
 
         [TestMethod]
@@ -276,7 +276,7 @@ namespace Zmpp.Core.Vm.Tests
             machine.UpdateStatusLine();
 
             // assert
-            statusLine.Verify(sl => sl.updateStatusTime(It.IsAny<String>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
+            statusLine.Verify(sl => sl.UpdateStatusTime(It.IsAny<String>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
         }
 
         [TestMethod]
@@ -296,9 +296,9 @@ namespace Zmpp.Core.Vm.Tests
         public void testHalt()
         {
             // arrange
-            outputStream1.Setup(os => os.isSelected()).Returns(true);
-            outputStream2.Setup(os => os.isSelected()).Returns(false);
-            outputStream3.Setup(os => os.isSelected()).Returns(false);
+            outputStream1.Setup(os => os.IsSelected()).Returns(true);
+            outputStream2.Setup(os => os.IsSelected()).Returns(false);
+            outputStream3.Setup(os => os.IsSelected()).Returns(false);
 
             // act
             machine.Start();
@@ -307,11 +307,11 @@ namespace Zmpp.Core.Vm.Tests
             var result2 = machine.RunState;
 
             // assert
-            outputStream2.Verify(os => os.select(false), Times.Once());
-            outputStream1.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream2.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream3.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream1.Verify(os => os.print(It.IsAny<char>()));
+            outputStream2.Verify(os => os.Select(false), Times.Once());
+            outputStream1.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream2.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream3.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream1.Verify(os => os.Print(It.IsAny<char>()));
 
             Assert.AreEqual(MachineRunState.RUNNING, result);
             Assert.AreEqual(MachineRunState.STOPPED, result2);
@@ -326,9 +326,9 @@ namespace Zmpp.Core.Vm.Tests
             machine.Restart();
 
             // assert
-            outputStream1.Verify(os => os.flush(), Times.Once());
-            outputStream2.Verify(os => os.flush(), Times.Once());
-            outputStream3.Verify(os => os.flush(), Times.Once());
+            outputStream1.Verify(os => os.Flush(), Times.Once());
+            outputStream2.Verify(os => os.Flush(), Times.Once());
+            outputStream3.Verify(os => os.Flush(), Times.Once());
             screen.Verify(s => s.Reset(), Times.Once());
         }
 
@@ -357,7 +357,7 @@ namespace Zmpp.Core.Vm.Tests
             var result = machine.FileHeader.IsEnabled(StoryFileHeaderAttribute.Transcripting);
 
             // assert
-            outputStream2.Verify(os => os.select(true), Times.Once());
+            outputStream2.Verify(os => os.Select(true), Times.Once());
             Assert.IsTrue(result);
         }
 
@@ -365,20 +365,20 @@ namespace Zmpp.Core.Vm.Tests
         public void testSelectMemoryOutputStreamWithoutTable()
         {
             // arrange
-            outputStream1.Setup(os => os.isSelected()).Returns(true);
-            outputStream2.Setup(os => os.isSelected()).Returns(false);
-            outputStream3.Setup(os => os.isSelected()).Returns(false);
+            outputStream1.Setup(os => os.IsSelected()).Returns(true);
+            outputStream2.Setup(os => os.IsSelected()).Returns(false);
+            outputStream3.Setup(os => os.IsSelected()).Returns(false);
 
             // act
             machine.SelectOutputStream(OutputBase.OUTPUTSTREAM_MEMORY, true);
 
             // assert
-            outputStream2.Verify(os => os.select(false), Times.AtLeastOnce());
-            outputStream3.Verify(os => os.select(true), Times.Once());
-            outputStream1.Verify(os => os.isSelected(), Times.Once());
-            outputStream2.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream3.Verify(os => os.isSelected(), Times.AtLeastOnce());
-            outputStream1.Verify(os => os.print(It.IsAny<char>()));
+            outputStream2.Verify(os => os.Select(false), Times.AtLeastOnce());
+            outputStream3.Verify(os => os.Select(true), Times.Once());
+            outputStream1.Verify(os => os.IsSelected(), Times.Once());
+            outputStream2.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream3.Verify(os => os.IsSelected(), Times.AtLeastOnce());
+            outputStream1.Verify(os => os.Print(It.IsAny<char>()));
         }
 
         //[TestMethod]

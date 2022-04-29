@@ -49,8 +49,8 @@ namespace ZMachineConsole
     /// </remarks>
     public class Interpreter
     {
-        public const bool DEBUG = false;
-        public const bool DEBUG_INTERRUPT = false;
+        public const bool Debug = false;
+        public const bool DebugInterrupt = false;
 
         private readonly ILogger logger;
         private readonly IMachine machine;
@@ -199,12 +199,11 @@ namespace ZMachineConsole
                 EnableHeaderFlag(StoryFileHeaderAttribute.SupportsColours);
             }
 
-            int defaultForeground = DefaultForeground;
-            int defaultBackground = DefaultBackground;
-            logger.LogDebug($"Game Default Foreground: {defaultForeground}.");
-            logger.LogDebug($"Game Default Background: {defaultBackground}.");
-            machine.Screen.SetBackground(defaultBackground, -1);
-            machine.Screen.SetForeground(defaultForeground, -1);
+            logger.LogDebug($"Game Default Foreground: {DefaultForeground}.");
+            logger.LogDebug($"Game Default Background: {DefaultBackground}.");
+
+            machine.Screen.SetBackground(DefaultBackground, -1);
+            machine.Screen.SetForeground(DefaultForeground, -1);
 
             logger.LogInformation("Z-machine started at {dateTime}.", DateTime.UtcNow);
 
@@ -222,10 +221,7 @@ namespace ZMachineConsole
         /// <summary>
         /// Stops the z-machine.
         /// </summary>
-        public void Stop()
-        {
-            // TODO: Implement this method!!!
-        }
+        public void Stop() => throw new NotImplementedException();
 
         #region Story & Resource Data
 
@@ -277,7 +273,7 @@ namespace ZMachineConsole
                 int pc = machine.PC;
                 IInstruction instr = instructionDecoder.decodeInstruction(pc);
                 // if the print is executed after Execute() the result is different !!
-                if (DEBUG && machine.RunState == MachineRunState.RUNNING)
+                if (Debug && machine.RunState == MachineRunState.RUNNING)
                 {
                     Console.Out.WriteLine(string.Format("{0:D4}: ${1:x5} {2}", step, (int)pc, instr.ToString()));
                 }

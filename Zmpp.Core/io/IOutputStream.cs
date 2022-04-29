@@ -36,28 +36,28 @@ namespace Zmpp.Core.IO
         /// needed to implement edit buffers.
         /// </summary>
         /// <param name="zchar">the ZSCII character to print</param>
-        void print(char zchar);
+        void Print(char zchar);
 
         /// <summary>
         /// Close underlying resources.
         /// </summary>
-        void close();
+        void Close();
 
         /// <summary>
         /// Flushes the output.
         /// </summary>
-        void flush();
+        void Flush();
 
         /// <summary>
         /// Enables/disables this output stream.
         /// </summary>
         /// <param name="flag">true to enable, false to disable</param>
-        void select(bool flag);
+        void Select(bool flag);
 
         /// <summary>
         /// Determine, if this stream is selected.
         /// </summary>
         /// <returns>true if selected, false if deselected</returns>
-        bool isSelected();
+        bool IsSelected();
     }
 }

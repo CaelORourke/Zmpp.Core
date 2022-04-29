@@ -622,11 +622,11 @@ namespace Zmpp.Core.Vm
                 int global3 = cpu.GetVariable((char)0x12);
                 if (FileHeader.IsEnabled(StoryFileHeaderAttribute.ScoreGame))
                 {
-                    statusLine.updateStatusScore(objectName, global2, global3);
+                    statusLine.UpdateStatusScore(objectName, global2, global3);
                 }
                 else
                 {
-                    statusLine.updateStatusTime(objectName, global2, global3);
+                    statusLine.UpdateStatusTime(objectName, global2, global3);
                 }
             }
         }

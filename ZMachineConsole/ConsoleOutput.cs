@@ -5,24 +5,24 @@
 
     public class ConsoleOutput : IOutputStream
     {
-        private bool _isSelected;
+        private bool isSelected;
 
-        public void close()
+        public void Close()
         {
             Console.Out.Close();
         }
 
-        public void flush()
+        public void Flush()
         {
             Console.Out.Flush();
         }
 
-        public bool isSelected()
+        public bool IsSelected()
         {
-            return _isSelected;
+            return isSelected;
         }
 
-        public void print(char zchar)
+        public void Print(char zchar)
         {
             if (zchar == '\n' || zchar == '\r')
                 Console.Out.WriteLine();
@@ -30,9 +30,9 @@
                 Console.Out.Write(zchar);
         }
 
-        public void select(bool flag)
+        public void Select(bool flag)
         {
-            _isSelected = flag;
+            isSelected = flag;
         }
     }
 }
